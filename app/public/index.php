@@ -18,6 +18,8 @@ use function FastRoute\simpleDispatcher;
 $dispatcher = simpleDispatcher(function (RouteCollector $r) {
     $r->addRoute('GET', '/', ['App\Controllers\HomeController', 'home']);
     $r->addRoute('GET', '/hello/{name}', ['App\Controllers\HelloController', 'greet']);
+    $r->addRoute('GET', '/guestbook', ['App\Controllers\GuestbookController', 'getAll']);
+    $r->addRoute('POST', '/guestbook', ['App\Controllers\GuestbookController', 'addNewMessage']);
 });
 
 

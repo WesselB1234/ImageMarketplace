@@ -2,7 +2,7 @@
 
 namespace App\Services\Interfaces;
 
-interface IUsersService
+interface IImagesService
 {
     
 }

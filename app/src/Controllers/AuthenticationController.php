@@ -6,13 +6,28 @@ use App\Controllers\Controller;
 
 class AuthenticationController extends Controller 
 {
-    public function login()
+    public function loginIndex()
     {
         
     }
 
-    public function logout()
+    public function processLogin()
     {
         
+    }
+
+    public function registerIndex()
+    {
+        
+    }
+
+    public function processRegister()
+    {
+        
+    }
+    
+    public function logout()
+    {
+        $this->loggedInAuthorization();
     }
 }

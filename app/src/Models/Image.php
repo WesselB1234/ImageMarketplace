@@ -4,11 +4,11 @@ namespace App\Models;
 
 class Image
 {
-    public $id;
-    public $ownerId;
-    public $name;
-    public $description;
-    public $price;
-    public $isModerated;
-    public $isOnSale;
+    public int $imageId;
+    public int $ownerId;
+    public string $name;
+    public string $description;
+    public int $priceInTokens;
+    public bool $isModerated;
+    public bool $isOnSale;
 }

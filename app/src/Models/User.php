@@ -4,9 +4,9 @@ namespace App\Models;
 
 class User
 {
-    public $id;
-    public $userName;
-    public $email;
-    public $password;
-    public $imageTokens;
+    public int $userId;
+    public string $userName;
+    public string $email;
+    public string $password;
+    public int $imageTokens;
 }

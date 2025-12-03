@@ -12,6 +12,11 @@ class ImagesRepository extends Repository implements IImagesRepository
         return [];
     }
 
+    function getAllOnSaleImages(): array
+    {
+        return [];
+    }
+
     public function getImageByImageId(int $imageId): ?Image
     {
         return null;

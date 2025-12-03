@@ -22,6 +22,11 @@ class UsersRepository extends Repository implements IUsersRepository
         return null;
     }
 
+    public function createUser(User $user)
+    {
+        return null;    
+    }
+
     public function updateTokensBalanceByUserId(int $userId, int $newTokensBalance)
     {
         return null;

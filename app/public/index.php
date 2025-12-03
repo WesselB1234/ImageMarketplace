@@ -6,10 +6,37 @@ use FastRoute\RouteCollector;
 use function FastRoute\simpleDispatcher;
 
 $dispatcher = simpleDispatcher(function (RouteCollector $r) {
-    $r->addRoute('GET', '/', ['App\Controllers\HomeController', 'home']);
-    $r->addRoute('GET', '/hello/{name}', ['App\Controllers\HelloController', 'greet']);
-    $r->addRoute('GET', '/guestbook', ['App\Controllers\GuestbookController', 'getAll']);
-    $r->addRoute('POST', '/guestbook', ['App\Controllers\GuestbookController', 'addNewMessage']);
+    
+    // Authentication
+    $r->addRoute('GET', '/login', ['App\Controllers\AuthenticationController', 'loginIndex']);
+    $r->addRoute('POST', '/login', ['App\Controllers\AuthenticationController', 'processLogin']);
+    $r->addRoute('GET', '/register', ['App\Controllers\AuthenticationController', 'registerIndex']);
+    $r->addRoute('POST', '/register', ['App\Controllers\AuthenticationController', 'processRegister']);
+    $r->addRoute('POST', '/logout', ['App\Controllers\AuthenticationController', 'logout']);
+
+    // Images
+    $r->addRoute('GET', '/images', ['App\Controllers\ImagesController', 'index']);
+    $r->addRoute('GET', '/images/{id}', ['App\Controllers\ImagesController', 'details']);
+    $r->addRoute('GET', '/images/buy', ['App\Controllers\ImagesController', 'buyIndex']);
+    $r->addRoute('POST', '/images/buy', ['App\Controllers\ImagesController', 'processBuy']);
+    $r->addRoute('GET', '/images/sell', ['App\Controllers\ImagesController', 'sellIndex']);
+    $r->addRoute('POST', '/images/sell', ['App\Controllers\ImagesController', 'processSell']);
+    $r->addRoute('GET', '/images/upload', ['App\Controllers\ImagesController', 'uploadIndex']);
+    $r->addRoute('POST', '/images/upload', ['App\Controllers\ImagesController', 'processUpload']);
+    $r->addRoute('POST', '/images/{id}/moderate', ['App\Controllers\ImagesController', 'moderateImage']);
+    $r->addRoute('POST', '/images/{id}/unmoderate', ['App\Controllers\ImagesController', 'unModerateImage']);
+    $r->addRoute('GET', '/images/{id}', ['App\Controllers\ImagesController', 'deleteImage']);
+
+    // Portfolio
+    $r->addRoute('GET', '/portfolio', ['App\Controllers\PortfolioController', 'index']);
+
+    // Users (admin only)
+    $r->addRoute('GET', '/users', ['App\Controllers\UsersController', 'index']);
+    $r->addRoute('GET', '/users/create', ['App\Controllers\UsersController', 'createIndex']);
+    $r->addRoute('POST', '/users/create', ['App\Controllers\UsersController', 'processCreate']);
+    $r->addRoute('GET', '/users/{id}/update', ['App\Controllers\UsersController', 'updateIndex']);
+    $r->addRoute('POST', '/users/{id}/update', ['App\Controllers\UsersController', 'processUpdate']);
+    $r->addRoute('GET', '/users/{id}', ['App\Controllers\UsersController', 'delete']);
 });
 
 $httpMethod = $_SERVER['REQUEST_METHOD'];

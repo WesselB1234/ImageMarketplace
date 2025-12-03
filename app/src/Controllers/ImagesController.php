@@ -31,12 +31,12 @@ class ImagesController extends Controller
 
     }
 
-    public function sellIndex()
+    public function setOnSale()
     {
 
     }
 
-    public function processSell()
+    public function removeOnSale()
     {
 
     }

@@ -8,7 +8,7 @@ class PortfolioController extends Controller
 {
     public function __construct()
     {
-        $this->isLoggedInAuthorization();
+        $this->loggedInAuthorization();
     }
     
     public function index()

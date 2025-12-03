@@ -11,4 +11,5 @@ class Image
     public int $priceInTokens;
     public bool $isModerated;
     public bool $isOnSale;
+    public string $imageString;
 }

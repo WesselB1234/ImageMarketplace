@@ -1,10 +1,10 @@
 <?php 
     $title = "Portfolio";
     
-    require __DIR__."../../Partials/header.php"; 
+    require __DIR__."../../Partials/navbarHeader.php"; 
 ?>
 
-<main>
+<main class="container">
     <?php
 
         // Read the image file into a string

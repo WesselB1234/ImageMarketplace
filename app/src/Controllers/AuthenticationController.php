@@ -8,7 +8,7 @@ class AuthenticationController extends Controller
 {
     public function loginIndex()
     {
-        
+        $this->displayView("Authentication/login.php", null);
     }
 
     public function processLogin()

@@ -1,5 +1,5 @@
 <?php 
-    $title = "Buy image";
+    $title = "Update image";
     
     require __DIR__."../../Partials/navbarHeader.php"; 
 ?>

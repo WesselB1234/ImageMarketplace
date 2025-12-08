@@ -1,4 +1,8 @@
-<?php require __DIR__."../../Partials/header.php"; ?>
+<?php 
+    $title = "Portfolio";
+    
+    require __DIR__."../../Partials/header.php"; 
+?>
 
 <main>
     <?php

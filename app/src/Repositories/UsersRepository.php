@@ -15,7 +15,7 @@ class UsersRepository extends Repository implements IUsersRepository
         $sql = 'SELECT id, username, email, image_tokens, role FROM Users';
         $result = $this->connection->query($sql);
 
-        return $result->fetchAll(PDO::FETCH_ASSOC);
+        return $result->fetchAll(PDO::FETCH_CLASS, User::class);
     }
 
     public function getUserByUserId(int $userId): ?User

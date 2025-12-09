@@ -2,13 +2,19 @@
     use App\Models\Enums\UserRole;
 
     $title = "Create user";
+    $partialsDir = __DIR__."../../../Partials";
+
+    var_dump($viewModel);
     
-    require __DIR__."../../../Partials/navbarHeader.php"; 
+    require $partialsDir."/navbarHeader.php"; 
 ?>
 
 <main class="container">
 
     <h1>Create User</h1>
+
+    <?php include $partialsDir."/errorAlert.php";?>
+
     <a href="/users" class="btn btn-secondary">Return back to users</a>
     
     <form action="/users/create" method="post" class="mt-4">
@@ -45,4 +51,4 @@
     </form>
 </main>
 
-<?php require __DIR__."../../../Partials/footer.php"; ?>
+<?php require $partialsDir."/footer.php"; ?>

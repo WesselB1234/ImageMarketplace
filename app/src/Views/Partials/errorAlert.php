@@ -1,3 +1,5 @@
-<div class="alert alert-danger" role="alert">
-    This is an error alert—check it out!
-</div>
+<?php if (isset($errorMessage)) {?>
+    <div class="alert alert-danger" role="alert">
+        An error has occured: <?php echo $errorMessage; ?>
+    </div>
+<?php } ?>

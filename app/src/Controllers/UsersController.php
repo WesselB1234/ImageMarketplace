@@ -6,6 +6,7 @@ use App\Controllers\Controller;
 use App\Services\Interfaces\IUsersService;
 use App\Services\UsersService;
 use App\Models\User;
+use Exception;
 
 class UsersController extends Controller
 {
@@ -23,12 +24,12 @@ class UsersController extends Controller
     {
         $users = $this->usersService->getAllUsers();
 
-        $this->displayView("Admin/Users/index.php", $users);
+        $this->displayView("Admin/Users/index.php", ["viewModel" => $users]);
     }
 
     public function createIndex()
     {
-        $this->displayView("Admin/Users/create.php", null);
+        $this->displayView("Admin/Users/create.php", []);
     }
 
     public function processCreate()
@@ -37,11 +38,16 @@ class UsersController extends Controller
         
         try{ 
             $this->usersService->createUser($user);
-            
 
+            setcookie("success_message", "Successfully created a new user.", time() + 5, "/");
+            header("Location: /users");
         }
         catch(Exception $e){
-            $this->displayView("Admin/Users/create.php", $user);
+
+            $this->displayView("Admin/Users/create.php", [
+                "viewModel" => $user, 
+                "errorMessage" => $e->getMessage()
+            ]);
         }
     }
 

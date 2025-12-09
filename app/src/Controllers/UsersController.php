@@ -27,7 +27,7 @@ class UsersController extends Controller
 
     public function createIndex()
     {
-        
+        $this->displayView("Admin/Users/create.php", null);
     }
 
     public function processCreate()

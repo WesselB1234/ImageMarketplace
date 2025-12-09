@@ -40,7 +40,7 @@ $dispatcher = simpleDispatcher(function (RouteCollector $r) {
     $r->addRoute('POST', '/users/create', ['App\Controllers\UsersController', 'processCreate']);
     $r->addRoute('GET', '/users/update/{id}', ['App\Controllers\UsersController', 'updateIndex']);
     $r->addRoute('POST', '/users/update/{id}', ['App\Controllers\UsersController', 'processUpdate']);
-    $r->addRoute('POST', '/users/delete{id}', ['App\Controllers\UsersController', 'delete']);
+    $r->addRoute('POST', '/users/delete/{id}', ['App\Controllers\UsersController', 'delete']);
 });
 
 $httpMethod = $_SERVER['REQUEST_METHOD'];

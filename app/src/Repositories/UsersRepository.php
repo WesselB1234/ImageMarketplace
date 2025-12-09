@@ -10,9 +10,9 @@ class UsersRepository extends Repository implements IUsersRepository
 {
     public function getAllUsers(): array
     {
-        $sql = 'SELECT id, userName, email, image_tokens FROM Users';
+        $sql = 'SELECT id, username, email, image_tokens FROM Users';
         $result = $this->connection->query($sql);
-        
+
         return $result->fetchAll(\PDO::FETCH_ASSOC);
     }
 

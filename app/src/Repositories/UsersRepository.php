@@ -13,7 +13,7 @@ class UsersRepository extends Repository implements IUsersRepository
 {
     public function getAllUsers(): array
     {
-        $sql = 'SELECT id, username, email, image_tokens, role FROM Users';
+        $sql = "SELECT id, username, email, image_tokens, role FROM Users;";
         $result = $this->connection->query($sql);
         $assocUsers = $result->fetchAll(PDO::FETCH_ASSOC);
         $users = [];
@@ -22,13 +22,31 @@ class UsersRepository extends Repository implements IUsersRepository
             array_push($users, DataMapper::mapAssocUserToUser($user));
         }
 
-        var_dump($users);
-
         return $users;
     }
 
     public function getUserByUserId(int $userId): ?User
     {
+        return null;
+    }
+
+    public function getUserByUsername(string $username): ?User
+    {
+        $stmt = $this->connection->prepare(
+            "SELECT id, username, email, image_tokens, role 
+            FROM Users
+            WHERE username = :username;"
+        );
+
+        $stmt->bindParam(":username", $username);
+        $stmt->execute();
+
+        $assocUser = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($assocUser !== false) {
+            return DataMapper::mapAssocUserToUser($assocUser);
+        }
+
         return null;
     }
 
@@ -39,8 +57,10 @@ class UsersRepository extends Repository implements IUsersRepository
 
     public function createUser(User $user)
     {
-        $stmt = $this->connection->prepare("INSERT INTO Users (username, email, password, image_tokens, role) 
-            VALUES (:username, :email, :password, :image_tokens, :role)");
+        $stmt = $this->connection->prepare(
+            "INSERT INTO Users (username, email, password, image_tokens, role) 
+            VALUES (:username, :email, :password, :image_tokens, :role);"
+        );
 
         $stmt->bindParam(':username', $user->username);
         $stmt->bindParam(':email', $user->email);

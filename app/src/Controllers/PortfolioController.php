@@ -13,6 +13,6 @@ class PortfolioController extends Controller
     
     public function index()
     {
-        $this->displayView("Portfolio/index.php", null);
+        $this->displayView("Portfolio/index.php", []);
     }
 }

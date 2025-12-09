@@ -12,6 +12,7 @@ class UsersRepository extends Repository implements IUsersRepository
     {
         $sql = 'SELECT id, userName, email, image_tokens FROM Users';
         $result = $this->connection->query($sql);
+        
         return $result->fetchAll(\PDO::FETCH_ASSOC);
     }
 

@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Repositories\Interfaces\IUsersRepository;
 use App\Repositories\Repository;
 use App\Models\User;
+use App\Framework\DataMapper;
 
 use PDO;
 
@@ -14,8 +15,16 @@ class UsersRepository extends Repository implements IUsersRepository
     {
         $sql = 'SELECT id, username, email, image_tokens, role FROM Users';
         $result = $this->connection->query($sql);
+        $assocUsers = $result->fetchAll(PDO::FETCH_ASSOC);
+        $users = [];
 
-        return $result->fetchAll(PDO::FETCH_CLASS, User::class);
+        foreach($assocUsers as $user){
+            array_push($users, DataMapper::mapAssocUserToUser($user));
+        }
+
+        var_dump($users);
+
+        return $users;
     }
 
     public function getUserByUserId(int $userId): ?User
@@ -37,7 +46,7 @@ class UsersRepository extends Repository implements IUsersRepository
         $stmt->bindParam(':email', $user->email);
         $stmt->bindParam(':password', $user->password);
         $stmt->bindParam(':image_tokens', $user->imageTokens);
-        $stmt->bindValue(':role', $user->role->value, PDO::PARAM_INT);
+        $stmt->bindValue(':role', $user->role->value, PDO::PARAM_STR);
 
         $stmt->execute();
     }

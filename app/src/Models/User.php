@@ -6,7 +6,7 @@ use App\Models\Enums\UserRole;
 
 class User
 {
-    public int $userId;
+    public int $id;
     public string $username;
     public string $email;
     public string $password;
@@ -14,10 +14,10 @@ class User
     public UserRole $role;
 
     public function __construct(){
-
+      
     }
 
-    public static function constructUnknownUser(string $username, string $email, string $password, int $imageTokens, int $roleIndex) : User
+    public static function constructUnknownUser(string $username, string $email, string $password, int $imageTokens, string $stringRole) : User
     {
         $user = new self();
 
@@ -25,7 +25,20 @@ class User
         $user->email = $email;
         $user->password = $password;
         $user->imageTokens = $imageTokens;
-        $user->role = UserRole::from($roleIndex);
+        $user->role = UserRole::from($stringRole);
+        
+        return $user;
+    }
+
+    public static function constructKnownUserWithoutPassword(int $id, string $username, string $email, int $imageTokens, string $stringRole) : User
+    {
+        $user = new self();
+
+        $user->id = $id;
+        $user->username = $username;
+        $user->email = $email;
+        $user->imageTokens = $imageTokens;
+        $user->role = UserRole::from($stringRole);
         
         return $user;
     }

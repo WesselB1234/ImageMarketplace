@@ -37,6 +37,7 @@ class UsersController extends Controller
         $user = User::constructUnknownUser($_POST["username"], $_POST["email"], $_POST["password"], $_POST["image_tokens"], $_POST["role"]);
         
         try{ 
+            throw new Exception("Pootis");
             $this->usersService->createUser($user);
 
             setcookie("success_message", "Successfully created a new user.", time() + 5, "/");

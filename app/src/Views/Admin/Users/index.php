@@ -34,8 +34,8 @@
                     <th scope="row"><?php echo htmlspecialchars($user->id, ENT_QUOTES, 'UTF-8'); ?></th>
                     <td><?php echo htmlspecialchars($user->username, ENT_QUOTES, 'UTF-8'); ?></td>
                     <td><?php echo htmlspecialchars($user->email, ENT_QUOTES, 'UTF-8'); ?></td>
-                    <td><?php echo htmlspecialchars($user->image_tokens, ENT_QUOTES, 'UTF-8'); ?></td>
-                    <td><?php echo htmlspecialchars($user->role, ENT_QUOTES, 'UTF-8'); ?></td>
+                    <td><?php echo htmlspecialchars($user->imageTokens, ENT_QUOTES, 'UTF-8'); ?></td>
+                    <td><?php echo htmlspecialchars($user->role->value, ENT_QUOTES, 'UTF-8'); ?></td>
                     <td>
                         <a href="users/update/<?php echo htmlspecialchars($user->id, ENT_QUOTES, 'UTF-8'); ?>" class="btn btn-primary">Update</a> |
                         <a href="users/delete/<?php echo htmlspecialchars($user->id, ENT_QUOTES, 'UTF-8'); ?>" class="btn btn-danger">Delete</a>

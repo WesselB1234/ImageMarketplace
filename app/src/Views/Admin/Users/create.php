@@ -3,8 +3,6 @@
 
     $title = "Create user";
     $partialsDir = __DIR__."../../../Partials";
-
-    var_dump($viewModel);
     
     require $partialsDir."/navbarHeader.php"; 
 ?>
@@ -20,24 +18,32 @@
     <form action="/users/create" method="post" class="mt-4">
         <div class="mb-3">
             <label for="username" class="form-label">Username</label>
-            <input type="text" class="form-control" id="username" name="username" placeholder="Enter username" required>
+            <input type="text" class="form-control" id="username" name="username" placeholder="Enter username" required value="<?php 
+                echo (isset($viewModel) && isset($viewModel->username) ? $viewModel->username : "") 
+            ?>">
         </div>
 
         <div class="mb-3">
             <label for="email" class="form-label">Email</label>
-            <input type="email" class="form-control" id="email" name="email" placeholder="Enter email address" required>
+            <input type="email" class="form-control" id="email" name="email" placeholder="Enter email address" required value="<?php 
+                echo (isset($viewModel) && isset($viewModel->email) ? $viewModel->email : "") 
+            ?>">
         </div>
 
         <div class="mb-3">
             <label for="image_tokens" class="form-label">Image tokens</label>
-            <input type="number" class="form-control" id="image_tokens" name="image_tokens" min="0" placeholder="Enter number of tokens" required>
+            <input type="number" class="form-control" id="image_tokens" name="image_tokens" min="0" placeholder="Enter number of tokens" required value="<?php 
+                echo (isset($viewModel) && isset($viewModel->imageTokens) ? $viewModel->imageTokens : "") 
+            ?>">
         </div>
 
         <div class="mb-3">
             <label for="role" class="form-label">Role</label>
             <select class="form-select" id="role" name="role" required>
-                <?php foreach (UserRole::cases() as $i => $case){ ?>
-                    <option value="<?php echo $i + 1; ?>"><?php echo $case->name; ?></option>
+                <?php foreach (UserRole::cases() as $case){ ?>
+                    <option value="<?php echo $case->name; ?>" <?php echo (isset($viewModel) && isset($viewModel->role) && $case->name == $viewModel->role->value ? "selected" : "") ?>>
+                        <?php echo $case->name; ?>
+                    </option>
                 <?php } ?>  
             </select>
         </div>

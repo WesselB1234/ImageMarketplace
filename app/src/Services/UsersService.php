@@ -31,6 +31,11 @@ class UsersService implements IUsersService
         $this->usersRepository->updateUser($user);
     }
 
+    private function getIsValidEmail(string $email): bool
+    {
+        return filter_var($email, FILTER_VALIDATE_EMAIL);
+    }
+
     private function getHashedPassword($rawPassword): string
     {
         return password_hash($rawPassword, PASSWORD_DEFAULT);   
@@ -43,6 +48,11 @@ class UsersService implements IUsersService
         if(isset($duplicateUser))
         {
             throw new Exception("User with username ".$user->username. " already exists.");
+        }
+
+        if(!$this->getIsValidEmail($user->email))
+        {
+            throw new Exception("Email is not valid.");
         }
 
         $user->password = $this->getHashedPassword($user->password);

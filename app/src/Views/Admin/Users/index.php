@@ -1,6 +1,4 @@
 <?php 
-    use App\Models\User;
-
     $title = "Users";
     $enabledNavLink = "Users";
     $partialsDir = __DIR__."../../../Partials";

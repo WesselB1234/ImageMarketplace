@@ -27,6 +27,21 @@ class UsersRepository extends Repository implements IUsersRepository
 
     public function getUserByUserId(int $userId): ?User
     {
+        $stmt = $this->connection->prepare(
+            "SELECT id, username, email, image_tokens, role 
+            FROM Users
+            WHERE id = :id;"
+        );
+
+        $stmt->bindParam(":id", $userId);
+        $stmt->execute();
+
+        $assocUser = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($assocUser !== false) {
+            return DataMapper::mapAssocUserToUser($assocUser);
+        }
+
         return null;
     }
 

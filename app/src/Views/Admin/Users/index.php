@@ -2,13 +2,20 @@
     use App\Models\User;
 
     $title = "Users";
+    $enabledNavLink = "Users";
+    $partialsDir = __DIR__."../../../Partials";
     
-    require __DIR__."../../../Partials/navbarHeader.php"; 
+    require $partialsDir."/navbarHeader.php"; 
 ?>
 
 <main class="container">
 
     <h1>Users</h1>
+
+    <?php 
+        include $partialsDir."/errorAlert.php";
+        include $partialsDir."/successAlert.php"; 
+    ?>
 
     <a class="btn btn-success" href="users/create">Create new user</a>
 
@@ -18,18 +25,20 @@
             <th scope="col">Username</th>
             <th scope="col">Email</th>
             <th scope="col">Image tokens</th>
+            <th scope="col">Role</th>
             <th scope="col">Actions</th>
         </thead>
         <tbody>
             <?php foreach($viewModel as $user){ ?>
                 <tr>
-                    <th scope="row"><?php echo $user["id"]; ?></th>
-                    <td><?php echo $user["username"]; ?></td>
-                    <td><?php echo $user["email"]; ?></td>
-                    <td><?php echo $user["image_tokens"]; ?></td>
+                    <th scope="row"><?php echo htmlspecialchars($user["id"], ENT_QUOTES, 'UTF-8'); ?></th>
+                    <td><?php echo htmlspecialchars($user["username"], ENT_QUOTES, 'UTF-8'); ?></td>
+                    <td><?php echo htmlspecialchars($user["email"], ENT_QUOTES, 'UTF-8'); ?></td>
+                    <td><?php echo htmlspecialchars($user["image_tokens"], ENT_QUOTES, 'UTF-8'); ?></td>
+                    <td><?php echo htmlspecialchars($user["role"], ENT_QUOTES, 'UTF-8'); ?></td>
                     <td>
-                        <a href="users/update/<?php echo $user["id"]; ?>" class="btn btn-primary">Update</a> |
-                        <a href="users/delete/<?php echo $user["id"]; ?>" class="btn btn-danger">Delete</a>
+                        <a href="users/update/<?php echo htmlspecialchars($user["id"], ENT_QUOTES, 'UTF-8'); ?>" class="btn btn-primary">Update</a> |
+                        <a href="users/delete/<?php echo htmlspecialchars($user["id"], ENT_QUOTES, 'UTF-8'); ?>" class="btn btn-danger">Delete</a>
                     </td>
                 </tr>
             <?php }?>
@@ -37,4 +46,4 @@
     </table>
 </main>
 
-<?php require __DIR__."../../../Partials/footer.php"; ?>
+<?php require $partialsDir."/footer.php"; ?>

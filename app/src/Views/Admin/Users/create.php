@@ -1,4 +1,6 @@
 <?php 
+    use App\Models\Enums\UserRole;
+
     $title = "Create user";
     
     require __DIR__."../../../Partials/navbarHeader.php"; 
@@ -8,7 +10,7 @@
 
     <h1>Create User</h1>
     <a href="/users" class="btn btn-secondary">Return back to users</a>
-
+    
     <form action="/users/create" method="post" class="mt-4">
         <div class="mb-3">
             <label for="username" class="form-label">Username</label>
@@ -28,8 +30,9 @@
         <div class="mb-3">
             <label for="role" class="form-label">Role</label>
             <select class="form-select" id="role" name="role" required>
-                <option value="User">User</option>
-                <option value="Admin">Admin</option>
+                <?php foreach (UserRole::cases() as $i => $case){ ?>
+                    <option value="<?php echo $i + 1; ?>"><?php echo $case->name; ?></option>
+                <?php } ?>  
             </select>
         </div>
 

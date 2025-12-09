@@ -31,16 +31,6 @@ class ImagesController extends Controller
 
     }
 
-    public function updateIndex()
-    {
-
-    }
-
-    public function processUpdate()
-    {
-
-    }
-
     public function setOnSale()
     {
 

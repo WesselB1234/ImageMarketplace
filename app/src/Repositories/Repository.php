@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Repository;
+namespace App\Repositories;
 
 use App\Config;
 use PDO;
 
 class Repository 
 {
-    public PDO $connection;
+    protected PDO $connection;
 
     public function __construct(){
 

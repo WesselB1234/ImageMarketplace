@@ -3,18 +3,26 @@
 namespace App\Controllers;
 
 use App\Controllers\Controller;
+use App\Services\Interfaces\IUsersService;
+use App\Services\UsersService;
 
 class UsersController extends Controller
 {
+    private IUsersService $usersService;
+
     public function __construct()
     {
-        $this->isLoggedInAuthorization();
-        $this->isAdminAuthorization();
+        $this->loggedInAuthorization();
+        $this->adminAuthorization();
+
+        $this->usersService = new UsersService();
     }
 
     public function index()
     {
-        
+        $users = $this->usersService->getAllUsers();
+
+        $this->displayView("Admin/Users/index.php", $users);
     }
 
     public function createIndex()

@@ -4,12 +4,15 @@ namespace App\Repositories;
 
 use App\Repositories\Interfaces\IUsersRepository;
 use App\Repositories\Repository;
+use App\Models\User;
 
 class UsersRepository extends Repository implements IUsersRepository
 {
     public function getAllUsers(): array
     {
-        return [];
+        $sql = 'SELECT id, userName, email, image_tokens FROM Users';
+        $result = $this->connection->query($sql);
+        return $result->fetchAll(\PDO::FETCH_ASSOC);
     }
 
     public function getUserByUserId(int $userId): ?User
@@ -32,7 +35,7 @@ class UsersRepository extends Repository implements IUsersRepository
         return null;
     }
 
-    public function deleteUserById(int $id)
+    public function deleteUserByUserId(int $id)
     {
         return null;
     }

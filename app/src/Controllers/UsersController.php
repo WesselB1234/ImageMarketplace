@@ -53,14 +53,14 @@ class UsersController extends Controller
 
     public function updateIndex(array $vars)
     {
-        $id = $vars["id"];
+        $userId = $vars["id"];
         
         try{
-            $user = $this->usersService->getUserByUserId($id);
+            $user = $this->usersService->getUserByUserId($userId);
 
             if(!isset($user))
             {
-                throw new Exception("User with id ".$id." does not exist.");
+                throw new Exception("User with id ".$userId." does not exist.");
             }
             
             $this->displayView("Admin/Users/update.php", [

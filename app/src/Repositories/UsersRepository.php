@@ -13,7 +13,7 @@ class UsersRepository extends Repository implements IUsersRepository
 {
     public function getAllUsers(): array
     {
-        $sql = "SELECT id, username, email, image_tokens, role FROM Users;";
+        $sql = "SELECT user_id, username, email, image_tokens, role FROM Users;";
         $result = $this->connection->query($sql);
         $assocUsers = $result->fetchAll(PDO::FETCH_ASSOC);
         $users = [];
@@ -28,12 +28,12 @@ class UsersRepository extends Repository implements IUsersRepository
     public function getUserByUserId(int $userId): ?User
     {
         $stmt = $this->connection->prepare(
-            "SELECT id, username, email, image_tokens, role 
+            "SELECT user_id, username, email, image_tokens, role 
             FROM Users
-            WHERE id = :id;"
+            WHERE user_id = :user_id;"
         );
 
-        $stmt->bindParam(":id", $userId);
+        $stmt->bindParam(":user_id", $userId);
         $stmt->execute();
 
         $assocUser = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -48,7 +48,7 @@ class UsersRepository extends Repository implements IUsersRepository
     public function getUserByUsername(string $username): ?User
     {
         $stmt = $this->connection->prepare(
-            "SELECT id, username, email, image_tokens, role 
+            "SELECT user_id, username, email, image_tokens, role 
             FROM Users
             WHERE username = :username;"
         );

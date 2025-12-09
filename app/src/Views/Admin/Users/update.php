@@ -16,7 +16,7 @@
 
     <a href="/users" class="btn btn-secondary">Return back to users</a>
     
-    <form action="/users/<?php echo $viewModel->id ?>/update" method="post" class="mt-4">
+    <form action="/users/<?php echo $viewModel->userId ?>/update" method="post" class="mt-4">
         <div class="mb-3">
             <label for="username" class="form-label">Username</label>
             <input type="text" class="form-control" id="username" name="username" placeholder="Enter username" required value="<?php 

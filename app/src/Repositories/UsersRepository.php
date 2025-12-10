@@ -38,7 +38,7 @@ class UsersRepository extends Repository implements IUsersRepository
 
         $assocUser = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if ($assocUser !== false) {
+        if (isset($assocUser)) {
             return DataMapper::mapAssocUserToUser($assocUser);
         }
 
@@ -67,7 +67,24 @@ class UsersRepository extends Repository implements IUsersRepository
 
     public function updateUser(User $user)
     {
-        return null;
+        $stmt = $this->connection->prepare(
+                "UPDATE Users 
+                SET username = :username,
+                    email = :email, 
+                    password = :password, 
+                    image_tokens = :image_tokens, 
+                    role = :role
+                WHERE user_id = :userId;"
+            );
+
+        $stmt->bindParam(':userId', $user->userId);
+        $stmt->bindParam(':username', $user->username);
+        $stmt->bindParam(':email', $user->email);
+        $stmt->bindParam(':password', $user->password);
+        $stmt->bindParam(':image_tokens', $user->imageTokens);
+        $stmt->bindValue(':role', $user->role->value, PDO::PARAM_STR);
+
+        $stmt->execute();
     }
 
     public function createUser(User $user)

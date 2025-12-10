@@ -13,8 +13,23 @@ class User
     public int $imageTokens;
     public UserRole $role;
 
-    public function __construct(){
-      
+    public function __construct()
+    {
+        
+    }
+
+    public static function constructFullyKnownUser(int $userId ,string $username, string $email, string $password, int $imageTokens, string $stringRole): User
+    {
+        $user = new self();    
+        
+        $user->userId = $userId;
+        $user->username = $username;
+        $user->email = $email;
+        $user->password = $password;
+        $user->imageTokens = $imageTokens;
+        $user->role = UserRole::from($stringRole);
+        
+        return $user;
     }
 
     public static function constructUnknownUser(string $username, string $email, string $password, int $imageTokens, string $stringRole): User

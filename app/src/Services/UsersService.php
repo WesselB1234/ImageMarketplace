@@ -7,6 +7,7 @@ use App\Repositories\Interfaces\IUsersRepository;
 use App\Repositories\UsersRepository;
 use App\Models\User;
 use Exception;
+use App\Models\Exceptions;
 
 class UsersService implements IUsersService
 {
@@ -28,7 +29,35 @@ class UsersService implements IUsersService
 
     public function updateUser(User $user)
     {
+        $this->throwIfUserByUserIdDoesntExists($user->userId);
+        $this->throwIfUserIsNotValid($user);
+        $user->password = $this->getHashedPassword($user->password);
         $this->usersRepository->updateUser($user);
+    }
+
+    public function throwIfUserByUserIdDoesntExists(int $userId)
+    {
+        $user = $this->getUserByUserId($userId);
+
+        if(!isset($user))
+        {
+            throw new NotFoundException("User with id ".$id." does not exist.");
+        }
+    }
+
+    private function throwIfUserIsNotValid(User $user)
+    {
+        $duplicateUser = $this->usersRepository->getUserByUsername($user->username);
+
+        if(isset($duplicateUser) && (isset($user->userId) && $duplicateUser->userId == $user->userId) == false)
+        {
+            throw new Exception("User with username ".$user->username. " already exists.");
+        }
+
+        if(!$this->getIsValidEmail($user->email))
+        {
+            throw new Exception("Email is not valid.");
+        }
     }
 
     private function getIsValidEmail(string $email): bool
@@ -43,18 +72,7 @@ class UsersService implements IUsersService
 
     public function createUser(User $user)
     {
-        $duplicateUser = $this->usersRepository->getUserByUsername($user->username);
-
-        if(isset($duplicateUser))
-        {
-            throw new Exception("User with username ".$user->username. " already exists.");
-        }
-
-        if(!$this->getIsValidEmail($user->email))
-        {
-            throw new Exception("Email is not valid.");
-        }
-
+        $this->throwIfUserIsNotValid($user);
         $user->password = $this->getHashedPassword($user->password);
         $this->usersRepository->createUser($user);
     }

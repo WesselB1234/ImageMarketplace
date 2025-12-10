@@ -76,24 +76,25 @@ class UsersController extends Controller
 
     public function processUpdate(array $vars)
     {
-        $user = User::constructUnknownUser($vars["id"], $_POST["username"], $_POST["email"], $_POST["password"], $_POST["image_tokens"], $_POST["role"]);
+        $user = User::constructFullyKnownUser($vars["id"], $_POST["username"], $_POST["email"], $_POST["password"], $_POST["image_tokens"], $_POST["role"]);
         
         try{
-            $user = $this->usersService->getUserByUserId($id);
+            $this->usersService->updateUser($user);
 
-            // if(!isset($user))
-            // {
-            //     throw new ("User with id ".$id." does not exist.");
-            // }
-            
-            $this->displayView("Admin/Users/update.php", [
-                "viewModel" => $user
-            ]);
-        }
-        catch(Exception $e)
+            setcookie("success_message", "Successfully updated user ".$user->username , time() + 5, "/");
+            header("Location: /users");
+        } 
+        catch(NotFoundException $e)
         {
             setcookie("error_message", $e->getMessage(), time() + 5, "/");
             header("Location: /users");
+        } 
+        catch(Exception $e)
+        {
+            $this->displayView("Admin/Users/update.php", [
+                "viewModel" => $user,
+                "errorMessage" => $e->getMessage()
+            ]);
         } 
     }
 

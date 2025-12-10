@@ -29,20 +29,9 @@ class UsersService implements IUsersService
 
     public function updateUser(User $user)
     {
-        $this->throwIfUserByUserIdDoesntExists($user->userId);
         $this->throwIfUserIsNotValid($user);
         $user->password = $this->getHashedPassword($user->password);
         $this->usersRepository->updateUser($user);
-    }
-
-    public function throwIfUserByUserIdDoesntExists(int $userId)
-    {
-        $user = $this->getUserByUserId($userId);
-
-        if(!isset($user))
-        {
-            throw new NotFoundException("User with id ".$id." does not exist.");
-        }
     }
 
     private function throwIfUserIsNotValid(User $user)

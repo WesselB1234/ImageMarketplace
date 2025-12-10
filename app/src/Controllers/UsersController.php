@@ -7,6 +7,7 @@ use App\Services\Interfaces\IUsersService;
 use App\Services\UsersService;
 use App\Models\User;
 use Exception;
+use App\Models\Exceptions\NotFoundException;
 
 class UsersController extends Controller
 {
@@ -52,17 +53,17 @@ class UsersController extends Controller
     }
 
     public function updateIndex(array $vars)
-    {
+    {        
         $userId = $vars["id"];
-        
+
         try{
             $user = $this->usersService->getUserByUserId($userId);
 
             if(!isset($user))
             {
-                throw new Exception("User with id ".$userId." does not exist.");
+                throw new NotFoundException("User with id ".$userId." does not exist.");
             }
-            
+
             $this->displayView("Admin/Users/update.php", [
                 "viewModel" => $user
             ]);
@@ -81,7 +82,7 @@ class UsersController extends Controller
         try{
             $this->usersService->updateUser($user);
 
-            setcookie("success_message", "Successfully updated user ".$user->username , time() + 5, "/");
+            setcookie("success_message", "Successfully updated user.", time() + 5, "/");
             header("Location: /users");
         } 
         catch(NotFoundException $e)
@@ -98,8 +99,17 @@ class UsersController extends Controller
         } 
     }
 
-    public function delete()
+    public function delete(array $vars)
     {
-        
+        try{
+            $this->usersService->deleteUserByUserId($vars["id"]);
+            setcookie("success_message", "Successfully deleted user.", time() + 5, "/");
+        } 
+        catch(Exception $e)
+        {
+            setcookie("error_message", $e->getMessage(), time() + 5, "/");
+        } 
+
+        header("Location: /users");
     }
 }

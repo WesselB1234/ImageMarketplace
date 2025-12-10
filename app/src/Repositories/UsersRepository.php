@@ -6,6 +6,7 @@ use App\Repositories\Interfaces\IUsersRepository;
 use App\Repositories\Repository;
 use App\Models\User;
 use App\Framework\DataMapper;
+use App\Models\Exceptions\NotFoundException;
 
 use PDO;
 
@@ -38,7 +39,7 @@ class UsersRepository extends Repository implements IUsersRepository
 
         $assocUser = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if (isset($assocUser)) {
+        if ($assocUser !== false) {
             return DataMapper::mapAssocUserToUser($assocUser);
         }
 
@@ -85,6 +86,11 @@ class UsersRepository extends Repository implements IUsersRepository
         $stmt->bindValue(':role', $user->role->value, PDO::PARAM_STR);
 
         $stmt->execute();
+
+        if($stmt->rowCount() == 0)
+        {
+            throw new NotFoundException("User with id ".$user->userId." does not exist.");
+        }
     }
 
     public function createUser(User $user)
@@ -108,8 +114,15 @@ class UsersRepository extends Repository implements IUsersRepository
         return null;
     }
 
-    public function deleteUserByUserId(int $id)
+    public function deleteUserByUserId(int $userId)
     {
-        return null;
+        $stmt = $this->connection->prepare("DELETE FROM Users WHERE user_id = :userId;");
+        $stmt->bindParam(':userId', $userId);
+        $stmt->execute();
+
+        if($stmt->rowCount() == 0)
+        {
+            throw new NotFoundException("User with id ".$userId." does not exist.");
+        }
     }
 }

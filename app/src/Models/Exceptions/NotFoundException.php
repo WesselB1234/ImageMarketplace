@@ -2,6 +2,8 @@
 
 namespace App\Models\Exceptions;
 
+use Exception;
+
 class NotFoundException extends Exception
 {
     // No additional methods or properties

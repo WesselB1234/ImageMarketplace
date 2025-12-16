@@ -30,7 +30,9 @@ class AuthenticationController extends Controller
                 throw new Exception("Password or username is not correct.");
             }
 
-            //header("Location: /login");
+            $_SESSION["user"] = $user;
+
+            header("Location: /");
         }
         catch(Exception $e){
 

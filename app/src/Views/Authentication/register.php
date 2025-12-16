@@ -18,6 +18,11 @@
                     </div>
 
                     <div class="mb-3">
+                        <label for="username" class="form-label">Email</label>
+                        <input type="text" class="form-control" id="email" name="email" placeholder="Enter email address" required>
+                    </div>
+
+                    <div class="mb-3">
                         <label for="password" class="form-label">Password</label>
                         <input type="password" class="form-control" id="password" name="password" placeholder="Enter password" required>
                     </div>

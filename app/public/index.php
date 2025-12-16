@@ -1,14 +1,18 @@
 <?php
 
-session_start();
-
 require __DIR__ . '/../vendor/autoload.php';
 
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__."/../");
-$dotenv->load();
-
 use FastRoute\RouteCollector;
+use FastRoute\Dispatcher;
 use function FastRoute\simpleDispatcher;
+use Dotenv\Dotenv;
+use App\Models\User;
+use App\Models\Enums\UserRole;
+
+session_start();
+
+$dotenv = Dotenv::createImmutable(__DIR__."/../");
+$dotenv->load();
 
 $dispatcher = simpleDispatcher(function (RouteCollector $r) {
 
@@ -51,15 +55,15 @@ $routeInfo = $dispatcher->dispatch($httpMethod, $uri);
 
 switch ($routeInfo[0]) {
 
-    case FastRoute\Dispatcher::NOT_FOUND:
+    case Dispatcher::NOT_FOUND:
         http_response_code(404);
         echo 'Not Found';
         break;
-    case FastRoute\Dispatcher::METHOD_NOT_ALLOWED:
+    case Dispatcher::METHOD_NOT_ALLOWED:
         http_response_code(405);
         echo 'Method Not Allowed';
         break;
-    case FastRoute\Dispatcher::FOUND:
+    case Dispatcher::FOUND:
 
         $controllerName = $routeInfo[1][0];
         $methodName = $routeInfo[1][1];

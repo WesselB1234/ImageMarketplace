@@ -1,7 +1,8 @@
 <?php 
     $title = "Register";
+    $partialsDir = __DIR__."../../Partials";
     
-    require __DIR__."../../Partials/header.php"; 
+    require $partialsDir."/header.php"; 
 ?>
 
 <main class="container">
@@ -9,7 +10,8 @@
         <div class="card shadow-sm" style="width: 22rem;">
             <div class="card-body">
                 <h3 class="card-title text-center mb-4">Register</h3>
-                <form action="/register" method="POST">
+                <?php include $partialsDir."/errorAlert.php";?>
+                <form action="/register" method="POST" id="registerForm">
 
                     <div class="mb-3">
                         <label for="username" class="form-label">Username</label>
@@ -39,4 +41,5 @@
     </div>
 </main>
 
-<?php require __DIR__."../../Partials/footer.php"; ?>
+<script src="assets/js/AlertMessaging.js"></script>
+<script src="assets/js/Register.js"></script>

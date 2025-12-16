@@ -1,5 +1,3 @@
-<?php if (isset($successMessage)) {?>
-    <div class="alert alert-success" role="alert">
-        <?php echo $successMessage; ?>
-    </div>
-<?php } ?>
+<div class="alert alert-success <?php echo (!isset($successMessage) ? "d-none" : "") ?>" id="successAlert" role="alert">
+    <?php echo (isset($successMessage) ? $successMessage : "") ?>
+</div>

@@ -56,5 +56,8 @@ class AuthenticationController extends Controller
     public function logout()
     {
         $this->loggedInAuthorization();
+        unset($_SESSION["user"]);
+
+        $this->displayView("Authentication/login.php", []);
     }
 }

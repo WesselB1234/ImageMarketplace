@@ -21,7 +21,7 @@ $dispatcher = simpleDispatcher(function (RouteCollector $r) {
     $r->addRoute('POST', '/login', ['App\Controllers\AuthenticationController', 'processLogin']);
     $r->addRoute('GET', '/register', ['App\Controllers\AuthenticationController', 'registerIndex']);
     $r->addRoute('POST', '/register', ['App\Controllers\AuthenticationController', 'processRegister']);
-    $r->addRoute('POST', '/logout', ['App\Controllers\AuthenticationController', 'logout']);
+    $r->addRoute('GET', '/logout', ['App\Controllers\AuthenticationController', 'logout']);
 
     // Images
     $r->addRoute('GET', '/images', ['App\Controllers\ImagesController', 'index']);

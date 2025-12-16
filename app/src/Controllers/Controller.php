@@ -29,11 +29,14 @@ class Controller
 
     public function loggedInAuthorization()
     {
-
+        if (!isset($_SESSION["user"])){
+            setcookie("error_message", "You need to be logged in to perform this action.", time() + 5, "/");
+            header("Location: /login");
+        }
     }
 
     public function adminAuthorization()
     {
-
+        var_dump($_SESSION["user"]->role);
     }
 }

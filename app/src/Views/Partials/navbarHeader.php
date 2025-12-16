@@ -22,7 +22,7 @@
             </ul>
             <div class="form-inline my-2 my-lg-0">
                 <div class="text-start nav-link">Image tokens: 1000</div>
-                <a class="btn btn-danger text-light" >Logout as testman</a>
+                <a href="/logout" class="btn btn-danger text-light" >Logout as testman</a>
             </div>
         </div>
     </nav>

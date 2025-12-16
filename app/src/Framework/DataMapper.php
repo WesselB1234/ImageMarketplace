@@ -16,4 +16,16 @@ class DataMapper{
             $assocUser["role"]
         );
     }
+
+    public static function mapAssocUserToFullyKnownUser(array $assocUser): User
+    {
+        return User::constructFullyKnownUser(
+            $assocUser["user_id"], 
+            $assocUser["username"], 
+            $assocUser["email"], 
+            $assocUser["password"], 
+            $assocUser["image_tokens"],
+            $assocUser["role"]
+        );
+    }
 }

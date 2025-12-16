@@ -66,6 +66,26 @@ class UsersRepository extends Repository implements IUsersRepository
         return null;
     }
 
+    public function getFullyKnownUserByUsername(string $username): ?User
+    {
+        $stmt = $this->connection->prepare(
+            "SELECT user_id, username, email, password, image_tokens, role 
+            FROM Users
+            WHERE username = :username;"
+        );
+
+        $stmt->bindParam(":username", $username);
+        $stmt->execute();
+
+        $assocUser = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($assocUser !== false) {
+            return DataMapper::mapAssocUserToFullyKnownUser($assocUser);
+        }
+
+        return null;
+    }
+
     public function updateUser(User $user)
     {
         $stmt = $this->connection->prepare(

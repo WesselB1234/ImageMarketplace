@@ -27,6 +27,17 @@ class UsersService implements IUsersService
         return $this->usersRepository->getUserByUserId($userId);
     }
 
+    public function getUserByUsernameAndPassword(string $username, string $password): ?User
+    {
+        $user = $this->usersRepository->getFullyKnownUserByUsername($username);
+
+        if (isset($user) && password_verify($password, $user->password)) {
+            return $user;
+        }
+
+        return null;
+    }
+
     public function updateUser(User $user)
     {
         $this->throwIfUserIsNotValid($user);

@@ -1,7 +1,8 @@
 <?php 
     $title = "Login";
+    $partialsDir = __DIR__."../../Partials";
     
-    require __DIR__."../../Partials/header.php"; 
+    require $partialsDir."/header.php"; 
 ?>
 
 <main class="container" >
@@ -9,8 +10,8 @@
         <div class="card shadow-sm" style="width: 22rem;">
             <div class="card-body">
                 <h3 class="card-title text-center mb-4">Login</h3>
+                <?php include $partialsDir."/errorAlert.php";?>
                 <form action="/login" method="POST">
-
                     <div class="mb-3">
                         <label for="username" class="form-label">Username</label>
                         <input type="text" class="form-control" id="username" name="username" placeholder="Enter username" required>

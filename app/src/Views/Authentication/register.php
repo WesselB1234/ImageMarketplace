@@ -12,7 +12,6 @@
                 <h3 class="card-title text-center mb-4">Register</h3>
                 <?php include $partialsDir."/errorAlert.php";?>
                 <form action="/register" method="POST" id="registerForm">
-
                     <div class="mb-3">
                         <label for="username" class="form-label">Username</label>
                         <input type="text" class="form-control" id="username" name="username" placeholder="Enter username" required>

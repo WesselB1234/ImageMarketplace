@@ -6,10 +6,10 @@ use App\Models\Enums\UserRole;
 
 class User
 {
-    public int $userId;
+    public ?int $userId;
     public string $username;
     public string $email;
-    public string $password;
+    public ?string $password;
     public int $imageTokens;
     public UserRole $role;
 

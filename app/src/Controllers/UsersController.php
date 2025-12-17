@@ -78,10 +78,18 @@ class UsersController extends Controller
     public function processUpdate(array $vars)
     {
         $user = User::constructFullyKnownUser($vars["id"], $_POST["username"], $_POST["email"], $_POST["password"], $_POST["image_tokens"], $_POST["role"]);
-        
+        //var_dump($user);
+
         try{
             $this->usersService->updateUser($user);
 
+            if ($vars["id"] == $_SESSION["user"]->userId)
+            {
+                $user->userId = $vars["id"];
+                $user->password = null;
+                $_SESSION["user"] = $user;
+            }
+            
             setcookie("success_message", "Successfully updated user.", time() + 5, "/");
             header("Location: /users");
         } 
@@ -102,6 +110,11 @@ class UsersController extends Controller
     public function delete(array $vars)
     {
         try{
+            if ($vars["id"] == $_SESSION["user"]->userId)
+            {
+                throw new Exception("You cannot delete yourself.");
+            }
+
             $this->usersService->deleteUserByUserId($vars["id"]);
             setcookie("success_message", "Successfully deleted user.", time() + 5, "/");
         } 

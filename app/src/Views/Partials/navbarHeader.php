@@ -1,4 +1,6 @@
-<?php require __DIR__."../../Partials/header.php"; ?> 
+<?php
+    require __DIR__."../../Partials/header.php"; 
+?> 
 
 <header>
     <nav class="navbar navbar-expand-lg navbar-light bg-light shadow mb-4">
@@ -21,8 +23,8 @@
                 </li>
             </ul>
             <div class="form-inline my-2 my-lg-0">
-                <div class="text-start nav-link">Image tokens: 1000</div>
-                <a href="/logout" class="btn btn-danger text-light" >Logout as testman</a>
+                <div class="text-start nav-link">Image tokens: <?php echo $_SESSION["user"]->imageTokens; ?></div>
+                <a href="/logout" class="btn btn-danger text-light" >Logout as <?php echo $_SESSION["user"]->username; ?></a>
             </div>
         </div>
     </nav>

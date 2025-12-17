@@ -31,10 +31,10 @@ class UsersRepository extends Repository implements IUsersRepository
         $stmt = $this->connection->prepare(
             "SELECT user_id, username, email, image_tokens, role 
             FROM Users
-            WHERE user_id = :user_id;"
+            WHERE user_id = :userId;"
         );
 
-        $stmt->bindParam(":user_id", $userId);
+        $stmt->bindValue(":userId", $userId, PDO::PARAM_INT); 
         $stmt->execute();
 
         $assocUser = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -54,7 +54,7 @@ class UsersRepository extends Repository implements IUsersRepository
             WHERE username = :username;"
         );
 
-        $stmt->bindParam(":username", $username);
+        $stmt->bindValue(":username", $username, PDO::PARAM_STR);
         $stmt->execute();
 
         $assocUser = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -74,7 +74,7 @@ class UsersRepository extends Repository implements IUsersRepository
             WHERE username = :username;"
         );
 
-        $stmt->bindParam(":username", $username);
+        $stmt->bindValue(":username", $username, PDO::PARAM_STR); 
         $stmt->execute();
 
         $assocUser = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -98,12 +98,12 @@ class UsersRepository extends Repository implements IUsersRepository
                 WHERE user_id = :userId;"
             );
 
-        $stmt->bindParam(':userId', $user->userId);
-        $stmt->bindParam(':username', $user->username);
-        $stmt->bindParam(':email', $user->email);
-        $stmt->bindParam(':password', $user->password);
-        $stmt->bindParam(':image_tokens', $user->imageTokens);
-        $stmt->bindValue(':role', $user->role->value, PDO::PARAM_STR);
+        $stmt->bindValue(":userId", $user->userId, PDO::PARAM_INT); 
+        $stmt->bindValue(":username", $user->username, PDO::PARAM_STR); 
+        $stmt->bindValue(":email", $user->email, PDO::PARAM_STR); 
+        $stmt->bindValue(":password", $user->password, PDO::PARAM_STR); 
+        $stmt->bindValue(":image_tokens", $user->imageTokens, PDO::PARAM_INT); 
+        $stmt->bindValue(":role", $user->role->value, PDO::PARAM_STR);
 
         $stmt->execute();
 
@@ -120,11 +120,11 @@ class UsersRepository extends Repository implements IUsersRepository
             VALUES (:username, :email, :password, :image_tokens, :role);"
         );
 
-        $stmt->bindParam(':username', $user->username);
-        $stmt->bindParam(':email', $user->email);
-        $stmt->bindParam(':password', $user->password);
-        $stmt->bindParam(':image_tokens', $user->imageTokens);
-        $stmt->bindValue(':role', $user->role->value, PDO::PARAM_STR);
+        $stmt->bindValue(":username", $user->username, PDO::PARAM_STR); 
+        $stmt->bindValue(":email", $user->email, PDO::PARAM_STR); 
+        $stmt->bindValue(":password", $user->password, PDO::PARAM_STR); 
+        $stmt->bindValue(":image_tokens", $user->imageTokens, PDO::PARAM_INT); 
+        $stmt->bindValue(":role", $user->role->value, PDO::PARAM_STR);
 
         $stmt->execute();
     }
@@ -137,7 +137,7 @@ class UsersRepository extends Repository implements IUsersRepository
     public function deleteUserByUserId(int $userId)
     {
         $stmt = $this->connection->prepare("DELETE FROM Users WHERE user_id = :userId;");
-        $stmt->bindParam(':userId', $userId);
+        $stmt->bindValue(":userId", $userId, PDO::PARAM_INT); 
         $stmt->execute();
 
         if($stmt->rowCount() == 0)

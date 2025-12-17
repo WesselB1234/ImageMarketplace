@@ -32,7 +32,8 @@ class AuthenticationController extends Controller
             if ($user == null){
                 throw new Exception("Password or username is not correct.");
             }
-
+            
+            $user->password = null;
             $_SESSION["user"] = $user;
 
             header("Location: /");
@@ -73,8 +74,9 @@ class AuthenticationController extends Controller
     public function logout()
     {
         $this->loggedInAuthorization();
-        unset($_SESSION["user"]);
-
+        session_unset(); 
+        session_destroy();
+        
         $this->displayView("Authentication/login.php", []);
     }
 }

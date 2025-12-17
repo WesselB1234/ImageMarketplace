@@ -11,6 +11,7 @@
             <div class="card-body">
                 <h3 class="card-title text-center mb-4">Login</h3>
                 <?php include $partialsDir."/errorAlert.php";?>
+                <?php include $partialsDir."/successAlert.php";?>
                 <form action="/login" method="POST">
                     <div class="mb-3">
                         <label for="username" class="form-label">Username</label>

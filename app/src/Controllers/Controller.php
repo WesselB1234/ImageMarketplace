@@ -2,6 +2,8 @@
 
 namespace App\Controllers;
 
+use App\Models\Enums\UserRole;
+
 class Controller
 {
     public function displayView($dir, $viewData)
@@ -37,6 +39,9 @@ class Controller
 
     public function adminAuthorization()
     {
-        var_dump($_SESSION["user"]->role);
+        if ($_SESSION["user"]->role == UserRole::Admin){
+            setcookie("error_message", "Your account doesn't have the right role to perform this action.", time() + 5, "/");
+            header("Location: /login");
+        }
     }
 }

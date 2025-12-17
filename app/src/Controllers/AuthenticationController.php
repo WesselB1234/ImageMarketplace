@@ -6,6 +6,7 @@ use App\Controllers\Controller;
 use App\Services\UsersService;
 use App\Services\Interfaces\IUsersService;
 use App\Models\User;
+use App\Models\Enums\UserRole;
 use Exception;
 
 class AuthenticationController extends Controller 
@@ -50,7 +51,21 @@ class AuthenticationController extends Controller
 
     public function processRegister()
     {
-        echo "process register";
+        $user = User::constructUnknownUser($_POST["username"], $_POST["email"], $_POST["password"], 100, UserRole::User->value);
+        
+        try{ 
+            $this->usersService->createUser($user);
+
+            setcookie("success_message", "Successfully created a new account. Login into your new account.", time() + 5, "/");
+            header("Location: /login");
+        }
+        catch(Exception $e){
+
+            $this->displayView("Authentication/Login.php", [
+                //"viewModel" => $user, 
+                "errorMessage" => $e->getMessage()
+            ]);
+        }
     }
     
     public function logout()

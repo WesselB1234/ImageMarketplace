@@ -7,6 +7,8 @@ use App\Services\UsersService;
 use App\Services\Interfaces\IUsersService;
 use App\Models\User;
 use App\Models\Enums\UserRole;
+use App\Models\ViewModels\LoginVm;
+use App\Models\ViewModels\RegisterVm;
 use Exception;
 
 class AuthenticationController extends Controller 
@@ -38,7 +40,7 @@ class AuthenticationController extends Controller
         catch(Exception $e){
 
             $this->displayView("Authentication/Login.php", [
-                //"viewModel" => $user, 
+                "viewModel" => new LoginVm($_POST["username"], $_POST["password"]),  
                 "errorMessage" => $e->getMessage()
             ]);
         }
@@ -61,8 +63,8 @@ class AuthenticationController extends Controller
         }
         catch(Exception $e){
 
-            $this->displayView("Authentication/Login.php", [
-                //"viewModel" => $user, 
+            $this->displayView("Authentication/Register.php", [
+                "viewModel" => new RegisterVm($_POST["username"], $_POST["password"], $_POST["email"]), 
                 "errorMessage" => $e->getMessage()
             ]);
         }

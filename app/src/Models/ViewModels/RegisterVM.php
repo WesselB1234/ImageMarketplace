@@ -1,15 +1,17 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\ViewModels;
 
-class Image
+class RegisterVm
 {
-    public int $imageId;
-    public int $ownerId;
-    public string $name;
-    public string $description;
-    public int $priceInTokens;
-    public bool $isModerated;
-    public bool $isOnSale;
-    public string $imageString;
+    public string $username;
+    public string $password;
+    public string $email;
+
+    public function __construct(string $username, string $password, string $email)
+    {
+        $this->username = $username;
+        $this->password = $password;
+        $this->email = $email;
+    }
 }

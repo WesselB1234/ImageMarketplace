@@ -7,7 +7,7 @@
 
 <main class="container">
     <div class="container d-flex justify-content-center align-items-center vh-100">
-        <div class="card shadow-sm" style="width: 22rem;">
+        <div class="card shadow-sm authentication-box">
             <div class="card-body">
                 <h3 class="card-title text-center mb-4">Register</h3>
                 <?php include $partialsDir."/errorAlert.php";?>

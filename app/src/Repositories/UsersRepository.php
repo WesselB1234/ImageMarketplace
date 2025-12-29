@@ -5,7 +5,7 @@ namespace App\Repositories;
 use App\Repositories\Interfaces\IUsersRepository;
 use App\Repositories\Repository;
 use App\Models\User;
-use App\Framework\DataMapper;
+use App\Models\Helpers\DataMapper;
 use App\Models\Exceptions\NotFoundException;
 
 use PDO;

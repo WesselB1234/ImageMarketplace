@@ -1,4 +1,6 @@
 <?php
+    use App\Models\Helpers\StringFormatter;
+
     require __DIR__."../../Partials/header.php"; 
 ?> 
 
@@ -23,7 +25,7 @@
                 </li>
             </ul>
             <div class="form-inline my-2 my-lg-0">
-                <div class="text-start nav-link">Image tokens balance: <?php echo $_SESSION["user"]->imageTokens; ?></div>
+                <div class="text-start nav-link">Image tokens balance: <?php echo StringFormatter::getDottedNumberStringFromNumber($_SESSION["user"]->imageTokens); ?></div>
                 <a href="/logout" class="btn btn-danger text-light" >Logout as <?php echo $_SESSION["user"]->username; ?></a>
             </div>
         </div>

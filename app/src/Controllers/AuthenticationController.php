@@ -60,7 +60,7 @@ class AuthenticationController extends Controller
             $this->usersService->createUser($user);
 
             setcookie("success_message", "Successfully created a new account. Login into your new account.", time() + 5, "/");
-            header("Location: /login");
+            $this->processLogin();
         }
         catch(Exception $e){
 

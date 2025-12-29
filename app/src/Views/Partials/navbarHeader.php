@@ -25,8 +25,11 @@
                 </li>
             </ul>
             <div class="form-inline my-2 my-lg-0">
-                <div class="text-start nav-link">Image tokens balance: <?php echo StringFormatter::getDottedNumberStringFromNumber($_SESSION["user"]->imageTokens); ?></div>
-                <a href="/logout" class="btn btn-danger text-light" >Logout as <?php echo $_SESSION["user"]->username; ?></a>
+                <div class="nav-link">
+                    Image tokens balance: <?php echo StringFormatter::getDottedNumberStringFromNumber($_SESSION["user"]->imageTokens); ?> |
+                    Logged in as: <?php echo $_SESSION["user"]->username; ?>
+                </div>
+                <a href="/logout" class="btn btn-danger text-light">Logout</a>
             </div>
         </div>
     </nav>

@@ -1,12 +1,21 @@
 <?php 
     $title = "Portfolio";
     $enabledNavLink = "Portfolio";
+    $partialsDir = __DIR__."../../Partials";
     
-    require __DIR__."../../Partials/navbarHeader.php"; 
+    require $partialsDir."/navbarHeader.php"; 
 ?>
 
 <main class="container">
+
     <h1>Portfolio</h1>
+
+    <?php 
+        include $partialsDir."/errorAlert.php";
+        include $partialsDir."/successAlert.php"; 
+    ?>
+
+    <a class="btn btn-success" href="images/upload">Upload an image</a>
 </main>
 
-<?php require __DIR__."../../Partials/footer.php"; ?>
+<?php require $partialsDir."/footer.php"; ?>

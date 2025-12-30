@@ -23,7 +23,9 @@ class ImagesController extends Controller
 
     public function index()
     {
-
+        $images = $this->imagesService->getAllOnSaleImages();
+        
+        $this->displayView("Images/index.php", ["viewModel" => $images]);
     }
 
     public function details()

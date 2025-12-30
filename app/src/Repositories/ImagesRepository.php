@@ -35,7 +35,23 @@ class ImagesRepository extends Repository implements IImagesRepository
 
     function getAllOnSaleImages(): array
     {
-        return [];
+        $images = [];
+
+        $stmt = $this->connection->prepare(
+            "SELECT id, owner_id, name, description, price, is_moderated, is_onsale, time_created, alt_text 
+            FROM Images
+            WHERE is_onsale = 1;"
+        );
+
+        $stmt->execute();
+
+        $assocImages = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        foreach($assocImages as $assocImage){
+            array_push($images, DataMapper::mapAssocImageToImage($assocImage));
+        }
+
+        return $images;
     }
 
     public function getImageByImageId(int $imageId): ?Image

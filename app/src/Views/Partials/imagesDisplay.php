@@ -2,7 +2,7 @@
     <?php foreach ($viewModel as $image) { ?>
         <div class="col mb-4">
             <div class="card h-100 image-card">
-                <img class="card-img-top" style="height: 300px;"src="/assets/img/UserUploadedImages/<?php echo $image->imageId ?>.png" alt="<?php echo $image->altText ?>">
+                <img class="card-img-top card-image-top" src="/assets/img/UserUploadedImages/<?php echo $image->imageId ?>.png" alt="<?php echo $image->altText ?>">
                 <div class="card-body d-flex flex-column">
                     <h5 class="card-title"><?php echo $image->name; ?></h5>
 
@@ -12,7 +12,7 @@
                         <p class="text-danger">This image is not on sale</p>
                     <?php } ?>
 
-                    <a href="#" class="btn btn-primary w-100 mt-auto">View details and actions</a>
+                    <a href="/images/details/<?php echo $image->imageId; ?>" class="btn btn-primary w-100 mt-auto">View details and actions</a>
                 </div>
             </div>
         </div>

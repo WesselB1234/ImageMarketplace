@@ -25,7 +25,7 @@ class ImagesService implements IImagesService
 
     public function getAllOnSaleImages(): array
     {
-        return [];
+        return $this->imagesRepository->getAllOnSaleImages();
     }
 
     public function getImageByImageId(int $imageId): ?Image

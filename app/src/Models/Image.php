@@ -7,7 +7,8 @@ use DateTime;
 class Image
 {
     public int $imageId;
-    public int $ownerId;
+    public ?int $ownerId;
+    public ?int $creatorId;
     public string $name;
     public string $description;
     public ?int $price;
@@ -21,11 +22,12 @@ class Image
         
     }
 
-    public static function constructUnknownImage(int $ownerId, string $name, string $description, string $altText): Image
+    public static function constructUnknownImage(?int $ownerId, ?int $creatorId, string $name, string $description, string $altText): Image
     {
         $image = new self();
 
         $image->ownerId = $ownerId;
+        $image->creatorId = $creatorId;
         $image->name = $name;
         $image->description = $description;
         $image->altText = $altText;
@@ -36,12 +38,13 @@ class Image
         return $image;
     }
 
-    public static function constructFullyKnownImage(int $imageId, int $ownerId, string $name, string $description, ?int $price, bool $isModerated, bool $isOnSale, DateTime $timeCreated, string $altText): Image
+    public static function constructFullyKnownImage(int $imageId, ?int $ownerId, ?int $creatorId, string $name, string $description, ?int $price, bool $isModerated, bool $isOnSale, DateTime $timeCreated, string $altText): Image
     {
         $image = new self();
 
         $image->imageId = $imageId; 
         $image->ownerId = $ownerId; 
+        $image->creatorId = $creatorId;
         $image->name = $name; 
         $image->description = $description; 
         $image->price = $price; 

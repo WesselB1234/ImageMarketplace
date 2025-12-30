@@ -36,6 +36,7 @@ class DataMapper{
         return Image::constructFullyKnownImage(
             $assocImage["id"], 
             $assocImage["owner_id"], 
+            $assocImage["creator_id"], 
             $assocImage["name"], 
             $assocImage["description"], 
             $assocImage["price"],

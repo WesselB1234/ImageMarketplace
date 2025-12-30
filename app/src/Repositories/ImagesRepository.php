@@ -16,7 +16,7 @@ class ImagesRepository extends Repository implements IImagesRepository
         $images = [];
 
         $stmt = $this->connection->prepare(
-            "SELECT id, owner_id, name, description, price, is_moderated, is_onsale, time_created, alt_text 
+            "SELECT id, owner_id, name, creator_id, description, price, is_moderated, is_onsale, time_created, alt_text 
             FROM Images
             WHERE owner_id = :userId;"
         );
@@ -38,7 +38,7 @@ class ImagesRepository extends Repository implements IImagesRepository
         $images = [];
 
         $stmt = $this->connection->prepare(
-            "SELECT id, owner_id, name, description, price, is_moderated, is_onsale, time_created, alt_text 
+            "SELECT id, owner_id, creator_id, name, description, price, is_moderated, is_onsale, time_created, alt_text 
             FROM Images
             WHERE is_onsale = 1;"
         );
@@ -57,7 +57,7 @@ class ImagesRepository extends Repository implements IImagesRepository
     public function getImageByImageId(int $imageId): ?Image
     {
          $stmt = $this->connection->prepare(
-            "SELECT id, owner_id, name, description, price, is_moderated, is_onsale, time_created, alt_text 
+            "SELECT id, owner_id, creator_id, name, description, price, is_moderated, is_onsale, time_created, alt_text 
             FROM Images
             WHERE id = :imageId;"
         );
@@ -82,11 +82,12 @@ class ImagesRepository extends Repository implements IImagesRepository
     public function createImage(Image $image): int
     {
         $stmt = $this->connection->prepare(
-            "INSERT INTO Images(owner_id, name, description, price, is_moderated, is_onsale, alt_text) 
-            VALUES (:ownerId, :name, :description, :price, :isModerated, :isOnsale, :altText);"
+            "INSERT INTO Images(owner_id, creator_id, name, description, price, is_moderated, is_onsale, alt_text) 
+            VALUES (:ownerId, :creatorId, :name, :description, :price, :isModerated, :isOnsale, :altText);"
         );
 
         $stmt->bindValue(":ownerId", $image->ownerId, PDO::PARAM_INT); 
+        $stmt->bindValue(":creatorId", $image->creatorId, PDO::PARAM_INT); 
         $stmt->bindValue(":name", $image->name, PDO::PARAM_STR); 
         $stmt->bindValue(":description", $image->description, PDO::PARAM_STR); 
         $stmt->bindValue(":price", null, PDO::PARAM_NULL); 

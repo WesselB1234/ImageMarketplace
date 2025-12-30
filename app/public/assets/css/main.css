@@ -16,4 +16,5 @@ footer {
 
 .card-image-top{
     height: 300px;
+    object-fit: contain;
 }

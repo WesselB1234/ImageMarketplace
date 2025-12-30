@@ -5,20 +5,25 @@ namespace App\Controllers;
 use App\Controllers\Controller;
 use App\Services\Interfaces\IImagesService;
 use App\Services\ImagesService;
+use App\Services\Interfaces\IUsersService;
+use App\Services\UsersService;
 use App\Models\Image;
 use App\Models\User;
+use App\Models\ViewModels\ImageDetailsVM;
 use Exception;
 use App\Models\Exceptions\NotFoundException;
 
 class ImagesController extends Controller
 {
     private IImagesService $imagesService;
+    private IUsersService $usersService;
 
     public function __construct()
     {
         $this->loggedInAuthorization();
 
         $this->imagesService = new ImagesService();
+        $this->usersService = new UsersService();
     }
 
     public function index()
@@ -30,20 +35,30 @@ class ImagesController extends Controller
 
     public function details(array $vars)
     {
-        $imageId = $vars["id"];
-
         try{
-            if (!isset($imageId)){
+            if (empty($vars["id"])){
                 throw new Exception("Image ID cannot be empty.");
             }
 
+            $imageId = $vars["id"];
             $image = $this->imagesService->getImageByImageId($imageId);
 
-            if ($image == null){
+            if ($image === null){
                 throw new Exception("Image with ID $imageId does not exist.");
             }
+            
+            $ownerUser = null;
+            $creatorUser = null;
 
-            $this->displayView("Images/details.php", ["viewModel" => $image]);
+            if ($image->ownerId !== null){
+                $ownerUser = $this->usersService->getUserByUserId($image->ownerId);
+            }
+
+            if ($image->creatorId !== null){
+                $creatorUser = $this->usersService->getUserByUserId($image->creatorId);
+            }
+           
+            $this->displayView("Images/details.php", ["viewModel" => new ImageDetailsVM($image, $ownerUser, $creatorUser)]);
         }
         catch(Exception $e){
             setcookie("error_message", $e->getMessage(), time() + 5, "/");
@@ -78,7 +93,7 @@ class ImagesController extends Controller
 
     public function processUpload()
     {
-        $image = Image::constructUnknownImage($_SESSION["user"]->userId, $_POST["name"], $_POST["description"], $_POST["alt_text"]);
+        $image = Image::constructUnknownImage($_SESSION["user"]->userId, $_SESSION["user"]->userId, $_POST["name"], $_POST["description"], $_POST["alt_text"]);
         
         try{
             $imageId = $this->imagesService->createImage($image);

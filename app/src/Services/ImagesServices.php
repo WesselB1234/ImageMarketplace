@@ -3,9 +3,22 @@
 namespace App\Services;
 
 use App\Services\Interfaces\IImagesService;
+use App\Repositories\Interfaces\IImagesRepository;
+use App\Repositories\ImagesRepository;
+use App\Models\Image;
+use App\Models\User;
+use Exception;
 
 class ImagesService implements IImagesService
 {
+    private IImagesRepository $imagesRepository; 
+    private const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png"];
+
+    public function __construct()
+    {
+        $this->imagesRepository = new ImagesRepository();
+    }
+
     public function getAllImages(): array
     {
         return [];
@@ -19,6 +32,39 @@ class ImagesService implements IImagesService
     public function getImageByImageId(int $imageId): ?Image
     {
         return null;
+    }
+
+    public function uploadImageFile(int $imageId)
+    {
+        if (!isset($_FILES["image"]) || $_FILES["image"]["error"] != UPLOAD_ERR_OK) {
+            throw new Exception("Upload failed.");
+        }
+
+        var_dump($this->ALLOWED_IMAGE_TYPES);
+
+        $allowedTypes = ["image/jpeg", "image/png"];
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $mimeType = finfo_file($finfo, $_FILES["image"]["tmp_name"]);
+
+        if (!in_array($mimeType, $allowedTypes)) {
+            throw new Exception("Invalid image type.");
+        }
+
+        $uploadDir = __DIR__."../../assets/img/UserUploadedImages";
+
+        $extension = pathinfo($_FILES["image"]["name"], PATHINFO_EXTENSION);
+        $filename = strval($imageId).".".$extension;
+
+        $destination = "assets/img/UserUploadedImages/$filename";
+
+        if (!move_uploaded_file($_FILES["image"]["tmp_name"], $destination)) {
+            throw new Exception("Failed to save image.");
+        }
+    }
+
+    public function addImage(Image $image): int
+    {
+        return $this->imagesRepository->addImage($image);
     }
 
     public function buyImage(int $imageId, User $user)

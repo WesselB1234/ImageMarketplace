@@ -27,6 +27,11 @@ class ImagesRepository extends Repository implements IImagesRepository
         return null;
     }
 
+    public function addImage(Image $image): int
+    {
+        return 1;
+    }
+
     public function updateImageOwnershipByImageId(int $imageId, int $userId)
     {
         return null;

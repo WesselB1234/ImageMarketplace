@@ -7,7 +7,6 @@ use App\Repositories\Interfaces\IUsersRepository;
 use App\Repositories\UsersRepository;
 use App\Models\User;
 use Exception;
-use App\Models\Exceptions;
 
 class UsersService implements IUsersService
 {

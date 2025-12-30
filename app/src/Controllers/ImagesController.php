@@ -3,12 +3,22 @@
 namespace App\Controllers;
 
 use App\Controllers\Controller;
+use App\Services\Interfaces\IImagesService;
+use App\Services\ImagesService;
+use App\Models\Image;
+use App\Models\User;
+use Exception;
+use App\Models\Exceptions\NotFoundException;
 
 class ImagesController extends Controller
 {
+    private IImagesService $imagesService;
+
     public function __construct()
     {
         $this->loggedInAuthorization();
+
+        $this->imagesService = new ImagesService();
     }
 
     public function index()
@@ -48,34 +58,7 @@ class ImagesController extends Controller
 
     public function processUpload()
     {
-        // 1. Check file exists
-        if (!isset($_FILES['image']) || $_FILES['image']['error'] !== UPLOAD_ERR_OK) {
-            die('Upload failed.');
-        }
-
-        // 2. Validate image
-        $allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
-        $finfo = finfo_open(FILEINFO_MIME_TYPE);
-        $mimeType = finfo_file($finfo, $_FILES['image']['tmp_name']);
-
-        if (!in_array($mimeType, $allowedTypes)) {
-            die('Invalid image type.');
-        }
-
-        $uploadDir = __DIR__."../../assets/img/UserUploadedImages";
-
-        // 4. Generate safe filename
-        $extension = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
-        $filename = uniqid('img_', true) . '.' . $extension;
-
-        // 5. Move uploaded file
-        $destination = "assets/img/UserUploadedImages/$filename";
-
-        var_dump($_FILES);
-
-        if (!move_uploaded_file($_FILES['image']['tmp_name'], $destination)) {
-            die('Failed to save image.');
-        }
+        $this->imagesService->uploadImageFile("test");
 
         echo "Image uploaded successfully!";
     }

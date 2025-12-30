@@ -13,5 +13,5 @@ interface IImagesRepository
     public function updateImage(Image $image);
     public function updateImageOwnershipByImageId(int $imageId, int $userId);
     public function updateImageModerationByImageId(int $imageId, bool $isModerated);
-    public function deleteImageByImageId(int $id);
+    public function deleteImageByImageId(int $imageId);
 }

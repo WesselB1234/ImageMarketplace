@@ -68,7 +68,7 @@ class ImagesController extends Controller
                 echo "Image uploaded successfully!";
             }
             catch(Exception $e){
-                // remove
+                $this->imagesService->deleteImageByImageId($imageId);
                 throw new Exception($e->getMessage());
             }
         }

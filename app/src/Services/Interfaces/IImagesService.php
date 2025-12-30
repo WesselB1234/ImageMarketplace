@@ -15,5 +15,5 @@ interface IImagesService
     public function buyImage(int $imageId, User $user);
     public function sellImage(int $imageId, User $user);
     public function updateImageModerationByImageId(int $imageId, bool $isModerated);
-    public function deleteImageByImageId(int $id);
+    public function deleteImageByImageId(int $imageId);
 }

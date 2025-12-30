@@ -32,7 +32,6 @@ class ImagesRepository extends Repository implements IImagesRepository
 
     public function createImage(Image $image): int
     {
-        
         $stmt = $this->connection->prepare(
             "INSERT INTO Images(owner_id, name, description, price, is_moderated, is_onsale, alt_text) 
             VALUES (:ownerId, :name, :description, :price, :isModerated, :isOnsale, :altText);"
@@ -61,8 +60,15 @@ class ImagesRepository extends Repository implements IImagesRepository
         return null;
     }
 
-    public function deleteImageByImageId(int $id)
+    public function deleteImageByImageId(int $imageId)
     {
-        return null;
+        $stmt = $this->connection->prepare("DELETE FROM Images WHERE id = :imageId");
+        $stmt->bindValue(":imageId", $imageId, PDO::PARAM_INT); 
+        $stmt->execute();
+
+        if($stmt->rowCount() == 0)
+        {
+            throw new NotFoundException("User with id ".$userId." does not exist.");
+        }
     }
 }

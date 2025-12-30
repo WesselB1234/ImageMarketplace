@@ -76,8 +76,8 @@ class ImagesService implements IImagesService
         return null;
     }
 
-    public function deleteImageByImageId(int $id)
+    public function deleteImageByImageId(int $imageId)
     {
-        return null;
+        return $this->imagesRepository->deleteImageByImageId($imageId);
     }
 }

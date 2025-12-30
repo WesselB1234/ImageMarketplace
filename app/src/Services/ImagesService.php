@@ -30,7 +30,7 @@ class ImagesService implements IImagesService
 
     public function getImageByImageId(int $imageId): ?Image
     {
-        return null;
+        return $this->imagesRepository->getImageByImageId($imageId);
     }
 
     public function uploadImageFile(int $imageId)

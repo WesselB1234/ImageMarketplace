@@ -56,7 +56,22 @@ class ImagesRepository extends Repository implements IImagesRepository
 
     public function getImageByImageId(int $imageId): ?Image
     {
-         
+         $stmt = $this->connection->prepare(
+            "SELECT id, owner_id, name, description, price, is_moderated, is_onsale, time_created, alt_text 
+            FROM Images
+            WHERE id = :imageId;"
+        );
+
+        $stmt->bindValue(":imageId", $imageId, PDO::PARAM_INT); 
+        $stmt->execute();
+
+        $assocImage = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if($assocImage != null){
+            return DataMapper::mapAssocImageToImage($assocImage);
+        }
+
+        return null;
     }
 
     public function updateImage(Image $image)

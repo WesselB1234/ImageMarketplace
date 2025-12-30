@@ -28,9 +28,27 @@ class ImagesController extends Controller
         $this->displayView("Images/index.php", ["viewModel" => $images]);
     }
 
-    public function details()
+    public function details(array $vars)
     {
+        $imageId = $vars["id"];
 
+        try{
+            if (!isset($imageId)){
+                throw new Exception("Image ID cannot be empty.");
+            }
+
+            $image = $this->imagesService->getImageByImageId($imageId);
+
+            if ($image == null){
+                throw new Exception("Image with ID $imageId does not exist.");
+            }
+
+            $this->displayView("Images/details.php", ["viewModel" => $image]);
+        }
+        catch(Exception $e){
+            setcookie("error_message", $e->getMessage(), time() + 5, "/");
+            header("Location: /portfolio");
+        }
     }
 
     public function buyIndex()

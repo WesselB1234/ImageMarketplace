@@ -1,3 +1,7 @@
+<?php
+    use App\Models\Helpers\StringFormatter;
+?>
+
 <div class="mt-4 row row-cols-xs-1 row-cols-sm-2 row-cols-md-4">
     <?php foreach ($viewModel as $image) { ?>
         <div class="col mb-4">
@@ -7,7 +11,7 @@
                     <h5 class="card-title"><?php echo htmlspecialchars($image->name, ENT_QUOTES, 'UTF-8');?></h5>
                     <p>
                         <?php if ($image->isOnSale && $image->price !== null) { ?> 
-                            <span class="font-weight-bold">Price:</span> <?php echo $image->price ?> image tokens
+                            <span class="font-weight-bold">Price:</span> <?php echo StringFormatter::getDottedNumberStringFromNumber($image->price); ?> image tokens
                         <?php } else{ ?>
                             <span class="text-danger">This image is not for sale</span>
                         <?php } ?>

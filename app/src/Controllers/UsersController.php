@@ -58,7 +58,7 @@ class UsersController extends Controller
         try{
             $user = $this->usersService->getUserByUserId($userId);
 
-            if(!isset($user)){
+            if($user === null){
                 throw new NotFoundException("User with id ".$userId." does not exist.");
             }
 
@@ -79,7 +79,7 @@ class UsersController extends Controller
         try{
             $this->usersService->updateUser($user);
 
-            if ($vars["id"] == $_SESSION["user"]->userId)
+            if ($vars["id"] === $_SESSION["user"]->userId)
             {
                 $user->userId = $vars["id"];
                 $user->password = null;
@@ -104,7 +104,7 @@ class UsersController extends Controller
     public function delete(array $vars)
     {
         try{
-            if ($vars["id"] == $_SESSION["user"]->userId){
+            if ($vars["id"] === $_SESSION["user"]->userId){
                 throw new Exception("You cannot delete yourself.");
             }
 

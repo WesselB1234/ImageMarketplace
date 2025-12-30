@@ -1,4 +1,6 @@
 <?php 
+    use App\Models\Helpers\StringFormatter;
+
     $title = "Users";
     $enabledNavLink = "Users";
     $partialsDir = __DIR__."../../../Partials";
@@ -32,7 +34,7 @@
                     <th scope="row"><?php echo $user->userId; ?></th>
                     <td><?php echo htmlspecialchars($user->username, ENT_QUOTES, 'UTF-8'); ?></td>
                     <td><?php echo htmlspecialchars($user->email, ENT_QUOTES, 'UTF-8'); ?></td>
-                    <td><?php echo $user->imageTokens; ?></td>
+                    <td><?php echo StringFormatter::getDottedNumberStringFromNumber($user->imageTokens); ?></td>
                     <td><?php echo $user->role->value; ?></td>
                     <td>
                         <a href="users/update/<?php echo $user->userId ?>" class="btn btn-primary">Update</a> |

@@ -143,7 +143,7 @@ class UsersRepository extends Repository implements IUsersRepository
         $stmt->bindValue(":userId", $userId, PDO::PARAM_INT); 
         $stmt->execute();
 
-        if($stmt->rowCount() == 0)
+        if($stmt->rowCount() === 0)
         {
             throw new NotFoundException("User with id ".$userId." does not exist.");
         }

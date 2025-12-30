@@ -67,7 +67,7 @@ class ImagesRepository extends Repository implements IImagesRepository
 
         $assocImage = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if($assocImage != null){
+        if($assocImage !== null){
             return DataMapper::mapAssocImageToImage($assocImage);
         }
 
@@ -116,7 +116,7 @@ class ImagesRepository extends Repository implements IImagesRepository
         $stmt->bindValue(":imageId", $imageId, PDO::PARAM_INT); 
         $stmt->execute();
 
-        if($stmt->rowCount() == 0)
+        if($stmt->rowCount() === 0)
         {
             throw new NotFoundException("User with id ".$userId." does not exist.");
         }

@@ -1,4 +1,6 @@
 <?php 
+    use App\Models\Helpers\StringFormatter;
+
     $title = "Image details";
     
     require __DIR__."../../Partials/navbarHeader.php"; 
@@ -29,11 +31,11 @@
                             <span class="font-weight-bold">Created by:</span> <?php echo ($viewModel->creatorUser !== null ? $viewModel->creatorUser->username : "Unknown") ?> <?php echo ($viewModel->image->creatorId !== null ? "(User ID: ".$viewModel->image->creatorId.")" : ""); ?>
                         </li>
                         <li class="list-group-item">
-                            <span class="font-weight-bold">Uploaded:</span> <?php echo $viewModel->image->timeCreated->format('Y-m-d H:i:s'); ?>
+                            <span class="font-weight-bold">Time created:</span> <?php echo $viewModel->image->timeCreated->format('Y-m-d H:i:s'); ?>
                         </li>
                         <li class="list-group-item">
                             <?php if ($viewModel->image->isOnSale && $viewModel->image->price !== null) { ?> 
-                                <span class="font-weight-bold">Price:</span> <?php echo $viewModel->image->price ?> image tokens
+                                <span class="font-weight-bold">Price:</span> <?php echo StringFormatter::getDottedNumberStringFromNumber($viewModel->image->price); ?> image tokens
                             <?php } else{ ?>
                                 <span class="text-danger">This image is not for sale</span>
                             <?php } ?>

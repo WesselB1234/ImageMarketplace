@@ -62,10 +62,12 @@ class ImagesController extends Controller
         
         try{
             $imageId = $this->imagesService->createImage($image);
-            
+        
             try{
                 $this->imagesService->uploadImageFile($imageId);
-                echo "Image uploaded successfully!";
+
+                setcookie("success_message", "Image successfully uploaded!", time() + 5, "/");
+                header("Location: /portfolio");
             }
             catch(Exception $e){
                 $this->imagesService->deleteImageByImageId($imageId);
@@ -73,7 +75,10 @@ class ImagesController extends Controller
             }
         }
         catch(Exception $e){
-            echo $e->getMessage();
+            $this->displayView("Images/upload.php", [
+                "viewModel" => $image, 
+                "errorMessage" => $e->getMessage()
+            ]);
         }                
     }
 

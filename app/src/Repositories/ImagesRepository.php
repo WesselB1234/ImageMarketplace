@@ -5,14 +5,32 @@ namespace App\Repositories;
 use App\Repositories\Interfaces\IImagesRepository;
 use App\Repositories\Repository;
 use App\Models\Image;
+use App\Models\Helpers\DataMapper;
 
 use PDO;
 
 class ImagesRepository extends Repository implements IImagesRepository
 {
-    public function getAllImages(): array
+    public function getAllImagesFromUserId(int $userId): array
     {
-        return [];
+        $images = [];
+
+        $stmt = $this->connection->prepare(
+            "SELECT id, owner_id, name, description, price, is_moderated, is_onsale, date_created, alt_text 
+            FROM Images
+            WHERE owner_id = :userId;"
+        );
+
+        $stmt->bindValue(":userId", $userId, PDO::PARAM_INT); 
+        $stmt->execute();
+
+        $assocImages = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        foreach($assocImages as $assocImage){
+            array_push($images, DataMapper::mapAssocImageToImage($assocImage));
+        }
+
+        return $images;
     }
 
     function getAllOnSaleImages(): array
@@ -22,7 +40,7 @@ class ImagesRepository extends Repository implements IImagesRepository
 
     public function getImageByImageId(int $imageId): ?Image
     {
-        return null;
+         
     }
 
     public function updateImage(Image $image)

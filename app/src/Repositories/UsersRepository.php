@@ -14,13 +14,14 @@ class UsersRepository extends Repository implements IUsersRepository
 {
     public function getAllUsers(): array
     {
-        $sql = "SELECT user_id, username, email, image_tokens, role FROM Users;";
-        $result = $this->connection->query($sql);
-        $assocUsers = $result->fetchAll(PDO::FETCH_ASSOC);
         $users = [];
 
-        foreach($assocUsers as $user){
-            array_push($users, DataMapper::mapAssocUserToUser($user));
+        $stmt = $this->connection->prepare("SELECT user_id, username, email, image_tokens, role FROM Users;");
+        $stmt->execute();
+        $assocUsers = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        foreach($assocUsers as $assocUser){
+            array_push($users, DataMapper::mapAssocUserToUser($assocUser));
         }
 
         return $users;

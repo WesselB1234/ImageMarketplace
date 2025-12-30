@@ -8,9 +8,10 @@ class Image
     public int $ownerId;
     public string $name;
     public string $description;
-    public int $priceInTokens;
+    public ?int $price;
     public bool $isModerated;
     public bool $isOnSale;
+    //public DateTime $timeCreated;
     public string $altText;
 
     public function __construct()
@@ -29,6 +30,22 @@ class Image
         
         $image->isModerated = false;
         $image->isOnSale = false;
+        
+        return $image;
+    }
+
+    public static function constructFullyKnownImage(int $imageId, int $ownerId, string $name, string $description, ?int $price, bool $isModerated, bool $isOnSale, string $altText): Image//DateTime $timeCreated, string $altText): Image
+    {
+        $image = new self();
+
+        $image->imageId = $imageId; 
+        $image->ownerId = $ownerId; 
+        $image->name = $name; 
+        $image->description = $description; 
+        $image->price = $price; 
+        $image->isModerated = $isModerated; 
+        $image->isOnSale = $isOnSale; 
+        $image->altText = $altText;
         
         return $image;
     }

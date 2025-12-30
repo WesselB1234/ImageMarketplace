@@ -12,16 +12,15 @@ use Exception;
 class ImagesService implements IImagesService
 {
     private IImagesRepository $imagesRepository; 
-    private const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png"];
 
     public function __construct()
     {
         $this->imagesRepository = new ImagesRepository();
     }
 
-    public function getAllImages(): array
+    public function getAllImagesFromUserId(int $userId): array
     {
-        return [];
+        return $this->imagesRepository->getAllImagesFromUserId($userId);
     }
 
     public function getAllOnSaleImages(): array
@@ -43,8 +42,8 @@ class ImagesService implements IImagesService
         $finfo = finfo_open(FILEINFO_MIME_TYPE);
         $mimeType = finfo_file($finfo, $_FILES["image"]["tmp_name"]);
 
-        if (!in_array($mimeType, $this::ALLOWED_IMAGE_TYPES)) {
-            throw new Exception("Invalid image type.");
+        if ($mimeType != "image/png") {
+            throw new Exception("You cannot use any other image extension other than .png");
         }
 
         $extension = pathinfo($_FILES["image"]["name"], PATHINFO_EXTENSION);

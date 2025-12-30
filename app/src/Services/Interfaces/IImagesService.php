@@ -7,7 +7,7 @@ use App\Models\Image;
 
 interface IImagesService
 {
-    public function getAllImages(): array;
+    public function getAllImagesFromUserId(int $userId): array;
     public function getAllOnSaleImages(): array;
     public function getImageByImageId(int $imageId): ?Image;
     public function createImage(Image $image): int;

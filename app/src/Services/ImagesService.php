@@ -40,21 +40,15 @@ class ImagesService implements IImagesService
             throw new Exception("Upload failed.");
         }
 
-        var_dump($this->ALLOWED_IMAGE_TYPES);
-
-        $allowedTypes = ["image/jpeg", "image/png"];
         $finfo = finfo_open(FILEINFO_MIME_TYPE);
         $mimeType = finfo_file($finfo, $_FILES["image"]["tmp_name"]);
 
-        if (!in_array($mimeType, $allowedTypes)) {
+        if (!in_array($mimeType, $this::ALLOWED_IMAGE_TYPES)) {
             throw new Exception("Invalid image type.");
         }
 
-        $uploadDir = __DIR__."../../assets/img/UserUploadedImages";
-
         $extension = pathinfo($_FILES["image"]["name"], PATHINFO_EXTENSION);
         $filename = strval($imageId).".".$extension;
-
         $destination = "assets/img/UserUploadedImages/$filename";
 
         if (!move_uploaded_file($_FILES["image"]["tmp_name"], $destination)) {

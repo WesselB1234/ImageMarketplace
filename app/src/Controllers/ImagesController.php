@@ -58,7 +58,7 @@ class ImagesController extends Controller
 
     public function processUpload()
     {
-        $this->imagesService->uploadImageFile("test");
+        $this->imagesService->uploadImageFile(1);
 
         echo "Image uploaded successfully!";
     }

@@ -16,7 +16,7 @@ class ImagesRepository extends Repository implements IImagesRepository
         $images = [];
 
         $stmt = $this->connection->prepare(
-            "SELECT id, owner_id, name, description, price, is_moderated, is_onsale, date_created, alt_text 
+            "SELECT id, owner_id, name, description, price, is_moderated, is_onsale, time_created, alt_text 
             FROM Images
             WHERE owner_id = :userId;"
         );

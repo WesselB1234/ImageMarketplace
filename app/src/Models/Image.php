@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use DateTime;
+
 class Image
 {
     public int $imageId;
@@ -11,7 +13,7 @@ class Image
     public ?int $price;
     public bool $isModerated;
     public bool $isOnSale;
-    //public DateTime $timeCreated;
+    public DateTime $timeCreated;
     public string $altText;
 
     public function __construct()
@@ -34,7 +36,7 @@ class Image
         return $image;
     }
 
-    public static function constructFullyKnownImage(int $imageId, int $ownerId, string $name, string $description, ?int $price, bool $isModerated, bool $isOnSale, string $altText): Image//DateTime $timeCreated, string $altText): Image
+    public static function constructFullyKnownImage(int $imageId, int $ownerId, string $name, string $description, ?int $price, bool $isModerated, bool $isOnSale, DateTime $timeCreated, string $altText): Image
     {
         $image = new self();
 
@@ -44,7 +46,8 @@ class Image
         $image->description = $description; 
         $image->price = $price; 
         $image->isModerated = $isModerated; 
-        $image->isOnSale = $isOnSale; 
+        $image->isOnSale = $isOnSale;
+        $image->timeCreated = $timeCreated; 
         $image->altText = $altText;
         
         return $image;

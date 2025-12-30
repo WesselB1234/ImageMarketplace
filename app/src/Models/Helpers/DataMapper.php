@@ -4,6 +4,7 @@ namespace App\Models\Helpers;
 
 use App\Models\User;
 use App\Models\Image;
+use DateTime;
 
 class DataMapper{
 
@@ -40,6 +41,7 @@ class DataMapper{
             $assocImage["price"],
             $assocImage["is_moderated"],
             $assocImage["is_onsale"], 
+            new DateTime($assocImage["time_created"]), 
             $assocImage["alt_text"]
         );
     }

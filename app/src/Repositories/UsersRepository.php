@@ -113,7 +113,7 @@ class UsersRepository extends Repository implements IUsersRepository
         }
     }
 
-    public function createUser(User $user)
+    public function createUser(User $user): int
     {
         $stmt = $this->connection->prepare(
             "INSERT INTO Users (username, email, password, image_tokens, role) 
@@ -127,6 +127,8 @@ class UsersRepository extends Repository implements IUsersRepository
         $stmt->bindValue(":role", $user->role->value, PDO::PARAM_STR);
 
         $stmt->execute();
+
+        return (int)$this->connection->lastInsertId();
     }
 
     public function updateTokensBalanceByUserId(int $userId, int $newTokensBalance)

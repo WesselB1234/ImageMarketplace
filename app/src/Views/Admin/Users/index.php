@@ -19,7 +19,7 @@
 
     <table class="table mt-4">
         <thead class="table-dark">
-            <th scope="col">#</th>
+            <th scope="col">User ID</th>
             <th scope="col">Username</th>
             <th scope="col">Email</th>
             <th scope="col">Image tokens</th>

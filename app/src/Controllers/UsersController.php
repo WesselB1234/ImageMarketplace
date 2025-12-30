@@ -38,13 +38,12 @@ class UsersController extends Controller
         $user = User::constructUnknownUser($_POST["username"], $_POST["email"], $_POST["password"], $_POST["image_tokens"], $_POST["role"]);
         
         try{ 
-            $this->usersService->createUser($user);
+            $userId = $this->usersService->createUser($user);
 
-            setcookie("success_message", "Successfully created a new user.", time() + 5, "/");
+            setcookie("success_message", "Successfully created a new user with User ID $userId.", time() + 5, "/");
             header("Location: /users");
         }
         catch(Exception $e){
-
             $this->displayView("Admin/Users/create.php", [
                 "viewModel" => $user, 
                 "errorMessage" => $e->getMessage()
@@ -59,8 +58,7 @@ class UsersController extends Controller
         try{
             $user = $this->usersService->getUserByUserId($userId);
 
-            if(!isset($user))
-            {
+            if(!isset($user)){
                 throw new NotFoundException("User with id ".$userId." does not exist.");
             }
 
@@ -68,8 +66,7 @@ class UsersController extends Controller
                 "viewModel" => $user
             ]);
         }
-        catch(Exception $e)
-        {
+        catch(Exception $e){
             setcookie("error_message", $e->getMessage(), time() + 5, "/");
             header("Location: /users");
         }        
@@ -92,13 +89,11 @@ class UsersController extends Controller
             setcookie("success_message", "Successfully updated user.", time() + 5, "/");
             header("Location: /users");
         } 
-        catch(NotFoundException $e)
-        {
+        catch(NotFoundException $e){
             setcookie("error_message", $e->getMessage(), time() + 5, "/");
             header("Location: /users");
         } 
-        catch(Exception $e)
-        {
+        catch(Exception $e){
             $this->displayView("Admin/Users/update.php", [
                 "viewModel" => $user,
                 "errorMessage" => $e->getMessage()
@@ -109,16 +104,14 @@ class UsersController extends Controller
     public function delete(array $vars)
     {
         try{
-            if ($vars["id"] == $_SESSION["user"]->userId)
-            {
+            if ($vars["id"] == $_SESSION["user"]->userId){
                 throw new Exception("You cannot delete yourself.");
             }
 
             $this->usersService->deleteUserByUserId($vars["id"]);
             setcookie("success_message", "Successfully deleted user.", time() + 5, "/");
         } 
-        catch(Exception $e)
-        {
+        catch(Exception $e){
             setcookie("error_message", $e->getMessage(), time() + 5, "/");
         } 
 

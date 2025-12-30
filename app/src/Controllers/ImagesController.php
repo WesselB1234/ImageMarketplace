@@ -58,9 +58,23 @@ class ImagesController extends Controller
 
     public function processUpload()
     {
-        $this->imagesService->uploadImageFile(1);
+        $image = Image::constructUnknownImage($_SESSION["user"]->userId, $_POST["name"], $_POST["description"], $_POST["alt_text"]);
+        
+        try{
+            $imageId = $this->imagesService->createImage($image);
+            echo $imageId;
+            try{
+                //$this->imagesService->uploadImageFile($imageId);
+                echo "Image uploaded successfully!";
+            }
+            catch(Exception $e){
+                // remove
+                throw new Exception($e->getMessage());
+            }
+        }
+        catch(Exception $e){
 
-        echo "Image uploaded successfully!";
+        }                
     }
 
     public function moderateImage()

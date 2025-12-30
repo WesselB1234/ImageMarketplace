@@ -69,11 +69,12 @@ class UsersService implements IUsersService
         return password_hash($rawPassword, PASSWORD_DEFAULT);   
     }
 
-    public function createUser(User $user)
+    public function createUser(User $user): int
     {
         $this->throwIfUserIsNotValid($user);
         $user->password = $this->getHashedPassword($user->password);
-        $this->usersRepository->createUser($user);
+        
+        return $this->usersRepository->createUser($user);
     }
 
     public function deleteUserByUserId(int $userId)

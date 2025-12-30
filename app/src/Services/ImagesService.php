@@ -56,9 +56,9 @@ class ImagesService implements IImagesService
         }
     }
 
-    public function addImage(Image $image): int
+    public function createImage(Image $image): int
     {
-        return $this->imagesRepository->addImage($image);
+        return $this->imagesRepository->createImage($image);
     }
 
     public function buyImage(int $imageId, User $user)

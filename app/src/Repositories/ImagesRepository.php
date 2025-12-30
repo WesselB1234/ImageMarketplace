@@ -28,8 +28,21 @@ class ImagesRepository extends Repository implements IImagesRepository
         return null;
     }
 
-    public function addImage(Image $image): int
+    public function createImage(Image $image): int
     {
+        // $stmt = $this->connection->prepare(
+        //     "INSERT INTO Users (username, email, password, image_tokens, role) 
+        //     VALUES (:username, :email, :password, :image_tokens, :role);"
+        // );
+
+        // $stmt->bindValue(":username", $user->username, PDO::PARAM_STR); 
+        // $stmt->bindValue(":email", $user->email, PDO::PARAM_STR); 
+        // $stmt->bindValue(":password", $user->password, PDO::PARAM_STR); 
+        // $stmt->bindValue(":image_tokens", $user->imageTokens, PDO::PARAM_INT); 
+        // $stmt->bindValue(":role", $user->role->value, PDO::PARAM_STR);
+
+        // $stmt->execute();
+
         return 1;
     }
 

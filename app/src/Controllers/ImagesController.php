@@ -62,9 +62,9 @@ class ImagesController extends Controller
         
         try{
             $imageId = $this->imagesService->createImage($image);
-            echo $imageId;
+            
             try{
-                //$this->imagesService->uploadImageFile($imageId);
+                $this->imagesService->uploadImageFile($imageId);
                 echo "Image uploaded successfully!";
             }
             catch(Exception $e){
@@ -73,7 +73,7 @@ class ImagesController extends Controller
             }
         }
         catch(Exception $e){
-
+            echo $e->getMessage();
         }                
     }
 

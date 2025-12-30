@@ -6,6 +6,8 @@ use App\Repositories\Interfaces\IImagesRepository;
 use App\Repositories\Repository;
 use App\Models\Image;
 
+use PDO;
+
 class ImagesRepository extends Repository implements IImagesRepository
 {
     public function getAllImages(): array
@@ -30,20 +32,23 @@ class ImagesRepository extends Repository implements IImagesRepository
 
     public function createImage(Image $image): int
     {
-        // $stmt = $this->connection->prepare(
-        //     "INSERT INTO Users (username, email, password, image_tokens, role) 
-        //     VALUES (:username, :email, :password, :image_tokens, :role);"
-        // );
+        
+        $stmt = $this->connection->prepare(
+            "INSERT INTO Images(owner_id, name, description, price, is_moderated, is_onsale, alt_text) 
+            VALUES (:ownerId, :name, :description, :price, :isModerated, :isOnsale, :altText);"
+        );
 
-        // $stmt->bindValue(":username", $user->username, PDO::PARAM_STR); 
-        // $stmt->bindValue(":email", $user->email, PDO::PARAM_STR); 
-        // $stmt->bindValue(":password", $user->password, PDO::PARAM_STR); 
-        // $stmt->bindValue(":image_tokens", $user->imageTokens, PDO::PARAM_INT); 
-        // $stmt->bindValue(":role", $user->role->value, PDO::PARAM_STR);
+        $stmt->bindValue(":ownerId", $image->ownerId, PDO::PARAM_INT); 
+        $stmt->bindValue(":name", $image->name, PDO::PARAM_STR); 
+        $stmt->bindValue(":description", $image->description, PDO::PARAM_STR); 
+        $stmt->bindValue(":price", null, PDO::PARAM_NULL); 
+        $stmt->bindValue(":isModerated", $image->isModerated, PDO::PARAM_BOOL);
+        $stmt->bindValue(":isOnsale", $image->isOnSale, PDO::PARAM_BOOL);
+        $stmt->bindValue(":altText", $image->altText, PDO::PARAM_STR);
 
-        // $stmt->execute();
+        $stmt->execute();
 
-        return 1;
+        return (int)$this->connection->lastInsertId();
     }
 
     public function updateImageOwnershipByImageId(int $imageId, int $userId)

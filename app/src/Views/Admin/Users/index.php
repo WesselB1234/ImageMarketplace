@@ -29,14 +29,14 @@
         <tbody>
             <?php foreach($viewModel as $user){ ?>
                 <tr>
-                    <th scope="row"><?php echo htmlspecialchars($user->userId, ENT_QUOTES, 'UTF-8'); ?></th>
+                    <th scope="row"><?php echo $user->userId; ?></th>
                     <td><?php echo htmlspecialchars($user->username, ENT_QUOTES, 'UTF-8'); ?></td>
                     <td><?php echo htmlspecialchars($user->email, ENT_QUOTES, 'UTF-8'); ?></td>
-                    <td><?php echo htmlspecialchars($user->imageTokens, ENT_QUOTES, 'UTF-8'); ?></td>
-                    <td><?php echo htmlspecialchars($user->role->value, ENT_QUOTES, 'UTF-8'); ?></td>
+                    <td><?php echo $user->imageTokens; ?></td>
+                    <td><?php echo $user->role->value; ?></td>
                     <td>
-                        <a href="users/update/<?php echo htmlspecialchars($user->userId, ENT_QUOTES, 'UTF-8'); ?>" class="btn btn-primary">Update</a> |
-                        <a href="users/delete/<?php echo htmlspecialchars($user->userId, ENT_QUOTES, 'UTF-8'); ?>" class="btn btn-danger">Delete</a>
+                        <a href="users/update/<?php echo $user->userId ?>" class="btn btn-primary">Update</a> |
+                        <a href="users/delete/<?php echo $user->userId ?>" class="btn btn-danger">Delete</a>
                     </td>
                 </tr>
             <?php }?>

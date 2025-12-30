@@ -35,14 +35,14 @@ class ImagesService implements IImagesService
 
     public function uploadImageFile(int $imageId)
     {
-        if (!isset($_FILES["image"]) || $_FILES["image"]["error"] != UPLOAD_ERR_OK) {
+        if (!isset($_FILES["image"]) || $_FILES["image"]["error"] !== UPLOAD_ERR_OK) {
             throw new Exception("Upload failed.");
         }
 
         $finfo = finfo_open(FILEINFO_MIME_TYPE);
         $mimeType = finfo_file($finfo, $_FILES["image"]["tmp_name"]);
 
-        if ($mimeType != "image/png") {
+        if ($mimeType !== "image/png") {
             throw new Exception("You cannot use any other image extension other than .png");
         }
 

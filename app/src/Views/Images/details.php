@@ -8,15 +8,15 @@
     <div class="row g-4">
         <div class="col-md-6">
             <div class="card">
-                <img src="/assets/img/UserUploadedImages/<?php echo $viewModel->image->imageId; ?>.png" class="card-img-top" alt="<?php echo htmlspecialchars($viewModel->image->altText); ?>">
+                <img src="/assets/img/UserUploadedImages/<?php echo $viewModel->image->imageId; ?>.png" class="card-img-top" alt="<?php echo htmlspecialchars($viewModel->image->altText, ENT_QUOTES, "UTF-8"); ?>">
             </div>
         </div>
 
         <div class="col-md-6">
             <div class="card">
                 <div class="card-body d-flex flex-column">
-                    <h3 class="card-title mb-3"><?php echo htmlspecialchars($viewModel->image->name); ?></h3>
-                    <p class="card-text text-muted"><?php echo nl2br(htmlspecialchars($viewModel->image->description)); ?></p>
+                    <h3 class="card-title mb-3"><?php echo htmlspecialchars($viewModel->image->name, ENT_QUOTES, "UTF-8"); ?></h3>
+                    <p class="card-text text-muted"><?php echo nl2br(htmlspecialchars($viewModel->image->description, ENT_QUOTES, "UTF-8")); ?></p>
 
                     <ul class="list-group list-group-flush mb-3">
                         <li class="list-group-item">

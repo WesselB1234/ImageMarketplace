@@ -30,7 +30,7 @@ class UsersService implements IUsersService
     {
         $user = $this->usersRepository->getFullyKnownUserByUsername($username);
 
-        if (isset($user) && password_verify($password, $user->password)) {
+        if ($user !== null && password_verify($password, $user->password)) {
             return $user;
         }
 
@@ -48,7 +48,7 @@ class UsersService implements IUsersService
     {
         $duplicateUser = $this->usersRepository->getUserByUsername($user->username);
 
-        if(isset($duplicateUser) && (isset($user->userId) && $duplicateUser->userId == $user->userId) == false)
+        if($duplicateUser !== null && ($user->userId !== null && $duplicateUser->userId === $user->userId) === false)
         {
             throw new Exception("User with username ".$user->username. " already exists.");
         }

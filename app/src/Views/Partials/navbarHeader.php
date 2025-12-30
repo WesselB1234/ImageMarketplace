@@ -15,13 +15,13 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
-                    <a class="nav-link <?php echo ($enabledNavLink == "Portfolio" ? "active" : "") ?>" href="/portfolio">Portfolio</a>
+                    <a class="nav-link <?php echo ($enabledNavLink === "Portfolio" ? "active" : "") ?>" href="/portfolio">Portfolio</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link <?php echo ($enabledNavLink == "Images" ? "active" : "") ?>" href="/images">Images on sale</a>
+                    <a class="nav-link <?php echo ($enabledNavLink === "Images" ? "active" : "") ?>" href="/images">Images on sale</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link <?php echo ($enabledNavLink == "Users" ? "active" : "") ?>" href="/users">Users</a>
+                    <a class="nav-link <?php echo ($enabledNavLink === "Users" ? "active" : "") ?>" href="/users">Users</a>
                 </li>
             </ul>
             <div class="form-inline my-2 my-lg-0">

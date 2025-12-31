@@ -36,8 +36,8 @@ class ImagesController extends Controller
     public function details(array $vars)
     {
         try{
-            if (empty($vars["id"])){
-                throw new Exception("Image ID cannot be empty.");
+            if (is_int($vars["id"]) === false){
+                throw new Exception("Image ID is not valid.");
             }
 
             $imageId = $vars["id"];

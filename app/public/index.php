@@ -26,11 +26,11 @@ $dispatcher = simpleDispatcher(function (RouteCollector $r) {
     $r->addRoute('GET', '/images/details/{id}', ['App\Controllers\ImagesController', 'details']);
     $r->addRoute('GET', '/images/sell/{id}', ['App\Controllers\ImagesController', 'sellIndex']);
     $r->addRoute('POST', '/images/sell/{id}', ['App\Controllers\ImagesController', 'processSell']);
+    $r->addRoute('GET', '/images/buy/{id}', ['App\Controllers\ImagesController', 'buyImage']);
     $r->addRoute('GET', '/images/upload', ['App\Controllers\ImagesController', 'uploadIndex']);
     $r->addRoute('POST', '/images/upload', ['App\Controllers\ImagesController', 'processUpload']);
-    $r->addRoute('POST', '/images/moderate/{id}', ['App\Controllers\ImagesController', 'moderateImage']);
-    $r->addRoute('POST', '/images/unmoderate/{id}', ['App\Controllers\ImagesController', 'unModerateImage']);
-    $r->addRoute('POST', '/images/delete/{id}', ['App\Controllers\ImagesController', 'deleteImage']);
+    $r->addRoute('POST', '/images/moderate/{id}/{isModerate}', ['App\Controllers\ImagesController', 'moderateImage']);
+    $r->addRoute('GET', '/images/delete/{id}', ['App\Controllers\ImagesController', 'deleteImage']);
 
     // Portfolio
     $r->addRoute('GET', '/', ['App\Controllers\PortfolioController', 'index']);

@@ -48,25 +48,25 @@
                     </ul>
                     
                     <?php if ($viewModel->image->isModerated === false && $viewModel->image->isOnSale && $viewModel->image->ownerId !== $_SESSION["user"]->userId){ ?>
-                        <a href="#" class="btn btn-success w-100 mb-2">Buy</a>
+                        <a href="/images/buy/<?php echo $viewModel->image->imageId; ?>" class="btn btn-success w-100 mb-2">Buy</a>
                     <?php }
                     if ($viewModel->image->isModerated === false && ($_SESSION["user"]->role === UserRole::Admin || $viewModel->image->ownerId === $_SESSION["user"]->userId)){
                         if ($viewModel->image->isOnSale === false){?>
-                            <a href="#" class="btn btn-danger w-100 mb-2">Sell</a>
+                            <a href="/images/sell/<?php echo $viewModel->image->imageId; ?>" class="btn btn-danger w-100 mb-2">Sell</a>
                         <?php }
                         else{ ?>
-                            <a href="#" class="btn btn-danger w-100 mb-2">Take off sale</a>
+                            <a href="images/takeoffsale/<?php echo $viewModel->image->imageId; ?>" class="btn btn-danger w-100 mb-2">Take off sale</a>
                         <?php }
                     }
                     if ($_SESSION["user"]->role === UserRole::Admin || $viewModel->image->ownerId === $_SESSION["user"]->userId){?>
-                        <a href="#" class="btn btn-danger w-100 mb-2">Delete</a>
+                        <a href="/images/delete/<?php echo $viewModel->image->imageId; ?>" class="btn btn-danger w-100 mb-2">Delete</a>
                     <?php } 
                     if ($_SESSION["user"]->role === UserRole::Admin) {
                         if ($viewModel->image->isModerated === false){ ?>
-                            <a href="#" class="btn btn-warning w-100 mb-2">Moderate</a>
+                            <a href="/images/moderate/<?php echo $viewModel->image->imageId; ?>/true" class="btn btn-warning w-100 mb-2">Moderate</a>
                         <?php } 
                         else{ ?>
-                            <a href="#" class="btn btn-warning w-100 mb-2">Unmoderate</a>
+                            <a href="/images/moderate/<?php echo $viewModel->image->imageId; ?>/false" class="btn btn-warning w-100 mb-2">Unmoderate</a>
                        <?php } 
                     }?>
                 </div>

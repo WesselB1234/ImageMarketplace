@@ -71,15 +71,21 @@ class ImagesController extends Controller
         }
     }
 
-    public function sellIndex()
+    public function sellIndex(array $vars)
     {
 
     }
 
-    public function processSell()
+    public function processSell(array $vars)
     {
 
     }
+
+    public function buyImage(array $vars)
+    {
+
+    }
+
 
     public function uploadIndex()
     {
@@ -112,18 +118,37 @@ class ImagesController extends Controller
         }                
     }
 
-    public function moderateImage()
-    {
-        $this->adminAuthorization();
-    }
-
-    public function unModerateImage()
+    public function moderateImage(array $vars)
     {
         $this->adminAuthorization();
     }
 
     public function deleteImage(array $vars)
     {
-        $this->adminAuthorization();
+        try{
+            if (filter_var($vars["id"], FILTER_VALIDATE_INT) === false) {
+                throw new Exception("Image ID is not valid.");
+            }
+
+            $imageId = $vars["id"];
+            $image = $this->imagesService->getImageByImageId($imageId);
+
+            if ($image === null){
+                throw new Exception("Image with ID $imageId does not exist.");
+            }
+
+            if ($image->ownerId !== $_SESSION["user"]->userId && $_SESSION["user"]->role !== UserRole::Admin){
+                throw new Exception("You are not authorized to delete this image.");
+            }
+
+            $this->imagesService->deleteImageByImageId($imageId);
+
+            setcookie("success_message", "Successfully deleted image.", time() + 5, "/");
+        } 
+        catch(Exception $e){
+            setcookie("error_message", $e->getMessage(), time() + 5, "/");
+        } 
+
+        header("Location: /portfolio");
     }
 }

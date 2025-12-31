@@ -9,11 +9,12 @@ use App\Services\Interfaces\IUsersService;
 use App\Services\UsersService;
 use App\Models\Image;
 use App\Models\User;
+use App\Models\Enums\UserRole;
 use App\Models\ViewModels\ImageDetailsVM;
 use App\Models\ViewModels\ImageSellingVM;
 use Exception;
 use App\Models\Exceptions\NotFoundException;
-use App\Models\Enums\UserRole;
+use App\Models\Exceptions\NotAuthorizedException;
 
 class ImagesController extends Controller
 {
@@ -50,7 +51,7 @@ class ImagesController extends Controller
             }
             
             if ($image->isOnSale === false && $_SESSION["user"]->role !== UserRole::Admin && $image->ownerId !== $_SESSION["user"]->userId){
-                throw new Exception("You cannot view private off sale images.");
+                throw new NotAuthorizedException("You cannot view private off sale images.");
             }
 
             $ownerUser = null;
@@ -87,7 +88,7 @@ class ImagesController extends Controller
             }
 
             if ($image->ownerId !== $_SESSION["user"]->userId && $_SESSION["user"]->role !== UserRole::Admin){
-                throw new Exception("You are not authorized to sell this image.");
+                throw new NotAuthorizedException("You are not authorized to sell this image.");
             }
 
             $this->displayView("Images/sell.php", ["viewModel" => new ImageSellingVM($image, null), ]);
@@ -111,13 +112,15 @@ class ImagesController extends Controller
             }
 
             if ($image->ownerId !== $_SESSION["user"]->userId && $_SESSION["user"]->role !== UserRole::Admin){
-                throw new Exception("You are not authorized to sell this image.");
+                throw new NotAuthorizedException("You are not authorized to sell this image.");
             }
+
+            $this->imagesService->updateImageSellingPrice($image->imageId, $_POST["price"]);
 
             setcookie("success_message", "Image successfully put on sale.", time() + 5, "/");
             header("Location: /images/details/$imageId");
         }
-        catch(NotFoundException $e){
+        catch(NotFoundException | NotAuthorizedException $e){
             setcookie("error_message", $e->getMessage(), time() + 5, "/");
             header("Location: /portfolio");
         }
@@ -127,6 +130,40 @@ class ImagesController extends Controller
                 "viewModel" => new ImageSellingVM($image, $imageId),
                 "errorMessage" => $e->getMessage()
             ]);
+        }
+    }
+
+    public function takeOffSale(array $vars)
+    {
+        $imageId = $vars["id"];       
+
+        try{
+            if (filter_var($vars["id"], FILTER_VALIDATE_INT) === false) {
+                throw new NotFoundException("Image ID is not valid.");
+            }
+
+            $image = $this->imagesService->getImageByImageId($imageId);
+
+            if ($image === null){
+                throw new NotFoundException("Image with ID $imageId does not exist.");
+            }
+
+            if ($image->ownerId !== $_SESSION["user"]->userId && $_SESSION["user"]->role !== UserRole::Admin){
+                throw new NotAuthorizedException("You are not authorized to take this image off sale.");
+            }
+
+            $this->imagesService->updateImageSellingPrice($image->imageId, null);
+
+            setcookie("success_message", "Successfully put image off sale.", time() + 5, "/");
+            header("Location: /images/details/$imageId");
+        }
+        catch(NotFoundException $e){
+            setcookie("error_message", $e->getMessage(), time() + 5, "/");
+            header("Location: /portfolio");
+        }
+        catch(Exception $e){
+            setcookie("error_message", $e->getMessage(), time() + 5, "/");
+            header("Location: /images/details/$imageId");
         }
     }
 
@@ -186,7 +223,7 @@ class ImagesController extends Controller
             }
 
             if ($image->ownerId !== $_SESSION["user"]->userId && $_SESSION["user"]->role !== UserRole::Admin){
-                throw new Exception("You are not authorized to delete this image.");
+                throw new NotAuthorizedException("You are not authorized to delete this image.");
             }
 
             $this->imagesService->deleteImageByImageId($imageId);

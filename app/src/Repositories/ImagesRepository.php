@@ -6,6 +6,7 @@ use App\Repositories\Interfaces\IImagesRepository;
 use App\Repositories\Repository;
 use App\Models\Image;
 use App\Models\Helpers\DataMapper;
+use App\Models\Exceptions\NotFoundException;
 
 use PDO;
 
@@ -74,9 +75,31 @@ class ImagesRepository extends Repository implements IImagesRepository
         return null;
     }
 
-    public function updateImage(Image $image)
+    public function updateImageSellingPrice(int $imageId, ?int $price)
     {
-        return null;
+        $stmt = $this->connection->prepare(
+                "UPDATE Images 
+                SET price = :price, is_onsale = :isOnSale
+                WHERE id = :imageId;"
+            );
+
+        $stmt->bindValue(":imageId", $imageId, PDO::PARAM_INT); 
+
+        if ($price === null) {
+            $stmt->bindValue(":price", null, PDO::PARAM_NULL); 
+            $stmt->bindValue(":isOnSale", false, PDO::PARAM_BOOL); 
+        }
+        else{
+            $stmt->bindValue(":price", $price, PDO::PARAM_STR); 
+            $stmt->bindValue(":isOnSale", true, PDO::PARAM_BOOL); 
+        }
+
+        $stmt->execute();
+
+        if($stmt->rowCount() == 0)
+        {
+            throw new NotFoundException("Image with ID ".$imageId." does not exist.");
+        }
     }
 
     public function createImage(Image $image): int

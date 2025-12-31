@@ -4,7 +4,7 @@ namespace App\Models\Exceptions;
 
 use Exception;
 
-class NotFoundException extends Exception
+class NotAuthorizedException extends Exception
 {
     
 }

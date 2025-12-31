@@ -26,6 +26,7 @@ $dispatcher = simpleDispatcher(function (RouteCollector $r) {
     $r->addRoute('GET', '/images/details/{id}', ['App\Controllers\ImagesController', 'details']);
     $r->addRoute('GET', '/images/sell/{id}', ['App\Controllers\ImagesController', 'sellIndex']);
     $r->addRoute('POST', '/images/sell/{id}', ['App\Controllers\ImagesController', 'processSell']);
+    $r->addRoute('GET', '/images/takeoffsale/{id}', ['App\Controllers\ImagesController', 'takeOffSale']);
     $r->addRoute('GET', '/images/buy/{id}', ['App\Controllers\ImagesController', 'buyImage']);
     $r->addRoute('GET', '/images/upload', ['App\Controllers\ImagesController', 'uploadIndex']);
     $r->addRoute('POST', '/images/upload', ['App\Controllers\ImagesController', 'processUpload']);

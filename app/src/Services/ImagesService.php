@@ -36,7 +36,7 @@ class ImagesService implements IImagesService
     public function uploadImageFile(int $imageId)
     {
         if (!isset($_FILES["image"]) || $_FILES["image"]["error"] !== UPLOAD_ERR_OK) {
-            throw new Exception("Upload failed.");
+            throw new Exception("The uploading of the file to the server has failed.");
         }
 
         $finfo = finfo_open(FILEINFO_MIME_TYPE);
@@ -51,7 +51,7 @@ class ImagesService implements IImagesService
         $destination = "assets/img/UserUploadedImages/$filename";
 
         if (!move_uploaded_file($_FILES["image"]["tmp_name"], $destination)) {
-            throw new Exception("Failed to save image.");
+            throw new Exception("Failed to save image to file structure.");
         }
     }
 
@@ -65,9 +65,9 @@ class ImagesService implements IImagesService
         return null;
     }
 
-    public function sellImage(int $imageId, User $user)
+    public function updateImageSellingPrice(int $imageId, ?int $price)
     {
-        return null;
+        $this->imagesRepository->updateImageSellingPrice($imageId, $price);
     }
 
     public function updateImageModerationByImageId(int $imageId, bool $isModerated)

@@ -60,7 +60,7 @@
                             <a href="/images/sell/<?php echo $viewModel->image->imageId; ?>" class="btn btn-danger w-100 mb-2">Sell</a>
                         <?php }
                         else{ ?>
-                            <a href="images/takeoffsale/<?php echo $viewModel->image->imageId; ?>" class="btn btn-danger w-100 mb-2">Take off sale</a>
+                            <a href="/images/takeoffsale/<?php echo $viewModel->image->imageId; ?>" class="btn btn-danger w-100 mb-2">Take off sale</a>
                         <?php }
                     }
                     if ($_SESSION["user"]->role === UserRole::Admin || $viewModel->image->ownerId === $_SESSION["user"]->userId){?>

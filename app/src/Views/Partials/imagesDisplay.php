@@ -2,7 +2,7 @@
     use App\Models\Helpers\StringFormatter;
 ?>
 
-<div class="mt-4 row row-cols-xs-1 row-cols-sm-2 row-cols-md-4">
+<div class="mt-4 row row-cols-sm-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4">
     <?php foreach ($viewModel as $image) { ?>
         <div class="col mb-4">
             <div class="card h-100 image-card">

@@ -36,7 +36,7 @@ class ImagesController extends Controller
     public function details(array $vars)
     {
         try{
-            if (is_int($vars["id"]) === false){
+            if (filter_var($vars["id"], FILTER_VALIDATE_INT) === false) {
                 throw new Exception("Image ID is not valid.");
             }
 
@@ -119,7 +119,7 @@ class ImagesController extends Controller
 
     public function moderateImage()
     {
-        
+        $this->adminAuthorization();
     }
 
     public function unModerateImage()

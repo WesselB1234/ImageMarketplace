@@ -67,7 +67,7 @@ class ImagesRepository extends Repository implements IImagesRepository
 
         $assocImage = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if($assocImage !== null){
+        if($assocImage !== false){
             return DataMapper::mapAssocImageToImage($assocImage);
         }
 

@@ -53,13 +53,16 @@ class UsersController extends Controller
 
     public function updateIndex(array $vars)
     {        
-        $userId = $vars["id"];
-
         try{
+            if (filter_var($vars["id"], FILTER_VALIDATE_INT) === false) {
+                throw new Exception("User ID is not valid.");
+            }
+            
+            $userId = $vars["id"];
             $user = $this->usersService->getUserByUserId($userId);
 
             if($user === null){
-                throw new NotFoundException("User with id ".$userId." does not exist.");
+                throw new NotFoundException("User with ID ".$userId." does not exist.");
             }
 
             $this->displayView("Admin/Users/update.php", [
@@ -74,14 +77,15 @@ class UsersController extends Controller
 
     public function processUpdate(array $vars)
     {
+        $userId = $vars["id"];
         $user = User::constructFullyKnownUser($vars["id"], $_POST["username"], $_POST["email"], $_POST["password"], $_POST["image_tokens"], $_POST["role"]);
 
         try{
             $this->usersService->updateUser($user);
-
-            if ($vars["id"] === $_SESSION["user"]->userId)
+            
+            if ($user->userId === $_SESSION["user"]->userId)
             {
-                $user->userId = $vars["id"];
+                $user->userId = $userId;
                 $user->password = null;
                 $_SESSION["user"] = $user;
             }
@@ -104,11 +108,17 @@ class UsersController extends Controller
     public function delete(array $vars)
     {
         try{
-            if ($vars["id"] === $_SESSION["user"]->userId){
+            if (filter_var($vars["id"], FILTER_VALIDATE_INT) === false) {
+                throw new Exception("User ID is not valid.");
+            }
+
+            $userId = $vars["id"];
+
+            if ($userId === $_SESSION["user"]->userId){
                 throw new Exception("You cannot delete yourself.");
             }
 
-            $this->usersService->deleteUserByUserId($vars["id"]);
+            $this->usersService->deleteUserByUserId($userId);
             setcookie("success_message", "Successfully deleted user.", time() + 5, "/");
         } 
         catch(Exception $e){

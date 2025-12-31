@@ -6,8 +6,6 @@ use FastRoute\RouteCollector;
 use FastRoute\Dispatcher;
 use function FastRoute\simpleDispatcher;
 use Dotenv\Dotenv;
-use App\Models\User;
-use App\Models\Enums\UserRole;
 
 session_start();
 
@@ -26,10 +24,8 @@ $dispatcher = simpleDispatcher(function (RouteCollector $r) {
     // Images
     $r->addRoute('GET', '/images', ['App\Controllers\ImagesController', 'index']);
     $r->addRoute('GET', '/images/details/{id}', ['App\Controllers\ImagesController', 'details']);
-    $r->addRoute('GET', '/images/buy/{id}', ['App\Controllers\ImagesController', 'buyIndex']);
-    $r->addRoute('POST', '/images/buy/{id}', ['App\Controllers\ImagesController', 'processBuy']);
-    $r->addRoute('POST', '/images/setOnSale/{id}', ['App\Controllers\ImagesController', 'setOnSale']);
-    $r->addRoute('POST', '/images/removeOnSale/{id}', ['App\Controllers\ImagesController', 'removeOnSale']);
+    $r->addRoute('GET', '/images/sell/{id}', ['App\Controllers\ImagesController', 'sellIndex']);
+    $r->addRoute('POST', '/images/sell/{id}', ['App\Controllers\ImagesController', 'processSell']);
     $r->addRoute('GET', '/images/upload', ['App\Controllers\ImagesController', 'uploadIndex']);
     $r->addRoute('POST', '/images/upload', ['App\Controllers\ImagesController', 'processUpload']);
     $r->addRoute('POST', '/images/moderate/{id}', ['App\Controllers\ImagesController', 'moderateImage']);

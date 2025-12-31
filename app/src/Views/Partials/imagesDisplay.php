@@ -3,7 +3,10 @@
 ?>
 
 <div class="mt-4 row row-cols-sm-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4">
-    <?php foreach ($viewModel as $image) { ?>
+    <?php if (count($viewModel) === 0) {?>
+        <span class="font-weight-bold">No images found</span>
+    <?php }
+    foreach ($viewModel as $image) { ?>
         <div class="col mb-4">
             <div class="card h-100 image-card">
                 <img class="card-img-top card-image-top" src="/assets/img/UserUploadedImages/<?php echo $image->imageId ?>.png" alt="<?php echo htmlspecialchars($image->altText, ENT_QUOTES, 'UTF-8'); ?>">

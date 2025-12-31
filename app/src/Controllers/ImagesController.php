@@ -12,6 +12,7 @@ use App\Models\User;
 use App\Models\ViewModels\ImageDetailsVM;
 use Exception;
 use App\Models\Exceptions\NotFoundException;
+use App\Models\Enums\UserRole;
 
 class ImagesController extends Controller
 {
@@ -47,6 +48,10 @@ class ImagesController extends Controller
                 throw new Exception("Image with ID $imageId does not exist.");
             }
             
+            if ($image->isOnSale === false && $_SESSION["user"]->role !== UserRole::Admin && $image->ownerId !== $_SESSION["user"]->userId){
+                throw new Exception("You cannot view private off sale images.");
+            }
+
             $ownerUser = null;
             $creatorUser = null;
 
@@ -66,22 +71,12 @@ class ImagesController extends Controller
         }
     }
 
-    public function buyIndex()
+    public function sellIndex()
     {
 
     }
 
-    public function processBuy()
-    {
-
-    }
-
-    public function setOnSale()
-    {
-
-    }
-
-    public function removeOnSale()
+    public function processSell()
     {
 
     }
@@ -127,7 +122,7 @@ class ImagesController extends Controller
         $this->adminAuthorization();
     }
 
-    public function deleteImage()
+    public function deleteImage(array $vars)
     {
         $this->adminAuthorization();
     }

@@ -10,6 +10,7 @@ use App\Services\UsersService;
 use App\Models\Image;
 use App\Models\User;
 use App\Models\ViewModels\ImageDetailsVM;
+use App\Models\ViewModels\ImageSellingVM;
 use Exception;
 use App\Models\Exceptions\NotFoundException;
 use App\Models\Enums\UserRole;
@@ -73,19 +74,39 @@ class ImagesController extends Controller
 
     public function sellIndex(array $vars)
     {
+        try{
+            if (filter_var($vars["id"], FILTER_VALIDATE_INT) === false) {
+                throw new Exception("Image ID is not valid.");
+            }
 
+            $imageId = $vars["id"];
+            $image = $this->imagesService->getImageByImageId($imageId);
+
+            if ($image === null){
+                throw new Exception("Image with ID $imageId does not exist.");
+            }
+
+            if ($image->ownerId !== $_SESSION["user"]->userId && $_SESSION["user"]->role !== UserRole::Admin){
+                throw new Exception("You are not authorized to sell this image.");
+            }
+
+            $this->displayView("Images/sell.php", ["viewModel" => new ImageSellingVM($image, null), ]);
+        }
+        catch(Exception $e){
+            setcookie("error_message", $e->getMessage(), time() + 5, "/");
+            header("Location: /portfolio");
+        }
     }
 
     public function processSell(array $vars)
     {
-
+        
     }
 
     public function buyImage(array $vars)
     {
 
     }
-
 
     public function uploadIndex()
     {

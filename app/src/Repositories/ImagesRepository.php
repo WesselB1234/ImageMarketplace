@@ -40,7 +40,7 @@ class ImagesRepository extends Repository implements IImagesRepository
         $stmt = $this->connection->prepare(
             "SELECT id, owner_id, creator_id, name, description, price, is_moderated, is_onsale, time_created, alt_text 
             FROM Images
-            WHERE is_onsale = 1;"
+            WHERE is_onsale = 1 AND is_moderated = 0; AND price IS NOT NULL;"
         );
 
         $stmt->execute();

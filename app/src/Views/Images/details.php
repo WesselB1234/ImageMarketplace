@@ -1,5 +1,6 @@
 <?php 
     use App\Models\Helpers\StringFormatter;
+    use App\Models\Enums\UserRole;
 
     $title = "Image details";
     
@@ -34,18 +35,40 @@
                             <span class="font-weight-bold">Time created:</span> <?php echo $viewModel->image->timeCreated->format('Y-m-d H:i:s'); ?>
                         </li>
                         <li class="list-group-item">
-                            <?php if ($viewModel->image->isOnSale && $viewModel->image->price !== null) { ?> 
+                            <?php if ($viewModel->image->isModerated) { ?> 
+                                <span class="text-danger">This image has been moderated</span>
+                            <?php } 
+                            else if ($viewModel->image->isOnSale && $viewModel->image->price !== null) { ?> 
                                 <span class="font-weight-bold">Price:</span> <?php echo StringFormatter::getDottedNumberStringFromNumber($viewModel->image->price); ?> image tokens
-                            <?php } else{ ?>
+                            <?php } 
+                            else{ ?>
                                 <span class="text-danger">This image is not for sale</span>
                             <?php } ?>
                         </li>
                     </ul>
-
-                    <a href="#" class="btn btn-success w-100 mb-2">Buy</a>
-                    <a href="#" class="btn btn-danger w-100 mb-2">Sell</a>
-                    <a href="#" class="btn btn-danger w-100 mb-2">Delete</a>
-                    <a href="#" class="btn btn-warning w-100 mb-2">Moderate</a>
+                    
+                    <?php if ($viewModel->image->isModerated === false && $viewModel->image->isOnSale && $viewModel->image->ownerId !== $_SESSION["user"]->userId){ ?>
+                        <a href="#" class="btn btn-success w-100 mb-2">Buy</a>
+                    <?php }
+                    if ($viewModel->image->isModerated === false && ($_SESSION["user"]->role === UserRole::Admin || $viewModel->image->ownerId === $_SESSION["user"]->userId)){
+                        if ($viewModel->image->isOnSale === false){?>
+                            <a href="#" class="btn btn-danger w-100 mb-2">Sell</a>
+                        <?php }
+                        else{ ?>
+                            <a href="#" class="btn btn-danger w-100 mb-2">Take off sale</a>
+                        <?php }
+                    }
+                    if ($_SESSION["user"]->role === UserRole::Admin || $viewModel->image->ownerId === $_SESSION["user"]->userId){?>
+                        <a href="#" class="btn btn-danger w-100 mb-2">Delete</a>
+                    <?php } 
+                    if ($_SESSION["user"]->role === UserRole::Admin) {
+                        if ($viewModel->image->isModerated === false){ ?>
+                            <a href="#" class="btn btn-warning w-100 mb-2">Moderate</a>
+                        <?php } 
+                        else{ ?>
+                            <a href="#" class="btn btn-warning w-100 mb-2">Unmoderate</a>
+                       <?php } 
+                    }?>
                 </div>
             </div>
         </div>

@@ -10,7 +10,10 @@
                 <div class="card-body d-flex flex-column">
                     <h5 class="card-title"><?php echo htmlspecialchars($image->name, ENT_QUOTES, 'UTF-8');?></h5>
                     <p>
-                        <?php if ($image->isOnSale && $image->price !== null) { ?> 
+                        <?php if ($image->isModerated){ ?>
+                            <span class="text-danger">This image has been moderated</span>
+                        <?php }
+                        else if ($image->isOnSale && $image->price !== null) { ?> 
                             <span class="font-weight-bold">Price:</span> <?php echo StringFormatter::getDottedNumberStringFromNumber($image->price); ?> image tokens
                         <?php } else{ ?>
                             <span class="text-danger">This image is not for sale</span>

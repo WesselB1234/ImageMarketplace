@@ -1,5 +1,6 @@
 <?php
     use App\Models\Helpers\StringFormatter;
+    use App\Models\Enums\UserRole;
 
     require __DIR__."../../Partials/header.php"; 
 ?> 
@@ -20,9 +21,11 @@
                 <li class="nav-item">
                     <a class="nav-link <?php echo ($enabledNavLink === "Images" ? "active" : "") ?>" href="/images">Images on sale</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link <?php echo ($enabledNavLink === "Users" ? "active" : "") ?>" href="/users">Users</a>
-                </li>
+                <?php if ($_SESSION["user"]->role === UserRole::Admin){?>
+                    <li class="nav-item">
+                        <a class="nav-link <?php echo ($enabledNavLink === "Users" ? "active" : "") ?>" href="/users">Users</a>
+                    </li>
+                <?php } ?>
             </ul>
             <div class="form-inline my-2 my-lg-0">
                 <div class="nav-link">

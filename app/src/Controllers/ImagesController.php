@@ -46,7 +46,7 @@ class ImagesController extends Controller
             $image = $this->imagesService->getImageByImageId($imageId);
 
             if ($image === null){
-                throw new Exception("Image with ID $imageId does not exist.");
+                throw new NotFoundException("Image with ID $imageId does not exist.");
             }
             
             if ($image->isOnSale === false && $_SESSION["user"]->role !== UserRole::Admin && $image->ownerId !== $_SESSION["user"]->userId){
@@ -83,7 +83,7 @@ class ImagesController extends Controller
             $image = $this->imagesService->getImageByImageId($imageId);
 
             if ($image === null){
-                throw new Exception("Image with ID $imageId does not exist.");
+                throw new NotFoundException("Image with ID $imageId does not exist.");
             }
 
             if ($image->ownerId !== $_SESSION["user"]->userId && $_SESSION["user"]->role !== UserRole::Admin){
@@ -100,7 +100,34 @@ class ImagesController extends Controller
 
     public function processSell(array $vars)
     {
-        
+        $image = null;
+        $imageId = $vars["id"];       
+
+        try{
+            $image = $this->imagesService->getImageByImageId($imageId);
+
+            if ($image === null){
+                throw new NotFoundException("Image with ID $imageId does not exist.");
+            }
+
+            if ($image->ownerId !== $_SESSION["user"]->userId && $_SESSION["user"]->role !== UserRole::Admin){
+                throw new Exception("You are not authorized to sell this image.");
+            }
+
+            setcookie("success_message", "Image successfully put on sale.", time() + 5, "/");
+            header("Location: /images/details/$imageId");
+        }
+        catch(NotFoundException $e){
+            setcookie("error_message", $e->getMessage(), time() + 5, "/");
+            header("Location: /portfolio");
+        }
+        catch(Exception $e){
+
+            $this->displayView("Images/sell.php", [
+                "viewModel" => new ImageSellingVM($image, $imageId),
+                "errorMessage" => $e->getMessage()
+            ]);
+        }
     }
 
     public function buyImage(array $vars)
@@ -155,7 +182,7 @@ class ImagesController extends Controller
             $image = $this->imagesService->getImageByImageId($imageId);
 
             if ($image === null){
-                throw new Exception("Image with ID $imageId does not exist.");
+                throw new NotFoundException("Image with ID $imageId does not exist.");
             }
 
             if ($image->ownerId !== $_SESSION["user"]->userId && $_SESSION["user"]->role !== UserRole::Admin){

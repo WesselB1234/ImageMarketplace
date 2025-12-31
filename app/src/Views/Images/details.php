@@ -3,11 +3,16 @@
     use App\Models\Enums\UserRole;
 
     $title = "Image details";
-    
-    require __DIR__."../../Partials/navbarHeader.php"; 
+    $partialsDir = __DIR__."../../Partials";
+    require $partialsDir."/navbarHeader.php"; 
 ?>
 
 <main class="container">
+
+    <h1 class="mb-4">Image details</h1>
+
+    <?php include $partialsDir."/successAlert.php"; ?>
+
     <div class="row g-4">
         <div class="col-md-6">
             <div class="card">
@@ -75,4 +80,4 @@
     </div>
 </main>
 
-<?php require __DIR__."../../Partials/footer.php"; ?>
+<?php require $partialsDir."/footer.php"; ?>

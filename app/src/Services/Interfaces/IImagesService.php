@@ -12,7 +12,7 @@ interface IImagesService
     public function getImageByImageId(int $imageId): ?Image;
     public function createImage(Image $image): int;
     public function uploadImageFile(int $imageId);
-    public function buyImage(int $imageId, User $user);
+    public function buyImage(Image $image, User $buyerUser);
     public function updateImageSellingPrice(int $imageId, ?int $price);
     public function updateImageModerationByImageId(int $imageId, bool $isModerated);
     public function deleteImageByImageId(int $imageId);

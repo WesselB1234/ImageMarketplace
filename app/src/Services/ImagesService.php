@@ -60,9 +60,17 @@ class ImagesService implements IImagesService
         return $this->imagesRepository->createImage($image);
     }
 
-    public function buyImage(int $imageId, User $user)
+    public function buyImage(Image $image, User $buyerUser)
     {
-        return null;
+        if ($image->isOnSale === false || $image->isModerated || $image->price === null){
+            throw new Exception("This image is not on sale");
+        }
+
+        if ($image->price > $buyerUser->imageTokens){
+            throw new Exception("You do not have enough image tokens to purchase this image.");
+        }
+
+        $this->imagesRepository->updateImageOwnershipByImageId($image->imageId, $buyerUser->userId);
     }
 
     public function updateImageSellingPrice(int $imageId, ?int $price)

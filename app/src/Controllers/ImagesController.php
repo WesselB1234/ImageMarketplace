@@ -138,7 +138,7 @@ class ImagesController extends Controller
         $imageId = $vars["id"];       
 
         try{
-            if (filter_var($vars["id"], FILTER_VALIDATE_INT) === false) {
+            if (filter_var($imageId, FILTER_VALIDATE_INT) === false) {
                 throw new NotFoundException("Image ID is not valid.");
             }
 
@@ -169,7 +169,36 @@ class ImagesController extends Controller
 
     public function buyImage(array $vars)
     {
+        $imageId = $vars["id"];    
 
+        try{
+            if (filter_var($imageId, FILTER_VALIDATE_INT) === false) {
+                throw new NotFoundException("Image ID is not valid.");
+            }
+
+            $image = $this->imagesService->getImageByImageId($imageId);
+
+            if ($image === null){
+                throw new NotFoundException("Image with ID $imageId does not exist.");
+            }
+
+            if ($image->ownerId === $_SESSION["user"]->userId){
+                throw new NotAuthorizedException("You cannot buy your own image.");
+            }
+
+            $this->imagesService->buyImage($image, $_SESSION["user"]);
+
+            setcookie("success_message", "Successfully bought image: $image->name (Image ID: $image->imageId).", time() + 5, "/");
+            header("Location: /portfolio");
+        }
+        catch(NotFoundException $e){
+            setcookie("error_message", $e->getMessage(), time() + 5, "/");
+            header("Location: /portfolio");
+        }
+        catch(Exception $e){
+            setcookie("error_message", $e->getMessage(), time() + 5, "/");
+            header("Location: /images/details/$imageId");
+        }
     }
 
     public function uploadIndex()

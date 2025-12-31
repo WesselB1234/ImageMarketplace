@@ -125,7 +125,21 @@ class ImagesRepository extends Repository implements IImagesRepository
 
     public function updateImageOwnershipByImageId(int $imageId, int $userId)
     {
-        return null;
+        $stmt = $this->connection->prepare(
+                "UPDATE Images 
+                SET owner_id = :userId, is_onsale = 0, price = NULL
+                WHERE id = :imageId;"
+            );
+
+        $stmt->bindValue(":imageId", $imageId, PDO::PARAM_INT); 
+        $stmt->bindValue(":userId", $userId, PDO::PARAM_INT); 
+
+        $stmt->execute();
+
+        if($stmt->rowCount() == 0)
+        {
+            throw new NotFoundException("Image with ID ".$imageId." does not exist.");
+        }
     }
 
     public function updateImageModerationByImageId(int $imageId, bool $isModerated)

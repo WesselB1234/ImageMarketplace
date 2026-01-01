@@ -24,7 +24,6 @@ class UsersApiController extends Controller
 
     public function delete(array $vars)
     {   
-        
         header("Access-Control-Allow-Origin: *"); 
         header("Content-Type: application/json");
 
@@ -33,7 +32,7 @@ class UsersApiController extends Controller
         $userId = $data["id"];
 
         try{
-            $this->loggedInAuthorization();
+            $this->loggedInAuthorizationApiEndPoint();
             $this->adminAuthorizationApiEndPoint();
 
             if (intval($userId) === $_SESSION["user"]->userId){
@@ -43,7 +42,7 @@ class UsersApiController extends Controller
             $this->usersService->deleteUserByUserId($userId);
 
             http_response_code(200); 
-            echo json_encode(new UserDeletionResponse($userId));
+            echo json_encode(new UserDeletionResponse($userId), JSON_PRETTY_PRINT);
             exit;
         }
         catch(ForbiddenException $e){
@@ -56,9 +55,41 @@ class UsersApiController extends Controller
             http_response_code(404); 
         }
         catch(Exception $e){
-            http_response_code(404); 
+            http_response_code(400); 
         }  
 
-        echo json_encode(new ErrorResponse($e->getMessage()));
+        echo json_encode(new ErrorResponse($e->getMessage()), JSON_PRETTY_PRINT);
+    }
+
+    public function getLoggedInUser()
+    {
+        header("Access-Control-Allow-Origin: *"); 
+        header("Content-Type: application/json");
+
+        try{
+            $this->loggedInAuthorizationApiEndPoint();
+            
+            $userId = $_SESSION["user"]->userId;
+            $user = $this->usersService->getUserByUserId($userId);
+
+            if ($user === null){
+                throw new NotFoundException("Logged in user with user ID $userId does not exist.");
+            }
+
+            http_response_code(200); 
+            echo json_encode($user, JSON_PRETTY_PRINT);
+            exit;
+        }
+        catch(NotAuthorizedException $e){
+            http_response_code(401); 
+        } 
+        catch(NotFoundException $e){
+            http_response_code(404); 
+        }
+        catch(Exception $e){
+            http_response_code(400); 
+        }  
+
+        echo json_encode(new ErrorResponse($e->getMessage()), JSON_PRETTY_PRINT);
     }
 }

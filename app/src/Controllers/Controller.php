@@ -3,6 +3,8 @@
 namespace App\Controllers;
 
 use App\Models\Enums\UserRole;
+use App\Models\ApiResponses\ErrorResponse;
+use App\Models\Exceptions\NotAuthorizedException;
 
 class Controller
 {
@@ -42,6 +44,21 @@ class Controller
         if ($_SESSION["user"]->role != UserRole::Admin){
             setcookie("error_message", "Your account doesn't have the right role to perform this action.", time() + 5, "/");
             header("Location: /login");
+        }
+    }
+    
+
+    public function loggedInAuthorizationApiEndPoint()
+    {
+        if (!isset($_SESSION["user"])){
+            throw new NotAuthorizedException("You need to be logged in to perform this action.");
+        }
+    }
+
+    public function adminAuthorizationApiEndPoint()
+    {
+        if ($_SESSION["user"]->role != UserRole::Admin){
+            throw new NotAuthorizedException("Your account doesn't have the right role to perform this action.");
         }
     }
 }

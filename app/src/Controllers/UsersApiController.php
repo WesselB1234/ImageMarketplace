@@ -8,6 +8,8 @@ use App\Services\UsersService;
 use App\Models\User;
 use Exception;
 use App\Models\Exceptions\NotFoundException;
+use App\Models\Exceptions\NotAuthorizedException;
+use App\Models\Exceptions\ForbiddenException;
 use App\Models\ApiResponses\UserDeletionResponse;
 use App\Models\ApiResponses\ErrorResponse;
 
@@ -17,9 +19,6 @@ class UsersApiController extends Controller
 
     public function __construct()
     {
-        // $this->loggedInAuthorization();
-        // $this->adminAuthorization();
-
         $this->usersService = new UsersService();
     }
 
@@ -34,20 +33,32 @@ class UsersApiController extends Controller
         $userId = $data["id"];
 
         try{
-            // if ($userId === $_SESSION["user"]->userId){
-            //     throw new Exception("You cannot delete yourself.");
-            // }
-            
-            //$this->usersService->deleteUserByUserId($userId);
+            $this->loggedInAuthorization();
+            $this->adminAuthorizationApiEndPoint();
 
-            //throw new Exception("bruh momento");
+            if (intval($userId) === $_SESSION["user"]->userId){
+                throw new ForbiddenException("You cannot delete yourself.");
+            }
+            
+            $this->usersService->deleteUserByUserId($userId);
 
             http_response_code(200); 
             echo json_encode(new UserDeletionResponse($userId));
+            exit;
+        }
+        catch(ForbiddenException $e){
+            http_response_code(403); 
+        }  
+        catch(NotAuthorizedException $e){
+            http_response_code(401); 
         } 
+        catch(NotFoundException $e){
+            http_response_code(404); 
+        }
         catch(Exception $e){
             http_response_code(404); 
-            echo json_encode(new ErrorResponse($e->getMessage()));
-        } 
+        }  
+
+        echo json_encode(new ErrorResponse($e->getMessage()));
     }
 }

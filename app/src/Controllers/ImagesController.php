@@ -235,6 +235,31 @@ class ImagesController extends Controller
     public function moderateImage(array $vars)
     {
         $this->adminAuthorization();
+
+        try{
+            if (filter_var($vars["id"], FILTER_VALIDATE_INT) === false) {
+                throw new Exception("Image ID is not valid.");
+            }
+
+            $imageId = $vars["id"];
+            $isModerate = filter_var($vars["isModerate"], FILTER_VALIDATE_BOOL);
+
+            if ($isModerate === null) {
+                throw new Exception("IsModerate is not valid.");
+            }
+
+            $this->imagesService->updateImageModerationByImageId($imageId, $isModerate);
+            setcookie("success_message", "Image successfully ".($isModerate ? "moderated" : "unmoderated").".", time() + 5, "/");
+            header("Location: /images/details/$imageId");
+        }
+        catch(NotFoundException $e){
+            setcookie("error_message", $e->getMessage(), time() + 5, "/");
+            header("Location: /portfolio");
+        }
+        catch(Exception $e){
+            setcookie("error_message", $e->getMessage(), time() + 5, "/");
+            header("Location: /images/details/$imageId");
+        }
     }
 
     public function deleteImage(array $vars)

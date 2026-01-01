@@ -40,7 +40,7 @@ class UsersRepository extends Repository implements IUsersRepository
 
         $assocUser = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if ($assocUser !== false) {
+        if ($assocUser !== false){
             return DataMapper::mapAssocUserToUser($assocUser);
         }
 
@@ -60,7 +60,7 @@ class UsersRepository extends Repository implements IUsersRepository
 
         $assocUser = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if ($assocUser !== false) {
+        if ($assocUser !== false){
             return DataMapper::mapAssocUserToUser($assocUser);
         }
 
@@ -80,7 +80,7 @@ class UsersRepository extends Repository implements IUsersRepository
 
         $assocUser = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if ($assocUser !== false) {
+        if ($assocUser !== false){
             return DataMapper::mapAssocUserToFullyKnownUser($assocUser);
         }
 
@@ -108,9 +108,8 @@ class UsersRepository extends Repository implements IUsersRepository
 
         $stmt->execute();
 
-        if($stmt->rowCount() == 0)
-        {
-            throw new NotFoundException("User with id ".$user->userId." does not exist.");
+        if($stmt->rowCount() == 0){
+            throw new NotFoundException("User with ID ".$user->userId." does not exist.");
         }
     }
 
@@ -145,8 +144,7 @@ class UsersRepository extends Repository implements IUsersRepository
 
         $stmt->execute();
 
-        if($stmt->rowCount() == 0)
-        {
+        if($stmt->rowCount() == 0){
             throw new NotFoundException("User with ID ".$newTokensBalance." does not exist.");
         }
     }
@@ -157,8 +155,7 @@ class UsersRepository extends Repository implements IUsersRepository
         $stmt->bindValue(":userId", $userId, PDO::PARAM_INT); 
         $stmt->execute();
 
-        if($stmt->rowCount() === 0)
-        {
+        if($stmt->rowCount() === 0){
             throw new NotFoundException("User with id ".$userId." does not exist.");
         }
     }

@@ -78,10 +78,10 @@ class ImagesRepository extends Repository implements IImagesRepository
     public function updateImageSellingPrice(int $imageId, ?int $price)
     {
         $stmt = $this->connection->prepare(
-                "UPDATE Images 
-                SET price = :price, is_onsale = :isOnSale
-                WHERE id = :imageId;"
-            );
+            "UPDATE Images 
+            SET price = :price, is_onsale = :isOnSale
+            WHERE id = :imageId;"
+        );
 
         $stmt->bindValue(":imageId", $imageId, PDO::PARAM_INT); 
 
@@ -96,8 +96,7 @@ class ImagesRepository extends Repository implements IImagesRepository
 
         $stmt->execute();
 
-        if($stmt->rowCount() == 0)
-        {
+        if($stmt->rowCount() == 0){
             throw new NotFoundException("Image with ID ".$imageId." does not exist.");
         }
     }
@@ -126,25 +125,37 @@ class ImagesRepository extends Repository implements IImagesRepository
     public function updateImageOwnershipByImageId(int $imageId, int $userId)
     {
         $stmt = $this->connection->prepare(
-                "UPDATE Images 
-                SET owner_id = :userId, is_onsale = 0, price = NULL
-                WHERE id = :imageId;"
-            );
+            "UPDATE Images 
+            SET owner_id = :userId, is_onsale = 0, price = NULL
+            WHERE id = :imageId;"
+        );
 
         $stmt->bindValue(":imageId", $imageId, PDO::PARAM_INT); 
         $stmt->bindValue(":userId", $userId, PDO::PARAM_INT); 
 
         $stmt->execute();
 
-        if($stmt->rowCount() == 0)
-        {
+        if($stmt->rowCount() == 0){
             throw new NotFoundException("Image with ID ".$imageId." does not exist.");
         }
     }
 
     public function updateImageModerationByImageId(int $imageId, bool $isModerated)
     {
-        return null;
+        $stmt = $this->connection->prepare(
+            "UPDATE Images 
+            SET is_moderated = :isModerated
+            WHERE id = :imageId;"
+        );
+
+        $stmt->bindValue(":imageId", $imageId, PDO::PARAM_INT); 
+        $stmt->bindValue(":isModerated", $isModerated, PDO::PARAM_BOOL); 
+
+        $stmt->execute();
+
+        if($stmt->rowCount() == 0){
+            throw new NotFoundException("Image with ID ".$imageId." does not exist.");
+        }
     }
 
     public function deleteImageByImageId(int $imageId)
@@ -153,9 +164,8 @@ class ImagesRepository extends Repository implements IImagesRepository
         $stmt->bindValue(":imageId", $imageId, PDO::PARAM_INT); 
         $stmt->execute();
 
-        if($stmt->rowCount() === 0)
-        {
-            throw new NotFoundException("User with id ".$userId." does not exist.");
+        if($stmt->rowCount() === 0){
+            throw new NotFoundException("Image with ID ".$userId." does not exist.");
         }
     }
 }

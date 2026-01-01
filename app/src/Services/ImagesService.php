@@ -5,6 +5,8 @@ namespace App\Services;
 use App\Services\Interfaces\IImagesService;
 use App\Repositories\Interfaces\IImagesRepository;
 use App\Repositories\ImagesRepository;
+use App\Repositories\Interfaces\IUsersRepository;
+use App\Repositories\UsersRepository;
 use App\Models\Image;
 use App\Models\User;
 use Exception;
@@ -12,10 +14,12 @@ use Exception;
 class ImagesService implements IImagesService
 {
     private IImagesRepository $imagesRepository; 
+    private IUsersRepository $usersRepository; 
 
     public function __construct()
     {
         $this->imagesRepository = new ImagesRepository();
+        $this->usersRepository = new UsersRepository();
     }
 
     public function getAllImagesFromUserId(int $userId): array
@@ -70,6 +74,15 @@ class ImagesService implements IImagesService
             throw new Exception("You do not have enough image tokens to purchase this image.");
         }
 
+        $ownerUser = $this->usersRepository->getUserByUserId($image->ownerId);
+        $buyerUser->imageTokens = $buyerUser->imageTokens - $image->price;
+
+        if($ownerUser !== null){
+            $ownerUser->imageTokens = $ownerUser->imageTokens + $image->price;
+            $this->usersRepository->updateTokensBalanceByUserId($ownerUser->userId, $ownerUser->imageTokens);
+        }
+
+        $this->usersRepository->updateTokensBalanceByUserId($buyerUser->userId, $buyerUser->imageTokens);
         $this->imagesRepository->updateImageOwnershipByImageId($image->imageId, $buyerUser->userId);
     }
 

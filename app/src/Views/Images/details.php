@@ -11,7 +11,10 @@
 
     <h1 class="mb-4">Image details</h1>
 
-    <?php include $partialsDir."/successAlert.php"; ?>
+    <?php 
+        include $partialsDir."/successAlert.php"; 
+        include $partialsDir."/errorAlert.php";
+    ?>
 
     <div class="row g-4">
         <div class="col-md-6">

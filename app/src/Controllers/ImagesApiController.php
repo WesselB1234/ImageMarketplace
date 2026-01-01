@@ -3,68 +3,42 @@
 namespace App\Controllers;
 
 use App\Controllers\Controller;
-use App\Services\Interfaces\IUsersService;
-use App\Services\UsersService;
+use App\Services\Interfaces\IImagesService;
+use App\Services\ImagesService;
 use App\Models\User;
 use Exception;
 use App\Models\Exceptions\NotFoundException;
+use App\Models\ApiResponses\ErrorResponse;
 
 class ImagesApiController extends Controller
 {
-    private IImagesService $usersService;
+    private IImagesService $imagesService;
 
     public function __construct()
     {
-
-        $this->usersService = new UsersService();
+        $this->imagesService = new ImagesService();
     }
 
-    public function index()
+    public function getOnSaleImages()
     {
-        $users = $this->usersService->getAllUsers();
+        header("Access-Control-Allow-Origin: *"); 
+        header("Content-Type: application/json");
 
-        $this->displayView("Admin/Users/index.php", ["viewModel" => $users]);
-    }
-
-     public function getOnSaleImageByImageId(array $vars)
-    {
-        $images = $this->imagesService->getAllOnSaleImages();
-        
-        $this->displayView("Images/index.php", ["viewModel" => $images]);
-    }
-
-    public function details(array $vars)
-    {
         try{
-            if (filter_var($vars["id"], FILTER_VALIDATE_INT) === false) {
-                throw new Exception("Image ID is not valid.");
-            }
+            $this->loggedInAuthorizationApiEndPoint();   
+            $images = $this->imagesService->getAllOnSaleImages();
 
-            $imageId = $vars["id"];
-            $image = $this->imagesService->getImageByImageId($imageId);
-
-            if ($image === null){
-                throw new NotFoundException("Image with ID $imageId does not exist.");
-            }
-            
-            if ($image->isOnSale === false){
-                throw new NotAuthorizedException("You cannot view private off sale images.");
-            }
-
-            $ownerUser = null;
-            $creatorUser = null;
-
-            if ($image->ownerId !== null){
-                $ownerUser = $this->usersService->getUserByUserId($image->ownerId);
-            }
-
-            if ($image->creatorId !== null){
-                $creatorUser = $this->usersService->getUserByUserId($image->creatorId);
-            }
+            http_response_code(200); 
+            echo json_encode($images, JSON_PRETTY_PRINT);
+            exit;
+        }
+        catch(NotAuthorizedException $e){
+            http_response_code(401); 
         }
         catch(Exception $e){
-            setcookie("error_message", $e->getMessage(), time() + 5, "/");
-            header("Location: /portfolio");
-        }
+            http_response_code(400); 
+        }  
+
+        echo json_encode(new ErrorResponse($e->getMessage()), JSON_PRETTY_PRINT);
     }
 } 

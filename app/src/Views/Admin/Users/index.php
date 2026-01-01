@@ -38,7 +38,7 @@
                     <td><?php echo $user->role->value; ?></td>
                     <td>
                         <a href="users/update/<?php echo $user->userId ?>" class="btn btn-primary">Update</a> |
-                        <a href="users/delete/<?php echo $user->userId ?>" class="btn btn-danger">Delete</a>
+                        <button class="btn btn-danger user-deletion-btn" data-user-id="<?php echo $user->userId; ?>">Delete</button>
                     </td>
                 </tr>
             <?php }?>
@@ -46,4 +46,5 @@
     </table>
 </main>
 
+<script src="assets/js/UserDeletionAjax.js"></script>
 <?php require $partialsDir."/footer.php"; ?>

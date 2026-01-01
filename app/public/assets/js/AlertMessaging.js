@@ -31,4 +31,4 @@ window.addEventListener("load", function () {
     successAlert = document.getElementById("successAlert");
     errorAlert = document.getElementById("errorAlert");
     errorMessageHolder = document.getElementById("errorMessageHolder");
-})
+});

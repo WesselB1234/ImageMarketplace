@@ -104,27 +104,4 @@ class UsersController extends Controller
             ]);
         } 
     }
-
-    public function delete(array $vars)
-    {
-        try{
-            if (filter_var($vars["id"], FILTER_VALIDATE_INT) === false) {
-                throw new Exception("User ID is not valid.");
-            }
-
-            $userId = $vars["id"];
-
-            if ($userId === $_SESSION["user"]->userId){
-                throw new Exception("You cannot delete yourself.");
-            }
-
-            $this->usersService->deleteUserByUserId($userId);
-            setcookie("success_message", "Successfully deleted user.", time() + 5, "/");
-        } 
-        catch(Exception $e){
-            setcookie("error_message", $e->getMessage(), time() + 5, "/");
-        } 
-
-        header("Location: /users");
-    }
 }

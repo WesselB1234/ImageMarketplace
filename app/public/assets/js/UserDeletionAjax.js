@@ -15,12 +15,22 @@ window.addEventListener("load", function () {
                 id: userId 
             })
         })
-        .then(response => response.json())
-        .then(message => { 
-            console.log(message); 
+        .then(async response => {
+
+            const responseJson = await response.json();
+
+            if (!response.ok) {
+                throw new Error(responseJson.message);
+            }
+
+            return responseJson;
         })
-        .catch(err => {
-            console.error(err);
+        .then(responseJson => { 
+            console.log(responseJson.userId);
+            displaySuccessAlert("Successfully deleted user."); 
+        })
+        .catch(error => {
+            displayErrorAlert(error.message);
         });
     }
 

@@ -40,7 +40,7 @@ class UsersApiController extends Controller
             
             //$this->usersService->deleteUserByUserId($userId);
 
-            throw new Exception("bruh momento");
+            //throw new Exception("bruh momento");
 
             http_response_code(200); 
             echo json_encode(new UserDeletionResponse($userId));

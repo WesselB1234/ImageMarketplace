@@ -46,5 +46,6 @@
     </table>
 </main>
 
+<script src="assets/js/AlertMessaging.js"></script>
 <script src="assets/js/UserDeletionAjax.js"></script>
 <?php require $partialsDir."/footer.php"; ?>

@@ -33,7 +33,7 @@ class ImagesController extends Controller
     {
         $images = $this->imagesService->getAllOnSaleImages();
         
-        $this->displayView("Images/index.php", ["viewModel" => $images]);
+        $this->displayView(["viewModel" => $images], "Images/index.php");
     }
 
     public function details(array $vars)
@@ -65,7 +65,7 @@ class ImagesController extends Controller
                 $creatorUser = $this->usersService->getUserByUserId($image->creatorId);
             }
            
-            $this->displayView(["viewModel" => new ImageDetailsVM($image, $ownerUser, $creatorUser)]);
+            $this->displayView(["viewModel" => new ImageDetailsVM($image, $ownerUser, $creatorUser)], null);
         }
         catch(Exception $e){
             setcookie("error_message", $e->getMessage(), time() + 5, "/");
@@ -91,7 +91,7 @@ class ImagesController extends Controller
                 throw new NotAuthorizedException("You are not authorized to sell this image.");
             }
 
-            $this->displayView("Images/sell.php", ["viewModel" => new ImageSellingVM($image, null), ]);
+            $this->displayView(["viewModel" => new ImageSellingVM($image, null)], null);
         }
         catch(Exception $e){
             setcookie("error_message", $e->getMessage(), time() + 5, "/");

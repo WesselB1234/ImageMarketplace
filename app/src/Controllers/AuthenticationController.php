@@ -21,7 +21,7 @@ class AuthenticationController extends Controller
 
     public function login()
     {
-        $this->displayView("Authentication/login.php", []);
+        $this->displayView(null, null);
     }
 
     public function processLogin()
@@ -40,16 +40,18 @@ class AuthenticationController extends Controller
         }
         catch(Exception $e){
 
-            $this->displayView("Authentication/Login.php", [
-                "viewModel" => new LoginVm($_POST["username"], $_POST["password"]),  
-                "errorMessage" => $e->getMessage()
-            ]);
+            $this->displayView([
+                    "viewModel" => new LoginVm($_POST["username"], $_POST["password"]),  
+                    "errorMessage" => $e->getMessage()
+                ],
+                "Authentication/Login.php"
+            );
         }
     }
 
     public function register()
     {
-        $this->displayView("Authentication/register.php", []);
+        $this->displayView(null, null);
     }
 
     public function processRegister()
@@ -64,10 +66,12 @@ class AuthenticationController extends Controller
         }
         catch(Exception $e){
 
-            $this->displayView("Authentication/Register.php", [
-                "viewModel" => new RegisterVm($_POST["username"], $_POST["password"], $_POST["email"]), 
-                "errorMessage" => $e->getMessage()
-            ]);
+            $this->displayView([
+                    "viewModel" => new RegisterVm($_POST["username"], $_POST["password"], $_POST["email"]), 
+                    "errorMessage" => $e->getMessage()
+                ],
+                "Authentication/Register.php"
+            );
         }
     }
     

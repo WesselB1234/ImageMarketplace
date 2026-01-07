@@ -25,7 +25,7 @@ class UsersController extends Controller
     {
         $users = $this->usersService->getAllUsers();
 
-        $this->displayView("Admin/Users/index.php", ["viewModel" => $users]);
+        $this->displayView(["viewModel" => $users], null);
     }
 
     public function create()
@@ -44,10 +44,12 @@ class UsersController extends Controller
             header("Location: /users");
         }
         catch(Exception $e){
-            $this->displayView("Admin/Users/create.php", [
-                "viewModel" => $user, 
-                "errorMessage" => $e->getMessage()
-            ]);
+            $this->displayView([
+                    "viewModel" => $user, 
+                    "errorMessage" => $e->getMessage()
+                ], 
+                "Users/create.php"
+            );
         }
     }
 
@@ -65,9 +67,7 @@ class UsersController extends Controller
                 throw new NotFoundException("User with ID ".$userId." does not exist.");
             }
 
-            $this->displayView("Admin/Users/update.php", [
-                "viewModel" => $user
-            ]);
+            $this->displayView(["viewModel" => $user], null);
         }
         catch(Exception $e){
             setcookie("error_message", $e->getMessage(), time() + 5, "/");
@@ -98,10 +98,12 @@ class UsersController extends Controller
             header("Location: /users");
         } 
         catch(Exception $e){
-            $this->displayView("Admin/Users/update.php", [
-                "viewModel" => $user,
-                "errorMessage" => $e->getMessage()
-            ]);
+            $this->displayView([
+                    "viewModel" => $user,
+                    "errorMessage" => $e->getMessage()
+                ],
+                "Admin/Users/update.php"
+            );
         } 
     }
 }

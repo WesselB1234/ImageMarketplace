@@ -19,7 +19,7 @@ class AuthenticationController extends Controller
         $this->usersService = new UsersService();
     }
 
-    public function loginIndex()
+    public function login()
     {
         $this->displayView("Authentication/login.php", []);
     }
@@ -47,7 +47,7 @@ class AuthenticationController extends Controller
         }
     }
 
-    public function registerIndex()
+    public function register()
     {
         $this->displayView("Authentication/register.php", []);
     }
@@ -74,9 +74,9 @@ class AuthenticationController extends Controller
     public function logout()
     {
         $this->loggedInAuthorization();
-        session_unset(); 
-        session_destroy();
         
-        $this->displayView("Authentication/login.php", []);
+        unset($_SESSION["user"]);
+        
+        $this->displayView(null, "Authentication/login.php");
     }
 }

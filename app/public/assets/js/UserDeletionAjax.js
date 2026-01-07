@@ -26,7 +26,7 @@ window.addEventListener("load", function () {
             return responseJson;
         })
         .then(responseJson => { 
-            displaySuccessAlert("Successfully deleted user."); 
+            displaySuccessAlert(`Successfully deleted user with ID ${responseJson.userId}.`); 
             userDeletionBtn.parentElement.parentElement.remove();
         })
         .catch(error => {

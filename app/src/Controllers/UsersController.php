@@ -28,9 +28,9 @@ class UsersController extends Controller
         $this->displayView("Admin/Users/index.php", ["viewModel" => $users]);
     }
 
-    public function createIndex()
+    public function create()
     {
-        $this->displayView("Admin/Users/create.php", []);
+        $this->displayView(null, null);
     }
 
     public function processCreate()
@@ -51,7 +51,7 @@ class UsersController extends Controller
         }
     }
 
-    public function updateIndex(array $vars)
+    public function update(array $vars)
     {        
         try{
             if (filter_var($vars["id"], FILTER_VALIDATE_INT) === false) {

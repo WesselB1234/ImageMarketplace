@@ -3,7 +3,7 @@
 
     $title = "Users";
     $enabledNavLink = "Users";
-    $partialsDir = __DIR__."../../../Partials";
+    $partialsDir = __DIR__."../../Partials";
     
     require $partialsDir."/navbarHeader.php"; 
 ?>

@@ -65,7 +65,7 @@ class ImagesController extends Controller
                 $creatorUser = $this->usersService->getUserByUserId($image->creatorId);
             }
            
-            $this->displayView("Images/details.php", ["viewModel" => new ImageDetailsVM($image, $ownerUser, $creatorUser)]);
+            $this->displayView(["viewModel" => new ImageDetailsVM($image, $ownerUser, $creatorUser)]);
         }
         catch(Exception $e){
             setcookie("error_message", $e->getMessage(), time() + 5, "/");
@@ -73,7 +73,7 @@ class ImagesController extends Controller
         }
     }
 
-    public function sellIndex(array $vars)
+    public function sell(array $vars)
     {
         try{
             if (filter_var($vars["id"], FILTER_VALIDATE_INT) === false) {
@@ -201,9 +201,9 @@ class ImagesController extends Controller
         }
     }
 
-    public function uploadIndex()
+    public function upload()
     {
-        $this->displayView("Images/upload.php", []);
+        $this->displayView([]);
     }
 
     public function processUpload()

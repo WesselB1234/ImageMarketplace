@@ -1,21 +1,22 @@
-<?php 
+<?php
     use App\Models\Enums\UserRole;
-
-    $title = "Create user";
-    $partialsDir = __DIR__."../../../Partials";
+    
+    $title = "Update user";
+    $enabledNavLink = "Users";
+    $partialsDir = __DIR__."../../Partials";
     
     require $partialsDir."/navbarHeader.php"; 
 ?>
 
 <main class="container">
 
-    <h1>Create User</h1>
+    <h1>Update User: #<?php echo $viewModel->userId; ?></h1>
 
     <?php include $partialsDir."/errorAlert.php";?>
 
     <a href="/users" class="btn btn-secondary">Return back to users</a>
     
-    <form action="/users/create" method="post" class="mt-4">
+    <form action="/users/update/<?php echo $viewModel->userId ?>" method="post" class="mt-4">
         <div class="mb-3">
             <label for="username" class="form-label">Username</label>
             <input type="text" class="form-control" id="username" name="username" placeholder="Enter username" required value="<?php 
@@ -53,7 +54,7 @@
             <input type="password" class="form-control" id="password" name="password" placeholder="Enter password" required>
         </div>
 
-        <button type="submit" class="btn btn-primary">Create</button>
+        <button type="submit" class="btn btn-primary">Update</button>
     </form>
 </main>
 

@@ -8,9 +8,11 @@ use App\Models\Exceptions\NotAuthorizedException;
 
 class Controller
 {
-    public function displayView($dir, $viewData)
+    public function displayView(?array $viewData, ?string $dir)
     {
-        extract($viewData);
+        if ($viewData !== null){
+            extract($viewData);
+        }
 
         if(isset($_COOKIE["error_message"])){
 
@@ -28,7 +30,21 @@ class Controller
             setcookie("success_message", false, -1, "/");
         }
 
-        require __DIR__ . "../../Views/" . $dir;
+        if ($dir !== null){
+            require __DIR__ . "../../Views/" . $dir;
+        }
+        else{
+            $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
+
+            $callerControllerDir  = $trace[1]["class"];
+            $callerMethod = $trace[1]["function"];
+
+            $explodedControllerDir = explode("\\", $callerControllerDir);
+            $callerControllerName = $explodedControllerDir[count($explodedControllerDir) - 1];
+            $cleanClass = str_replace("Controller", "", $callerControllerName);
+
+            require __DIR__ . "../../Views/$cleanClass/$callerMethod.php";
+        }
     }
 
     public function loggedInAuthorization()

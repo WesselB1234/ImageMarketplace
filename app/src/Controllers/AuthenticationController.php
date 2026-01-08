@@ -33,7 +33,7 @@ class AuthenticationController extends Controller
                 throw new Exception("Password or username is not correct.");
             }
             
-            $user->password = null;
+            $user->setPassword(null);
             $_SESSION["user"] = $user;
 
             header("Location: /");

@@ -83,10 +83,10 @@ class UsersController extends Controller
         try{
             $this->usersService->updateUser($user);
             
-            if ($user->userId === $_SESSION["user"]->userId)
+            if ($user->getUserId() === $_SESSION["user"]->getUserId())
             {
-                $user->userId = $userId;
-                $user->password = null;
+                $user->setUserId($userId);
+                $user->setPassword(null);
                 $_SESSION["user"] = $user;
             }
             

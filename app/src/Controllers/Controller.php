@@ -56,7 +56,7 @@ class Controller
 
     public function adminAuthorization()
     {
-        if ($_SESSION["user"]->role != UserRole::Admin){
+        if ($_SESSION["user"]->getRole() != UserRole::Admin){
             setcookie("error_message", "Your account doesn't have the right role to perform this action.", time() + 5, "/");
             header("Location: /login");
         }

@@ -35,7 +35,7 @@ class UsersApiController extends ApiController
             $this->loggedInAuthorization();
             $this->adminAuthorization();
 
-            if (intval($userId) === $_SESSION["user"]->userId){
+            if (intval($userId) === $_SESSION["user"]->getUserId()){
                 throw new ForbiddenException("You cannot delete yourself.");
             }
             
@@ -69,7 +69,7 @@ class UsersApiController extends ApiController
         try{
             $this->loggedInAuthorization();
             
-            $userId = $_SESSION["user"]->userId;
+            $userId = $_SESSION["user"]->getUserId();
             $user = $this->usersService->getUserByUserId($userId);
 
             if ($user === null){

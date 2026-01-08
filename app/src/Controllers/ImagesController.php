@@ -50,19 +50,19 @@ class ImagesController extends Controller
                 throw new NotFoundException("Image with ID $imageId does not exist.");
             }
             
-            if ($image->isOnSale === false && $_SESSION["user"]->role !== UserRole::Admin && $image->ownerId !== $_SESSION["user"]->userId){
+            if ($image->getIsOnSale() === false && $_SESSION["user"]->getRole() !== UserRole::Admin && $image->getOwnerId() !== $_SESSION["user"]->getUserId()){
                 throw new NotAuthorizedException("You cannot view private off sale images.");
             }
 
             $ownerUser = null;
             $creatorUser = null;
 
-            if ($image->ownerId !== null){
-                $ownerUser = $this->usersService->getUserByUserId($image->ownerId);
+            if ($image->getOwnerId() !== null){
+                $ownerUser = $this->usersService->getUserByUserId($image->getOwnerId());
             }
 
-            if ($image->creatorId !== null){
-                $creatorUser = $this->usersService->getUserByUserId($image->creatorId);
+            if ($image->getCreatorId() !== null){
+                $creatorUser = $this->usersService->getUserByUserId($image->getCreatorId());
             }
            
             $this->displayView(["viewModel" => new ImageDetailsVM($image, $ownerUser, $creatorUser)], null);
@@ -87,7 +87,7 @@ class ImagesController extends Controller
                 throw new NotFoundException("Image with ID $imageId does not exist.");
             }
 
-            if ($image->ownerId !== $_SESSION["user"]->userId && $_SESSION["user"]->role !== UserRole::Admin){
+            if ($image->getOwnerId() !== $_SESSION["user"]->getUserId() && $_SESSION["user"]->getRole() !== UserRole::Admin){
                 throw new NotAuthorizedException("You are not authorized to sell this image.");
             }
 
@@ -111,11 +111,11 @@ class ImagesController extends Controller
                 throw new NotFoundException("Image with ID $imageId does not exist.");
             }
 
-            if ($image->ownerId !== $_SESSION["user"]->userId && $_SESSION["user"]->role !== UserRole::Admin){
+            if ($image->getOwnerId() !== $_SESSION["user"]->getUserId() && $_SESSION["user"]->getRole() !== UserRole::Admin){
                 throw new NotAuthorizedException("You are not authorized to sell this image.");
             }
 
-            $this->imagesService->updateImageSellingPrice($image->imageId, $_POST["price"]);
+            $this->imagesService->updateImageSellingPrice($image->getImageId(), $_POST["price"]);
 
             setcookie("success_message", "Image successfully put on sale.", time() + 5, "/");
             header("Location: /images/details/$imageId");
@@ -148,11 +148,11 @@ class ImagesController extends Controller
                 throw new NotFoundException("Image with ID $imageId does not exist.");
             }
 
-            if ($image->ownerId !== $_SESSION["user"]->userId && $_SESSION["user"]->role !== UserRole::Admin){
+            if ($image->getOwnerId() !== $_SESSION["user"]->getUserId() && $_SESSION["user"]->getRole() !== UserRole::Admin){
                 throw new NotAuthorizedException("You are not authorized to take this image off sale.");
             }
 
-            $this->imagesService->updateImageSellingPrice($image->imageId, null);
+            $this->imagesService->updateImageSellingPrice($image->getImageId(), null);
 
             setcookie("success_message", "Successfully put image off sale.", time() + 5, "/");
             header("Location: /images/details/$imageId");
@@ -182,13 +182,13 @@ class ImagesController extends Controller
                 throw new NotFoundException("Image with ID $imageId does not exist.");
             }
 
-            if ($image->ownerId === $_SESSION["user"]->userId){
+            if ($image->getOwnerId() === $_SESSION["user"]->getUserId()){
                 throw new NotAuthorizedException("You cannot buy your own image.");
             }
 
             $this->imagesService->buyImage($image, $_SESSION["user"]);
 
-            setcookie("success_message", "Successfully bought image: $image->name (Image ID: $image->imageId).", time() + 5, "/");
+            setcookie("success_message", "Successfully bought image: ".$image->getName()." (Image ID: ".$image->getImageId().").", time() + 5, "/");
             header("Location: /portfolio");
         }
         catch(NotFoundException $e){
@@ -276,7 +276,7 @@ class ImagesController extends Controller
                 throw new NotFoundException("Image with ID $imageId does not exist.");
             }
 
-            if ($image->ownerId !== $_SESSION["user"]->userId && $_SESSION["user"]->role !== UserRole::Admin){
+            if ($image->getOwnerId() !== $_SESSION["user"]->getUserId() && $_SESSION["user"]->getRole() !== UserRole::Admin){
                 throw new NotAuthorizedException("You are not authorized to delete this image.");
             }
 

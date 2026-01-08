@@ -71,7 +71,7 @@ class ImagesService implements IImagesService
         }
 
         if ($image->getPrice() > $buyerUser->getImageTokens()){
-            throw new Exception("You do not have e nough image tokens to purchase this image.");
+            throw new Exception("You do not have enough image tokens to purchase this image.");
         }
 
         $ownerUser = $this->usersRepository->getUserByUserId($image->getOwnerId());
@@ -84,6 +84,15 @@ class ImagesService implements IImagesService
 
         $this->usersRepository->updateTokensBalanceByUserId($buyerUser->getUserId(), $buyerUser->getImageTokens());
         $this->imagesRepository->updateImageOwnershipByImageId($image->getImageId(), $buyerUser->getUserId());
+    }
+
+    public function sellImage(int $imageId, ?int $price): void
+    {
+        if ($price < 0){
+            throw new Exception("Price cannot be negative");
+        }
+        
+        $this->imagesRepository->updateImageSellingPrice($imageId, $price);
     }
 
     public function updateImageSellingPrice(int $imageId, ?int $price)

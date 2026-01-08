@@ -115,7 +115,7 @@ class ImagesController extends Controller
                 throw new NotAuthorizedException("You are not authorized to sell this image.");
             }
 
-            $this->imagesService->updateImageSellingPrice($image->getImageId(), $_POST["price"]);
+            $this->imagesService->sellImage($image->getImageId(), $_POST["price"]);
 
             setcookie("success_message", "Image successfully put on sale.", time() + 5, "/");
             header("Location: /images/details/$imageId");

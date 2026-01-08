@@ -13,20 +13,16 @@ class Controller
             extract($viewData);
         }
 
-        if(isset($_COOKIE["error_message"])){
+        if(isset($_SESSION["error_message"])){
 
-            $errorMessage = $_COOKIE["error_message"];
-            
-            unset($_COOKIE["error_message"]);
-            setcookie("error_message", false, -1, "/");
+            $errorMessage = $_SESSION["error_message"];
+            unset($_SESSION["error_message"]);
         }
 
-        if(isset($_COOKIE["success_message"])){
+        if(isset($_SESSION["success_message"])){
 
-            $successMessage = $_COOKIE["success_message"];
-
-            unset($_COOKIE["success_message"]);
-            setcookie("success_message", false, -1, "/");
+            $successMessage = $_SESSION["success_message"];
+            unset($_SESSION["success_message"]);
         }
 
         if ($dir !== null){

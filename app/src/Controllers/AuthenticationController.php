@@ -61,7 +61,8 @@ class AuthenticationController extends Controller
         try{ 
             $this->usersService->createUser($user);
 
-            setcookie("success_message", "Successfully created a new account.", time() + 5, "/");
+            $_SESSION["success_message"] = "Successfully created a new account.";
+            
             $this->processLogin();
         }
         catch(Exception $e){

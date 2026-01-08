@@ -45,9 +45,9 @@ $dispatcher = simpleDispatcher(function (RouteCollector $r) {
     $r->addRoute('POST', '/users/update/{id}', ['App\Controllers\UsersController', 'processUpdate']);
 
     // API endpoints
-    $r->addRoute('POST', '/users/api/delete', ['App\Controllers\UsersApiController', 'delete']);
-    $r->addRoute('GET', '/users/api/getloggedinuser', ['App\Controllers\UsersApiController', 'getLoggedInUser']);
-    $r->addRoute('GET', '/images/api/getonsaleimages', ['App\Controllers\ImagesApiController', 'getOnSaleImages']);
+    $r->addRoute('POST', '/users/api/delete', ['App\Controllers\ApiControllers\UsersApiController', 'delete']);
+    $r->addRoute('GET', '/users/api/getloggedinuser', ['App\Controllers\ApiControllers\UsersApiController', 'getLoggedInUser']);
+    $r->addRoute('GET', '/images/api/getonsaleimages', ['App\Controllers\ApiControllers\ImagesApiController', 'getOnSaleImages']);
 });
 
 $httpMethod = $_SERVER['REQUEST_METHOD'];

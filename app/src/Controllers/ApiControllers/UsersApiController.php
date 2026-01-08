@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\ApiControllers;
 
-use App\Controllers\Controller;
+use App\Controllers\ApiControllers\ApiController;
 use App\Services\Interfaces\IUsersService;
 use App\Services\UsersService;
 use App\Models\User;
@@ -13,7 +13,7 @@ use App\Models\Exceptions\ForbiddenException;
 use App\Models\ApiResponses\UserDeletionResponse;
 use App\Models\ApiResponses\ErrorResponse;
 
-class UsersApiController extends Controller
+class UsersApiController extends ApiController
 {
     private IUsersService $usersService;
 
@@ -32,8 +32,8 @@ class UsersApiController extends Controller
         $userId = $data["id"];
 
         try{
-            $this->loggedInAuthorizationApiEndPoint();
-            $this->adminAuthorizationApiEndPoint();
+            $this->loggedInAuthorization();
+            $this->adminAuthorization();
 
             if (intval($userId) === $_SESSION["user"]->userId){
                 throw new ForbiddenException("You cannot delete yourself.");
@@ -67,7 +67,7 @@ class UsersApiController extends Controller
         header("Content-Type: application/json");
 
         try{
-            $this->loggedInAuthorizationApiEndPoint();
+            $this->loggedInAuthorization();
             
             $userId = $_SESSION["user"]->userId;
             $user = $this->usersService->getUserByUserId($userId);

@@ -1,16 +1,14 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\ApiControllers;
 
-use App\Controllers\Controller;
+use App\Controllers\ApiControllers\ApiController;
 use App\Services\Interfaces\IImagesService;
 use App\Services\ImagesService;
-use App\Models\User;
 use Exception;
-use App\Models\Exceptions\NotFoundException;
 use App\Models\ApiResponses\ErrorResponse;
 
-class ImagesApiController extends Controller
+class ImagesApiController extends ApiController
 {
     private IImagesService $imagesService;
 
@@ -25,7 +23,8 @@ class ImagesApiController extends Controller
         header("Content-Type: application/json");
 
         try{
-            $this->loggedInAuthorizationApiEndPoint();   
+            $this->loggedInAuthorization();   
+            
             $images = $this->imagesService->getAllOnSaleImages();
 
             http_response_code(200); 

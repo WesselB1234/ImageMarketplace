@@ -30,7 +30,7 @@ class UsersService implements IUsersService
     {
         $user = $this->usersRepository->getFullyKnownUserByUsername($username);
 
-        if ($user !== null && password_verify($password, $user->password)) {
+        if ($user !== null && password_verify($password, $user->getPassword())) {
             return $user;
         }
 
@@ -40,20 +40,20 @@ class UsersService implements IUsersService
     public function updateUser(User $user)
     {
         $this->throwIfUserIsNotValid($user);
-        $user->password = $this->getHashedPassword($user->password);
+        $user->setPassword($this->getHashedPassword($user->getPassword()));
         $this->usersRepository->updateUser($user);
     }
 
     private function throwIfUserIsNotValid(User $user)
     {
-        $duplicateUser = $this->usersRepository->getUserByUsername($user->username);
+        $duplicateUser = $this->usersRepository->getUserByUsername($user->getUsername());
 
-        if($duplicateUser !== null && ($user->userId !== null && $duplicateUser->userId === $user->userId) === false)
+        if($duplicateUser !== null && ($user->getUserId() !== null && $duplicateUser->getUserId() === $user->getUserId()) === false)
         {
-            throw new Exception("User with username ".$user->username. " already exists.");
+            throw new Exception("User with username ".$user->getUsername(). " already exists.");
         }
 
-        if(!$this->getIsValidEmail($user->email))
+        if(!$this->getIsValidEmail($user->getEmail()))
         {
             throw new Exception("Email is not valid.");
         }
@@ -72,7 +72,7 @@ class UsersService implements IUsersService
     public function createUser(User $user): int
     {
         $this->throwIfUserIsNotValid($user);
-        $user->password = $this->getHashedPassword($user->password);
+        $user->setPassword($this->getHashedPassword($user->getPassword()));
         
         return $this->usersRepository->createUser($user);
     }

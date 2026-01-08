@@ -31,14 +31,14 @@
         <tbody>
             <?php foreach($viewModel as $user){ ?>
                 <tr>
-                    <th scope="row"><?php echo $user->userId; ?></th>
-                    <td><?php echo htmlspecialchars($user->username, ENT_QUOTES, 'UTF-8'); ?></td>
-                    <td><?php echo htmlspecialchars($user->email, ENT_QUOTES, 'UTF-8'); ?></td>
-                    <td><?php echo StringFormatter::getDottedNumberStringFromNumber($user->imageTokens); ?></td>
-                    <td><?php echo $user->role->value; ?></td>
+                    <th scope="row"><?php echo $user->getUserId(); ?></th>
+                    <td><?php echo htmlspecialchars($user->getUsername(), ENT_QUOTES, 'UTF-8'); ?></td>
+                    <td><?php echo htmlspecialchars($user->getEmail(), ENT_QUOTES, 'UTF-8'); ?></td>
+                    <td><?php echo StringFormatter::getDottedNumberStringFromNumber($user->getImageTokens()); ?></td>
+                    <td><?php echo $user->getRole()->value; ?></td>
                     <td>
-                        <a href="users/update/<?php echo $user->userId ?>" class="btn btn-primary">Update</a> |
-                        <button class="btn btn-danger user-deletion-btn" data-user-id="<?php echo $user->userId; ?>">Delete</button>
+                        <a href="users/update/<?php echo $user->getUserId() ?>" class="btn btn-primary">Update</a> |
+                        <button class="btn btn-danger user-deletion-btn" data-user-id="<?php echo $user->getUserId(); ?>">Delete</button>
                     </td>
                 </tr>
             <?php }?>

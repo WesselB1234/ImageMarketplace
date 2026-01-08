@@ -99,17 +99,17 @@ class UsersRepository extends Repository implements IUsersRepository
             WHERE user_id = :userId;"
         );
 
-        $stmt->bindValue(":userId", $user->userId, PDO::PARAM_INT); 
-        $stmt->bindValue(":username", $user->username, PDO::PARAM_STR); 
-        $stmt->bindValue(":email", $user->email, PDO::PARAM_STR); 
-        $stmt->bindValue(":password", $user->password, PDO::PARAM_STR); 
-        $stmt->bindValue(":imageTokens", $user->imageTokens, PDO::PARAM_INT); 
-        $stmt->bindValue(":role", $user->role->value, PDO::PARAM_STR);
+        $stmt->bindValue(":userId", $user->getUserId(), PDO::PARAM_INT); 
+        $stmt->bindValue(":username", $user->getUsername(), PDO::PARAM_STR); 
+        $stmt->bindValue(":email", $user->getEmail(), PDO::PARAM_STR); 
+        $stmt->bindValue(":password", $user->getPassword(), PDO::PARAM_STR); 
+        $stmt->bindValue(":imageTokens", $user->getImageTokens(), PDO::PARAM_INT); 
+        $stmt->bindValue(":role", $user->getRole()->value, PDO::PARAM_STR);
 
         $stmt->execute();
 
         if($stmt->rowCount() == 0){
-            throw new NotFoundException("User with ID ".$user->userId." does not exist.");
+            throw new NotFoundException("User with ID ".$user->getUserId()." does not exist.");
         }
     }
 
@@ -120,11 +120,11 @@ class UsersRepository extends Repository implements IUsersRepository
             VALUES (:username, :email, :password, :imageTokens, :role);"
         );
 
-        $stmt->bindValue(":username", $user->username, PDO::PARAM_STR); 
-        $stmt->bindValue(":email", $user->email, PDO::PARAM_STR); 
-        $stmt->bindValue(":password", $user->password, PDO::PARAM_STR); 
-        $stmt->bindValue(":imageTokens", $user->imageTokens, PDO::PARAM_INT); 
-        $stmt->bindValue(":role", $user->role->value, PDO::PARAM_STR);
+        $stmt->bindValue(":username", $user->getUsername(), PDO::PARAM_STR); 
+        $stmt->bindValue(":email", $user->getEmail(), PDO::PARAM_STR); 
+        $stmt->bindValue(":password", $user->getPassword(), PDO::PARAM_STR); 
+        $stmt->bindValue(":imageTokens", $user->getImageTokens(), PDO::PARAM_INT); 
+        $stmt->bindValue(":role", $user->getRole()->value, PDO::PARAM_STR);
 
         $stmt->execute();
 

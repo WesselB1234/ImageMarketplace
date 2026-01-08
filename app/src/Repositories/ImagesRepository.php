@@ -165,7 +165,7 @@ class ImagesRepository extends Repository implements IImagesRepository
         $stmt->execute();
 
         if($stmt->rowCount() === 0){
-            throw new NotFoundException("Image with ID ".$userId." does not exist.");
+            throw new NotFoundException("Image with ID ".$imageId." does not exist.");
         }
     }
 }

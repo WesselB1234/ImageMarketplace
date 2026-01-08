@@ -1,4 +1,4 @@
-<?php 
+<?php  
 
 namespace App\Services;
 
@@ -66,24 +66,24 @@ class ImagesService implements IImagesService
 
     public function buyImage(Image $image, User $buyerUser)
     {
-        if ($image->isOnSale === false || $image->isModerated || $image->price === null){
+        if ($image->getIsOnSale() === false || $image->getIsModerated() || $image->getPrice() === null){
             throw new Exception("This image is not on sale");
         }
 
-        if ($image->price > $buyerUser->imageTokens){
+        if ($image->getPrice() > $buyerUser->getImageTokens()){
             throw new Exception("You do not have e nough image tokens to purchase this image.");
         }
 
-        $ownerUser = $this->usersRepository->getUserByUserId($image->ownerId);
-        $buyerUser->imageTokens = $buyerUser->imageTokens - $image->price;
+        $ownerUser = $this->usersRepository->getUserByUserId($image->getOwnerId());
+        $buyerUser->setImageTokens($buyerUser->getImageTokens() - $image->getPrice());
 
         if($ownerUser !== null){
-            $ownerUser->imageTokens = $ownerUser->imageTokens + $image->price;
-            $this->usersRepository->updateTokensBalanceByUserId($ownerUser->userId, $ownerUser->imageTokens);
+            $ownerUser->setImageTokens($ownerUser->getImageTokens() + $image->getPrice());
+            $this->usersRepository->updateTokensBalanceByUserId($ownerUser->getUserId(), $ownerUser->getImageTokens());
         }
 
-        $this->usersRepository->updateTokensBalanceByUserId($buyerUser->userId, $buyerUser->imageTokens);
-        $this->imagesRepository->updateImageOwnershipByImageId($image->imageId, $buyerUser->userId);
+        $this->usersRepository->updateTokensBalanceByUserId($buyerUser->getUserId(), $buyerUser->getImageTokens());
+        $this->imagesRepository->updateImageOwnershipByImageId($image->getImageId(), $buyerUser->getUserId());
     }
 
     public function updateImageSellingPrice(int $imageId, ?int $price)

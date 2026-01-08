@@ -61,11 +61,7 @@ class UsersController extends Controller
             }
             
             $userId = $vars["id"];
-            $user = $this->usersService->getUserByUserId($userId);
-
-            if ($user === null){
-                throw new NotFoundException("User with ID ".$userId." does not exist.");
-            }
+            $user = $this->usersService->getUserByUserIdOrThrow($userId);
 
             $this->displayView(["viewModel" => $user], null);
         }

@@ -7,6 +7,7 @@ use App\Repositories\Interfaces\IUsersRepository;
 use App\Repositories\UsersRepository;
 use App\Models\User;
 use Exception;
+use App\Models\Exceptions\NotFoundException;
 
 class UsersService implements IUsersService
 {
@@ -25,7 +26,18 @@ class UsersService implements IUsersService
     {
         return $this->usersRepository->getUserByUserId($userId);
     }
+    
+    public function getUserByUserIdOrThrow(int $userId): User
+    {
+        $user = $this->getUserByUserId($userId);
 
+        if ($user === null){
+            throw new NotFoundException("User with ID ".$userId." does not exist.");
+        }
+
+        return $user;
+    }
+    
     public function getUserByUsernameAndPassword(string $username, string $password): ?User
     {
         $user = $this->usersRepository->getFullyKnownUserByUsername($username);
@@ -43,17 +55,17 @@ class UsersService implements IUsersService
         $user->setPassword($this->getHashedPassword($user->getPassword()));
         $this->usersRepository->updateUser($user);
     }
-
+ 
     private function throwIfUserIsNotValid(User $user)
     {
         $duplicateUser = $this->usersRepository->getUserByUsername($user->getUsername());
 
-        if($duplicateUser !== null && ($user->getUserId() !== null && $duplicateUser->getUserId() === $user->getUserId()) === false)
+        if ($duplicateUser !== null && ($user->getUserId() !== null && $duplicateUser->getUserId() === $user->getUserId()) === false)
         {
             throw new Exception("User with username ".$user->getUsername(). " already exists.");
         }
 
-        if(!$this->getIsValidEmail($user->getEmail()))
+        if (!$this->getIsValidEmail($user->getEmail()))
         {
             throw new Exception("Email is not valid.");
         }

@@ -10,6 +10,9 @@ use App\Repositories\UsersRepository;
 use App\Models\Image;
 use App\Models\User;
 use Exception;
+use App\Models\Exceptions\NotFoundException;
+use App\Models\Exceptions\NotAuthorizedException;
+use App\Models\Enums\UserRole;
 
 class ImagesService implements IImagesService
 {
@@ -35,6 +38,17 @@ class ImagesService implements IImagesService
     public function getImageByImageId(int $imageId): ?Image
     {
         return $this->imagesRepository->getImageByImageId($imageId);
+    }
+
+    public function getImageByImageIdOrThrow(int $imageId): Image
+    {
+        $image = $this->getImageByImageId($imageId);
+
+        if ($image === null){
+            throw new NotFoundException("Image with ID ".$imageId." does not exist.");
+        }
+
+        return $image;
     }
 
     public function uploadImageFile(int $imageId)
@@ -64,8 +78,14 @@ class ImagesService implements IImagesService
         return $this->imagesRepository->createImage($image);
     }
 
-    public function buyImage(Image $image, User $buyerUser)
+    public function buyImage(Image $image)
     {
+        $buyerUser = $_SESSION["user"];
+
+        if ($image->getOwnerId() === $_SESSION["user"]->getUserId()){
+            throw new NotAuthorizedException("You cannot buy your own image.");
+        }
+
         if ($image->getIsOnSale() === false || $image->getIsModerated() || $image->getPrice() === null){
             throw new Exception("This image is not on sale");
         }
@@ -86,13 +106,28 @@ class ImagesService implements IImagesService
         $this->imagesRepository->updateImageOwnershipByImageId($image->getImageId(), $buyerUser->getUserId());
     }
 
-    public function sellImage(int $imageId, ?int $price): void
+    public function sellImage(Image $image, int $price): void
     {
+        if (!$this->isUserAuthorizedToImage($image)){
+            throw new NotAuthorizedException("You are not authorized to sell this image.");
+        }
+
         if ($price < 0){
             throw new Exception("Price cannot be negative");
         }
         
-        $this->imagesRepository->updateImageSellingPrice($imageId, $price);
+        $this->imagesRepository->updateImageSellingPrice($image->getImageId(), $price);
+    }
+
+    public function takeImageOffSaleByImageId(int $imageId): void
+    {
+        $image = $this->getImageByImageIdOrThrow($imageId);
+
+        if (!$this->isUserAuthorizedToImage($image)){
+            throw new NotAuthorizedException("You are not authorized to take this image off sale.");
+        }
+
+        $this->updateImageSellingPrice($image->getImageId(), null);
     }
 
     public function updateImageSellingPrice(int $imageId, ?int $price)
@@ -107,6 +142,21 @@ class ImagesService implements IImagesService
 
     public function deleteImageByImageId(int $imageId)
     {
+        $image = $this->getImageByImageIdOrThrow($imageId);
+
+        if (!$this->isUserAuthorizedToImage($image)){
+            throw new NotAuthorizedException("You are not authorized to delete this image.");
+        }
+
         return $this->imagesRepository->deleteImageByImageId($imageId);
+    }
+
+    public function isUserAuthorizedToImage(Image $image): bool
+    {
+        if ($image->getOwnerId() !== $_SESSION["user"]->getUserId() && $_SESSION["user"]->getRole() !== UserRole::Admin){
+            return false;
+        }
+
+        return true;
     }
 }

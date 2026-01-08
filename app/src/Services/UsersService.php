@@ -7,7 +7,6 @@ use App\Repositories\Interfaces\IUsersRepository;
 use App\Repositories\UsersRepository;
 use App\Models\User;
 use Exception;
-use App\Models\Exceptions;
 
 class UsersService implements IUsersService
 {
@@ -31,7 +30,7 @@ class UsersService implements IUsersService
     {
         $user = $this->usersRepository->getFullyKnownUserByUsername($username);
 
-        if (isset($user) && password_verify($password, $user->password)) {
+        if ($user !== null && password_verify($password, $user->password)) {
             return $user;
         }
 
@@ -49,7 +48,7 @@ class UsersService implements IUsersService
     {
         $duplicateUser = $this->usersRepository->getUserByUsername($user->username);
 
-        if(isset($duplicateUser) && (isset($user->userId) && $duplicateUser->userId == $user->userId) == false)
+        if($duplicateUser !== null && ($user->userId !== null && $duplicateUser->userId === $user->userId) === false)
         {
             throw new Exception("User with username ".$user->username. " already exists.");
         }
@@ -70,11 +69,12 @@ class UsersService implements IUsersService
         return password_hash($rawPassword, PASSWORD_DEFAULT);   
     }
 
-    public function createUser(User $user)
+    public function createUser(User $user): int
     {
         $this->throwIfUserIsNotValid($user);
         $user->password = $this->getHashedPassword($user->password);
-        $this->usersRepository->createUser($user);
+        
+        return $this->usersRepository->createUser($user);
     }
 
     public function deleteUserByUserId(int $userId)

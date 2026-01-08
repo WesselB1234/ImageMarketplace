@@ -25,12 +25,12 @@ class UsersController extends Controller
     {
         $users = $this->usersService->getAllUsers();
 
-        $this->displayView("Admin/Users/index.php", ["viewModel" => $users]);
+        $this->displayView(["viewModel" => $users], null);
     }
 
-    public function createIndex()
+    public function create()
     {
-        $this->displayView("Admin/Users/create.php", []);
+        $this->displayView(null, null);
     }
 
     public function processCreate()
@@ -38,38 +38,38 @@ class UsersController extends Controller
         $user = User::constructUnknownUser($_POST["username"], $_POST["email"], $_POST["password"], $_POST["image_tokens"], $_POST["role"]);
         
         try{ 
-            $this->usersService->createUser($user);
+            $userId = $this->usersService->createUser($user);
 
-            setcookie("success_message", "Successfully created a new user.", time() + 5, "/");
+            setcookie("success_message", "Successfully created a new user with User ID $userId.", time() + 5, "/");
             header("Location: /users");
         }
         catch(Exception $e){
-
-            $this->displayView("Admin/Users/create.php", [
-                "viewModel" => $user, 
-                "errorMessage" => $e->getMessage()
-            ]);
+            $this->displayView([
+                    "viewModel" => $user, 
+                    "errorMessage" => $e->getMessage()
+                ], 
+                "Users/create.php"
+            );
         }
     }
 
-    public function updateIndex(array $vars)
+    public function update(array $vars)
     {        
-        $userId = $vars["id"];
-
         try{
+            if (filter_var($vars["id"], FILTER_VALIDATE_INT) === false) {
+                throw new Exception("User ID is not valid.");
+            }
+            
+            $userId = $vars["id"];
             $user = $this->usersService->getUserByUserId($userId);
 
-            if(!isset($user))
-            {
-                throw new NotFoundException("User with id ".$userId." does not exist.");
+            if($user === null){
+                throw new NotFoundException("User with ID ".$userId." does not exist.");
             }
 
-            $this->displayView("Admin/Users/update.php", [
-                "viewModel" => $user
-            ]);
+            $this->displayView(["viewModel" => $user], null);
         }
-        catch(Exception $e)
-        {
+        catch(Exception $e){
             setcookie("error_message", $e->getMessage(), time() + 5, "/");
             header("Location: /users");
         }        
@@ -77,15 +77,15 @@ class UsersController extends Controller
 
     public function processUpdate(array $vars)
     {
+        $userId = $vars["id"];
         $user = User::constructFullyKnownUser($vars["id"], $_POST["username"], $_POST["email"], $_POST["password"], $_POST["image_tokens"], $_POST["role"]);
-        //var_dump($user);
 
         try{
             $this->usersService->updateUser($user);
-
-            if ($vars["id"] == $_SESSION["user"]->userId)
+            
+            if ($user->userId === $_SESSION["user"]->userId)
             {
-                $user->userId = $vars["id"];
+                $user->userId = $userId;
                 $user->password = null;
                 $_SESSION["user"] = $user;
             }
@@ -93,36 +93,17 @@ class UsersController extends Controller
             setcookie("success_message", "Successfully updated user.", time() + 5, "/");
             header("Location: /users");
         } 
-        catch(NotFoundException $e)
-        {
+        catch(NotFoundException $e){
             setcookie("error_message", $e->getMessage(), time() + 5, "/");
             header("Location: /users");
         } 
-        catch(Exception $e)
-        {
-            $this->displayView("Admin/Users/update.php", [
-                "viewModel" => $user,
-                "errorMessage" => $e->getMessage()
-            ]);
+        catch(Exception $e){
+            $this->displayView([
+                    "viewModel" => $user,
+                    "errorMessage" => $e->getMessage()
+                ],
+                "Admin/Users/update.php"
+            );
         } 
-    }
-
-    public function delete(array $vars)
-    {
-        try{
-            if ($vars["id"] == $_SESSION["user"]->userId)
-            {
-                throw new Exception("You cannot delete yourself.");
-            }
-
-            $this->usersService->deleteUserByUserId($vars["id"]);
-            setcookie("success_message", "Successfully deleted user.", time() + 5, "/");
-        } 
-        catch(Exception $e)
-        {
-            setcookie("error_message", $e->getMessage(), time() + 5, "/");
-        } 
-
-        header("Location: /users");
     }
 }

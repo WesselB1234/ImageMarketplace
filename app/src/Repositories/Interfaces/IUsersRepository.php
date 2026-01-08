@@ -11,7 +11,7 @@ interface IUsersRepository
     public function getUserByUsername(string $username): ?User;
     public function getFullyKnownUserByUsername(string $username): ?User;
     public function updateUser(User $user);
-    public function createUser(User $user);
+    public function createUser(User $user): int;
     public function updateTokensBalanceByUserId(int $userId, int $newTokensBalance);
     public function deleteUserByUserId(int $userId);
 }

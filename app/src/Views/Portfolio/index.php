@@ -1,22 +1,23 @@
 <?php 
     $title = "Portfolio";
+    $enabledNavLink = "Portfolio";
+    $partialsDir = __DIR__."../../Partials";
     
-    require __DIR__."../../Partials/navbarHeader.php"; 
+    require $partialsDir."/navbarHeader.php"; 
 ?>
 
 <main class="container">
-    <?php
 
-        // Read the image file into a string
-        $imagePath = "../public/assets/images/Core1NoBackground.png";
-        $imageData = file_get_contents($imagePath);
+    <h1>Portfolio</h1>
 
-        // Encode the binary data as Base64
-        $imageString = base64_encode($imageData);
-
-        // Output or use the string
-        echo "<img src='data:image/jpeg;base64,". $imageString . "' />";
+    <?php 
+        include $partialsDir."/errorAlert.php";
+        include $partialsDir."/successAlert.php"; 
     ?>
+
+    <a class="btn btn-success" href="images/upload">Upload an image</a>
+
+    <?php require $partialsDir."/imagesDisplay.php" ?>
 </main>
 
-<?php require __DIR__."../../Partials/footer.php"; ?>
+<?php require $partialsDir."/footer.php"; ?>

@@ -1,14 +1,20 @@
-.messages-holder{
-    margin:auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px; 
+main {
+    min-height: calc(100vh - 174px);
 }
 
-.message-box{
-    background-color: rgb(222, 222, 222);
-    padding: 10px 20px 10px 20px;
-    width: 80%;
-    border: black solid 1px;
+footer {
+    height: 70px;
+}
+
+.authentication-box {
+    width: 350px;
+}
+
+.image-card{
+    width: 270px;
+}
+
+.card-image-top{
+    height: 300px;
+    object-fit: contain;
 }

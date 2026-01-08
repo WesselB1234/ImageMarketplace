@@ -13,4 +13,4 @@ window.addEventListener("load", function () {
     }
 
     registerForm.addEventListener("submit", getIsRepeatedPasswordCorrect);
-})
+});

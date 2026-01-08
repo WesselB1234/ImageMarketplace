@@ -5,7 +5,7 @@ namespace App\Repositories;
 use App\Repositories\Interfaces\IUsersRepository;
 use App\Repositories\Repository;
 use App\Models\User;
-use App\Framework\DataMapper;
+use App\Models\Helpers\DataMapper;
 use App\Models\Exceptions\NotFoundException;
 
 use PDO;
@@ -14,13 +14,14 @@ class UsersRepository extends Repository implements IUsersRepository
 {
     public function getAllUsers(): array
     {
-        $sql = "SELECT user_id, username, email, image_tokens, role FROM Users;";
-        $result = $this->connection->query($sql);
-        $assocUsers = $result->fetchAll(PDO::FETCH_ASSOC);
         $users = [];
 
-        foreach($assocUsers as $user){
-            array_push($users, DataMapper::mapAssocUserToUser($user));
+        $stmt = $this->connection->prepare("SELECT user_id, username, email, image_tokens, role FROM Users;");
+        $stmt->execute();
+        $assocUsers = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        foreach($assocUsers as $assocUser){
+            array_push($users, DataMapper::mapAssocUserToUser($assocUser));
         }
 
         return $users;
@@ -39,7 +40,7 @@ class UsersRepository extends Repository implements IUsersRepository
 
         $assocUser = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if ($assocUser !== false) {
+        if ($assocUser !== false){
             return DataMapper::mapAssocUserToUser($assocUser);
         }
 
@@ -59,7 +60,7 @@ class UsersRepository extends Repository implements IUsersRepository
 
         $assocUser = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if ($assocUser !== false) {
+        if ($assocUser !== false){
             return DataMapper::mapAssocUserToUser($assocUser);
         }
 
@@ -79,7 +80,7 @@ class UsersRepository extends Repository implements IUsersRepository
 
         $assocUser = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if ($assocUser !== false) {
+        if ($assocUser !== false){
             return DataMapper::mapAssocUserToFullyKnownUser($assocUser);
         }
 
@@ -89,49 +90,63 @@ class UsersRepository extends Repository implements IUsersRepository
     public function updateUser(User $user)
     {
         $stmt = $this->connection->prepare(
-                "UPDATE Users 
-                SET username = :username,
-                    email = :email, 
-                    password = :password, 
-                    image_tokens = :image_tokens, 
-                    role = :role
-                WHERE user_id = :userId;"
-            );
+            "UPDATE Users 
+            SET username = :username,
+                email = :email, 
+                password = :password, 
+                image_tokens = :imageTokens, 
+                role = :role
+            WHERE user_id = :userId;"
+        );
 
         $stmt->bindValue(":userId", $user->userId, PDO::PARAM_INT); 
         $stmt->bindValue(":username", $user->username, PDO::PARAM_STR); 
         $stmt->bindValue(":email", $user->email, PDO::PARAM_STR); 
         $stmt->bindValue(":password", $user->password, PDO::PARAM_STR); 
-        $stmt->bindValue(":image_tokens", $user->imageTokens, PDO::PARAM_INT); 
+        $stmt->bindValue(":imageTokens", $user->imageTokens, PDO::PARAM_INT); 
         $stmt->bindValue(":role", $user->role->value, PDO::PARAM_STR);
 
         $stmt->execute();
 
-        if($stmt->rowCount() == 0)
-        {
-            throw new NotFoundException("User with id ".$user->userId." does not exist.");
+        if($stmt->rowCount() == 0){
+            throw new NotFoundException("User with ID ".$user->userId." does not exist.");
         }
     }
 
-    public function createUser(User $user)
+    public function createUser(User $user): int
     {
         $stmt = $this->connection->prepare(
             "INSERT INTO Users (username, email, password, image_tokens, role) 
-            VALUES (:username, :email, :password, :image_tokens, :role);"
+            VALUES (:username, :email, :password, :imageTokens, :role);"
         );
 
         $stmt->bindValue(":username", $user->username, PDO::PARAM_STR); 
         $stmt->bindValue(":email", $user->email, PDO::PARAM_STR); 
         $stmt->bindValue(":password", $user->password, PDO::PARAM_STR); 
-        $stmt->bindValue(":image_tokens", $user->imageTokens, PDO::PARAM_INT); 
+        $stmt->bindValue(":imageTokens", $user->imageTokens, PDO::PARAM_INT); 
         $stmt->bindValue(":role", $user->role->value, PDO::PARAM_STR);
 
         $stmt->execute();
+
+        return (int)$this->connection->lastInsertId();
     }
 
     public function updateTokensBalanceByUserId(int $userId, int $newTokensBalance)
     {
-        return null;
+        $stmt = $this->connection->prepare(
+            "UPDATE Users 
+            SET image_tokens = :imageTokens
+            WHERE user_id = :userId;"
+        );
+
+        $stmt->bindValue(":userId", $userId, PDO::PARAM_INT); 
+        $stmt->bindValue(":imageTokens", $newTokensBalance, PDO::PARAM_INT); 
+
+        $stmt->execute();
+
+        if($stmt->rowCount() == 0){
+            throw new NotFoundException("User with ID ".$newTokensBalance." does not exist.");
+        }
     }
 
     public function deleteUserByUserId(int $userId)
@@ -140,8 +155,7 @@ class UsersRepository extends Repository implements IUsersRepository
         $stmt->bindValue(":userId", $userId, PDO::PARAM_INT); 
         $stmt->execute();
 
-        if($stmt->rowCount() == 0)
-        {
+        if($stmt->rowCount() === 0){
             throw new NotFoundException("User with id ".$userId." does not exist.");
         }
     }

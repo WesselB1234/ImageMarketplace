@@ -19,9 +19,9 @@ class AuthenticationController extends Controller
         $this->usersService = new UsersService();
     }
 
-    public function loginIndex()
+    public function login()
     {
-        $this->displayView("Authentication/login.php", []);
+        $this->displayView(null, null);
     }
 
     public function processLogin()
@@ -40,16 +40,18 @@ class AuthenticationController extends Controller
         }
         catch(Exception $e){
 
-            $this->displayView("Authentication/Login.php", [
-                "viewModel" => new LoginVm($_POST["username"], $_POST["password"]),  
-                "errorMessage" => $e->getMessage()
-            ]);
+            $this->displayView([
+                    "viewModel" => new LoginVm($_POST["username"], $_POST["password"]),  
+                    "errorMessage" => $e->getMessage()
+                ],
+                "Authentication/Login.php"
+            );
         }
     }
 
-    public function registerIndex()
+    public function register()
     {
-        $this->displayView("Authentication/register.php", []);
+        $this->displayView(null, null);
     }
 
     public function processRegister()
@@ -59,24 +61,26 @@ class AuthenticationController extends Controller
         try{ 
             $this->usersService->createUser($user);
 
-            setcookie("success_message", "Successfully created a new account. Login into your new account.", time() + 5, "/");
+            setcookie("success_message", "Successfully created a new account.", time() + 5, "/");
             $this->processLogin();
         }
         catch(Exception $e){
 
-            $this->displayView("Authentication/Register.php", [
-                "viewModel" => new RegisterVm($_POST["username"], $_POST["password"], $_POST["email"]), 
-                "errorMessage" => $e->getMessage()
-            ]);
+            $this->displayView([
+                    "viewModel" => new RegisterVm($_POST["username"], $_POST["password"], $_POST["email"]), 
+                    "errorMessage" => $e->getMessage()
+                ],
+                "Authentication/Register.php"
+            );
         }
     }
     
     public function logout()
     {
         $this->loggedInAuthorization();
-        session_unset(); 
-        session_destroy();
         
-        $this->displayView("Authentication/login.php", []);
+        unset($_SESSION["user"]);
+        
+        $this->displayView(null, "Authentication/login.php");
     }
 }

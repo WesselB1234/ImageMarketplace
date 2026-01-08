@@ -7,11 +7,13 @@ use App\Models\Image;
 
 interface IImagesService
 {
-    public function getAllImages(): array;
+    public function getAllImagesFromUserId(int $userId): array;
     public function getAllOnSaleImages(): array;
     public function getImageByImageId(int $imageId): ?Image;
-    public function buyImage(int $imageId, User $user);
-    public function sellImage(int $imageId, User $user);
+    public function createImage(Image $image): int;
+    public function uploadImageFile(int $imageId);
+    public function buyImage(Image $image, User $buyerUser);
+    public function updateImageSellingPrice(int $imageId, ?int $price);
     public function updateImageModerationByImageId(int $imageId, bool $isModerated);
-    public function deleteImageByImageId(int $id);
+    public function deleteImageByImageId(int $imageId);
 }

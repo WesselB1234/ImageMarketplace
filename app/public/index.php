@@ -6,8 +6,6 @@ use FastRoute\RouteCollector;
 use FastRoute\Dispatcher;
 use function FastRoute\simpleDispatcher;
 use Dotenv\Dotenv;
-use App\Models\User;
-use App\Models\Enums\UserRole;
 
 session_start();
 
@@ -17,24 +15,23 @@ $dotenv->load();
 $dispatcher = simpleDispatcher(function (RouteCollector $r) {
 
     // Authentication
-    $r->addRoute('GET', '/login', ['App\Controllers\AuthenticationController', 'loginIndex']);
+    $r->addRoute('GET', '/login', ['App\Controllers\AuthenticationController', 'login']);
     $r->addRoute('POST', '/login', ['App\Controllers\AuthenticationController', 'processLogin']);
-    $r->addRoute('GET', '/register', ['App\Controllers\AuthenticationController', 'registerIndex']);
+    $r->addRoute('GET', '/register', ['App\Controllers\AuthenticationController', 'register']);
     $r->addRoute('POST', '/register', ['App\Controllers\AuthenticationController', 'processRegister']);
     $r->addRoute('GET', '/logout', ['App\Controllers\AuthenticationController', 'logout']);
 
     // Images
     $r->addRoute('GET', '/images', ['App\Controllers\ImagesController', 'index']);
     $r->addRoute('GET', '/images/details/{id}', ['App\Controllers\ImagesController', 'details']);
-    $r->addRoute('GET', '/images/buy/{id}', ['App\Controllers\ImagesController', 'buyIndex']);
-    $r->addRoute('POST', '/images/buy/{id}', ['App\Controllers\ImagesController', 'processBuy']);
-    $r->addRoute('POST', '/images/setOnSale/{id}', ['App\Controllers\ImagesController', 'setOnSale']);
-    $r->addRoute('POST', '/images/removeOnSale/{id}', ['App\Controllers\ImagesController', 'removeOnSale']);
-    $r->addRoute('GET', '/images/upload', ['App\Controllers\ImagesController', 'uploadIndex']);
+    $r->addRoute('GET', '/images/sell/{id}', ['App\Controllers\ImagesController', 'sell']);
+    $r->addRoute('POST', '/images/sell/{id}', ['App\Controllers\ImagesController', 'processSell']);
+    $r->addRoute('GET', '/images/takeoffsale/{id}', ['App\Controllers\ImagesController', 'takeOffSale']);
+    $r->addRoute('GET', '/images/buy/{id}', ['App\Controllers\ImagesController', 'buyImage']);
+    $r->addRoute('GET', '/images/upload', ['App\Controllers\ImagesController', 'upload']);
     $r->addRoute('POST', '/images/upload', ['App\Controllers\ImagesController', 'processUpload']);
-    $r->addRoute('POST', '/images/moderate/{id}', ['App\Controllers\ImagesController', 'moderateImage']);
-    $r->addRoute('POST', '/images/unmoderate/{id}', ['App\Controllers\ImagesController', 'unModerateImage']);
-    $r->addRoute('POST', '/images/delete/{id}', ['App\Controllers\ImagesController', 'deleteImage']);
+    $r->addRoute('GET', '/images/moderate/{id}/{isModerate}', ['App\Controllers\ImagesController', 'moderateImage']);
+    $r->addRoute('GET', '/images/delete/{id}', ['App\Controllers\ImagesController', 'deleteImage']);
 
     // Portfolio
     $r->addRoute('GET', '/', ['App\Controllers\PortfolioController', 'index']);
@@ -42,15 +39,20 @@ $dispatcher = simpleDispatcher(function (RouteCollector $r) {
 
     // Users (admin only)
     $r->addRoute('GET', '/users', ['App\Controllers\UsersController', 'index']);
-    $r->addRoute('GET', '/users/create', ['App\Controllers\UsersController', 'createIndex']);
+    $r->addRoute('GET', '/users/create', ['App\Controllers\UsersController', 'create']);
     $r->addRoute('POST', '/users/create', ['App\Controllers\UsersController', 'processCreate']);
-    $r->addRoute('GET', '/users/update/{id}', ['App\Controllers\UsersController', 'updateIndex']);
+    $r->addRoute('GET', '/users/update/{id}', ['App\Controllers\UsersController', 'update']);
     $r->addRoute('POST', '/users/update/{id}', ['App\Controllers\UsersController', 'processUpdate']);
-    $r->addRoute('GET', '/users/delete/{id}', ['App\Controllers\UsersController', 'delete']);
+
+    // API endpoints
+    $r->addRoute('POST', '/users/api/delete', ['App\Controllers\ApiControllers\UsersApiController', 'delete']);
+    $r->addRoute('GET', '/users/api/getloggedinuser', ['App\Controllers\ApiControllers\UsersApiController', 'getLoggedInUser']);
+    $r->addRoute('GET', '/images/api/getonsaleimages', ['App\Controllers\ApiControllers\ImagesApiController', 'getOnSaleImages']);
 });
 
 $httpMethod = $_SERVER['REQUEST_METHOD'];
 $uri = strtok($_SERVER['REQUEST_URI'], '?');
+
 $routeInfo = $dispatcher->dispatch($httpMethod, $uri);
 
 switch ($routeInfo[0]) {

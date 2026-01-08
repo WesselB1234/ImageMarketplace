@@ -1,7 +1,9 @@
 <?php 
+    use App\Models\Helpers\StringFormatter;
+
     $title = "Users";
     $enabledNavLink = "Users";
-    $partialsDir = __DIR__."../../../Partials";
+    $partialsDir = __DIR__."../../Partials";
     
     require $partialsDir."/navbarHeader.php"; 
 ?>
@@ -19,7 +21,7 @@
 
     <table class="table mt-4">
         <thead class="table-dark">
-            <th scope="col">#</th>
+            <th scope="col">User ID</th>
             <th scope="col">Username</th>
             <th scope="col">Email</th>
             <th scope="col">Image tokens</th>
@@ -29,14 +31,14 @@
         <tbody>
             <?php foreach($viewModel as $user){ ?>
                 <tr>
-                    <th scope="row"><?php echo htmlspecialchars($user->userId, ENT_QUOTES, 'UTF-8'); ?></th>
+                    <th scope="row"><?php echo $user->userId; ?></th>
                     <td><?php echo htmlspecialchars($user->username, ENT_QUOTES, 'UTF-8'); ?></td>
                     <td><?php echo htmlspecialchars($user->email, ENT_QUOTES, 'UTF-8'); ?></td>
-                    <td><?php echo htmlspecialchars($user->imageTokens, ENT_QUOTES, 'UTF-8'); ?></td>
-                    <td><?php echo htmlspecialchars($user->role->value, ENT_QUOTES, 'UTF-8'); ?></td>
+                    <td><?php echo StringFormatter::getDottedNumberStringFromNumber($user->imageTokens); ?></td>
+                    <td><?php echo $user->role->value; ?></td>
                     <td>
-                        <a href="users/update/<?php echo htmlspecialchars($user->userId, ENT_QUOTES, 'UTF-8'); ?>" class="btn btn-primary">Update</a> |
-                        <a href="users/delete/<?php echo htmlspecialchars($user->userId, ENT_QUOTES, 'UTF-8'); ?>" class="btn btn-danger">Delete</a>
+                        <a href="users/update/<?php echo $user->userId ?>" class="btn btn-primary">Update</a> |
+                        <button class="btn btn-danger user-deletion-btn" data-user-id="<?php echo $user->userId; ?>">Delete</button>
                     </td>
                 </tr>
             <?php }?>
@@ -44,4 +46,6 @@
     </table>
 </main>
 
+<script src="assets/js/AlertMessaging.js"></script>
+<script src="assets/js/UserDeletionAjax.js"></script>
 <?php require $partialsDir."/footer.php"; ?>

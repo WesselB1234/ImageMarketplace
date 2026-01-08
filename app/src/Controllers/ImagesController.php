@@ -203,7 +203,7 @@ class ImagesController extends Controller
 
     public function upload()
     {
-        $this->displayView([]);
+        $this->displayView(null, null);
     }
 
     public function processUpload()

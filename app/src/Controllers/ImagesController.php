@@ -94,7 +94,7 @@ class ImagesController extends Controller
             $this->displayView(["viewModel" => new ImageSellingVM($image, null)], null);
         }
         catch(Exception $e){
-            setcookie("error_message", $e->getMessage(), time() + 5, "/");
+            $_SESSION["error_message"] = $e->getMessage();
             header("Location: /portfolio");
         }
     }
@@ -117,11 +117,11 @@ class ImagesController extends Controller
 
             $this->imagesService->sellImage($image->getImageId(), $_POST["price"]);
 
-            setcookie("success_message", "Image successfully put on sale.", time() + 5, "/");
+            $_SESSION["success_message"] = "Image successfully put on sale.";
             header("Location: /images/details/$imageId");
         }
         catch(NotFoundException | NotAuthorizedException $e){
-            setcookie("error_message", $e->getMessage(), time() + 5, "/");
+            $_SESSION["error_message"] = $e->getMessage();
             header("Location: /portfolio");
         }
         catch(Exception $e){
@@ -154,15 +154,15 @@ class ImagesController extends Controller
 
             $this->imagesService->updateImageSellingPrice($image->getImageId(), null);
 
-            setcookie("success_message", "Successfully put image off sale.", time() + 5, "/");
+            $_SESSION["success_message"] = "Successfully put image off sale.";
             header("Location: /images/details/$imageId");
         }
         catch(NotFoundException $e){
-            setcookie("error_message", $e->getMessage(), time() + 5, "/");
+            $_SESSION["error_message"] = $e->getMessage();
             header("Location: /portfolio");
         }
         catch(Exception $e){
-            setcookie("error_message", $e->getMessage(), time() + 5, "/");
+            $_SESSION["error_message"] = $e->getMessage();
             header("Location: /images/details/$imageId");
         }
     }
@@ -188,15 +188,15 @@ class ImagesController extends Controller
 
             $this->imagesService->buyImage($image, $_SESSION["user"]);
 
-            setcookie("success_message", "Successfully bought image: ".$image->getName()." (Image ID: ".$image->getImageId().").", time() + 5, "/");
+            $_SESSION["success_message"] = "Successfully bought image: ".$image->getName()." (Image ID: ".$image->getImageId().").";
             header("Location: /portfolio");
         }
         catch(NotFoundException $e){
-            setcookie("error_message", $e->getMessage(), time() + 5, "/");
+            $_SESSION["error_message"] = $e->getMessage();
             header("Location: /portfolio");
         }
         catch(Exception $e){
-            setcookie("error_message", $e->getMessage(), time() + 5, "/");
+            $_SESSION["error_message"] = $e->getMessage();
             header("Location: /images/details/$imageId");
         }
     }
@@ -216,7 +216,7 @@ class ImagesController extends Controller
             try{
                 $this->imagesService->uploadImageFile($imageId);
 
-                setcookie("success_message", "Image successfully uploaded!", time() + 5, "/");
+                $_SESSION["success_message"] = "Image successfully uploaded!";
                 header("Location: /portfolio");
             }
             catch(Exception $e){
@@ -249,15 +249,15 @@ class ImagesController extends Controller
             }
 
             $this->imagesService->updateImageModerationByImageId($imageId, $isModerate);
-            setcookie("success_message", "Image successfully ".($isModerate ? "moderated" : "unmoderated").".", time() + 5, "/");
+            $_SESSION["success_message"] = "Image successfully ".($isModerate ? "moderated" : "unmoderated").".";
             header("Location: /images/details/$imageId");
         }
         catch(NotFoundException $e){
-            setcookie("error_message", $e->getMessage(), time() + 5, "/");
+            $_SESSION["error_message"] = $e->getMessage();
             header("Location: /portfolio");
         }
         catch(Exception $e){
-            setcookie("error_message", $e->getMessage(), time() + 5, "/");
+            $_SESSION["error_message"] = $e->getMessage();
             header("Location: /images/details/$imageId");
         }
     }
@@ -282,10 +282,10 @@ class ImagesController extends Controller
 
             $this->imagesService->deleteImageByImageId($imageId);
 
-            setcookie("success_message", "Successfully deleted image.", time() + 5, "/");
+            $_SESSION["success_message"] = "Successfully deleted image.";
         } 
         catch(Exception $e){
-            setcookie("error_message", $e->getMessage(), time() + 5, "/");
+            $_SESSION["error_message"] = $e->getMessage();
         } 
 
         header("Location: /portfolio");

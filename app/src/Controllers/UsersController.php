@@ -40,7 +40,7 @@ class UsersController extends Controller
         try{ 
             $userId = $this->usersService->createUser($user);
 
-            setcookie("success_message", "Successfully created a new user with User ID $userId.", time() + 5, "/");
+            $_SESSION["success_message"] = "Successfully created a new user with User ID $userId.";
             header("Location: /users");
         }
         catch(Exception $e){
@@ -56,21 +56,21 @@ class UsersController extends Controller
     public function update(array $vars)
     {        
         try{
-            if (filter_var($vars["id"], FILTER_VALIDATE_INT) === false) {
+            if (filter_var($vars["id"], FILTER_VALIDATE_INT) === false){
                 throw new Exception("User ID is not valid.");
             }
             
             $userId = $vars["id"];
             $user = $this->usersService->getUserByUserId($userId);
 
-            if($user === null){
+            if ($user === null){
                 throw new NotFoundException("User with ID ".$userId." does not exist.");
             }
 
             $this->displayView(["viewModel" => $user], null);
         }
         catch(Exception $e){
-            setcookie("error_message", $e->getMessage(), time() + 5, "/");
+            $_SESSION["error_message"] = $e->getMessage();
             header("Location: /users");
         }        
     }
@@ -83,18 +83,17 @@ class UsersController extends Controller
         try{
             $this->usersService->updateUser($user);
             
-            if ($user->getUserId() === $_SESSION["user"]->getUserId())
-            {
+            if ($user->getUserId() === $_SESSION["user"]->getUserId()){
                 $user->setUserId($userId);
                 $user->setPassword(null);
                 $_SESSION["user"] = $user;
             }
             
-            setcookie("success_message", "Successfully updated user.", time() + 5, "/");
+            $_SESSION["success_message"] = "Successfully updated user.";
             header("Location: /users");
         } 
         catch(NotFoundException $e){
-            setcookie("error_message", $e->getMessage(), time() + 5, "/");
+            $_SESSION["error_message"] = $e->getMessage();
             header("Location: /users");
         } 
         catch(Exception $e){

@@ -208,7 +208,7 @@ class ImagesController extends Controller
 
     public function processUpload()
     {
-        $image = Image::constructUnknownImage($_SESSION["user"]->userId, $_SESSION["user"]->userId, $_POST["name"], $_POST["description"], $_POST["alt_text"]);
+        $image = Image::constructUnknownImage($_SESSION["user"]->getUserId(), $_SESSION["user"]->getUserId(), $_POST["name"], $_POST["description"], $_POST["alt_text"]);
         
         try{
             $imageId = $this->imagesService->createImage($image);

@@ -63,10 +63,9 @@ class User
         return $this->userId;
     }
 
-    public function setUserId(?int $userId): self
+    public function setUserId(?int $userId): void
     {
         $this->userId = $userId;
-        return $this;
     }
 
     public function getUsername(): string
@@ -74,10 +73,9 @@ class User
         return $this->username;
     }
 
-    public function setUsername(string $username): self
+    public function setUsername(string $username): void
     {
         $this->username = $username;
-        return $this;
     }
 
     public function getEmail(): string
@@ -85,10 +83,9 @@ class User
         return $this->email;
     }
 
-    public function setEmail(string $email): self
+    public function setEmail(string $email): void
     {
         $this->email = $email;
-        return $this;
     }
 
     public function getPassword(): ?string
@@ -96,10 +93,9 @@ class User
         return $this->password;
     }
 
-    public function setPassword(?string $password): self
+    public function setPassword(?string $password): void
     {
         $this->password = $password;
-        return $this;
     }
 
     public function getImageTokens(): int
@@ -107,10 +103,9 @@ class User
         return $this->imageTokens;
     }
 
-    public function setImageTokens(int $imageTokens): self
+    public function setImageTokens(int $imageTokens): void
     {
         $this->imageTokens = $imageTokens;
-        return $this;
     }
 
     public function getRole(): UserRole
@@ -118,9 +113,8 @@ class User
         return $this->role;
     }
 
-    public function setRole(UserRole $role): self
+    public function setRole(UserRole $role): void
     {
         $this->role = $role;
-        return $this;
     }
 }

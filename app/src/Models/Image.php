@@ -61,10 +61,9 @@ class Image
         return $this->imageId;
     }
 
-    public function setImageId(int $imageId): self
+    public function setImageId(int $imageId): void
     {
         $this->imageId = $imageId;
-        return $this;
     }
 
     public function getOwnerId(): ?int
@@ -72,10 +71,9 @@ class Image
         return $this->ownerId;
     }
 
-    public function setOwnerId(?int $ownerId): self
+    public function setOwnerId(?int $ownerId): void
     {
         $this->ownerId = $ownerId;
-        return $this;
     }
 
     public function getCreatorId(): ?int
@@ -83,10 +81,9 @@ class Image
         return $this->creatorId;
     }
 
-    public function setCreatorId(?int $creatorId): self
+    public function setCreatorId(?int $creatorId): void
     {
         $this->creatorId = $creatorId;
-        return $this;
     }
 
     public function getName(): string
@@ -94,10 +91,9 @@ class Image
         return $this->name;
     }
 
-    public function setName(string $name): self
+    public function setName(string $name): void
     {
         $this->name = $name;
-        return $this;
     }
 
     public function getDescription(): string
@@ -105,10 +101,9 @@ class Image
         return $this->description;
     }
 
-    public function setDescription(string $description): self
+    public function setDescription(string $description): void
     {
         $this->description = $description;
-        return $this;
     }
 
     public function getPrice(): ?int
@@ -116,10 +111,9 @@ class Image
         return $this->price;
     }
 
-    public function setPrice(?int $price): self
+    public function setPrice(?int $price): void
     {
         $this->price = $price;
-        return $this;
     }
 
     public function getIsModerated(): bool
@@ -127,10 +121,9 @@ class Image
         return $this->isModerated;
     }
 
-    public function setIsModerated(bool $isModerated): self
+    public function setIsModerated(bool $isModerated): void
     {
         $this->isModerated = $isModerated;
-        return $this;
     }
 
     public function getIsOnSale(): bool
@@ -138,10 +131,9 @@ class Image
         return $this->isOnSale;
     }
 
-    public function setIsOnSale(bool $isOnSale): self
+    public function setIsOnSale(bool $isOnSale): void
     {
         $this->isOnSale = $isOnSale;
-        return $this;
     }
 
     public function getTimeCreated(): DateTime
@@ -149,10 +141,9 @@ class Image
         return $this->timeCreated;
     }
 
-    public function setTimeCreated(DateTime $timeCreated): self
+    public function setTimeCreated(DateTime $timeCreated): void
     {
         $this->timeCreated = $timeCreated;
-        return $this;
     }
 
     public function getAltText(): string
@@ -160,9 +151,8 @@ class Image
         return $this->altText;
     }
 
-    public function setAltText(string $altText): self
+    public function setAltText(string $altText): void
     {
         $this->altText = $altText;
-        return $this;
     }
 }

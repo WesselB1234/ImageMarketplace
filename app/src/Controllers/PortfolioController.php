@@ -19,7 +19,7 @@ class PortfolioController extends Controller
     
     public function index()
     {
-        $images = $this->imagesService->getAllImagesFromUserId($_SESSION["user"]->userId);
+        $images = $this->imagesService->getAllImagesFromUserId($_SESSION["user"]->getUserId());
 
         $this->displayView(["viewModel" => $images], null);
     }

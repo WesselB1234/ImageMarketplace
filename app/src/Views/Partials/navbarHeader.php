@@ -21,7 +21,7 @@
                 <li class="nav-item">
                     <a class="nav-link <?php echo ($enabledNavLink === "Images" ? "active" : "") ?>" href="/images">Images on sale</a>
                 </li>
-                <?php if ($_SESSION["user"]->role === UserRole::Admin){?>
+                <?php if ($_SESSION["user"]->getRole() === UserRole::Admin){?>
                     <li class="nav-item">
                         <a class="nav-link <?php echo ($enabledNavLink === "Users" ? "active" : "") ?>" href="/users">Users</a>
                     </li>
@@ -29,8 +29,8 @@
             </ul>
             <div class="form-inline my-2 my-lg-0">
                 <div class="nav-link">
-                    Image tokens balance: <?php echo StringFormatter::getDottedNumberStringFromNumber($_SESSION["user"]->imageTokens); ?> |
-                    Logged in as: <?php echo $_SESSION["user"]->username; ?>
+                    Image tokens balance: <?php echo StringFormatter::getDottedNumberStringFromNumber($_SESSION["user"]->getImageTokens()); ?> |
+                    Logged in as: <?php echo $_SESSION["user"]->getUsername(); ?>
                 </div>
                 <a href="/logout" class="btn btn-danger text-light">Logout</a>
             </div>

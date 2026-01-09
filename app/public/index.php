@@ -124,7 +124,7 @@ function getMethodNameAndRouteFromRefClassEqualToHttp(ReflectionClass $refClass)
     return null;
 }
 
-function getWildCardsFromUriAndRouteObj(Route $route): ?array
+function getParamsFromUriAndRouteObj(Route $route): ?array
 {
     $uri = strtok($_SERVER["REQUEST_URI"], "?");
     $wildCardsInStr = str_replace($route->getRoute(), "", $uri);
@@ -135,9 +135,17 @@ function getWildCardsFromUriAndRouteObj(Route $route): ?array
 
     $wildCardVars = explode("/", $wildCardsInStr);
 
-    var_dump($wildCardVars);
+    if (count($wildCardVars) <= 0){
+        return null;
+    }
 
-    return null;
+    $params = [];
+
+    foreach($route->getParams() as $i => $param){
+        $params[$param] = $wildCardVars[$i];
+    }
+
+    return $params;
 }
 
 function callRouteMethodIfPresentInController(string $dir)
@@ -156,10 +164,12 @@ function callRouteMethodIfPresentInController(string $dir)
         $methodName = $methodNameAndRouteObj["methodName"];
         $routeObj = $methodNameAndRouteObj["routeObj"];
 
-        $wildcardVars = getWildCardsFromUriAndRouteObj($routeObj);
+        $params = getParamsFromUriAndRouteObj($routeObj);
 
+        var_dump($params);
+        
         $controller = new $controllerNamespace();
-        $controller->$methodName($wildcardVars);
+        $controller->$methodName($params);
     }
 }
 

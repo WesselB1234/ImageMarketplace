@@ -15,15 +15,15 @@
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item">
-                    <a class="nav-link <?php echo ($enabledNavLink === "Portfolio" ? "active" : "") ?>" href="/portfolio">Portfolio</a>
+                <li class="nav-link">
+                    <a class="nav-btn <?php echo ($enabledNavLink === "Portfolio" ? "nav-enabled" : "") ?>" href="/portfolio">Portfolio</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link <?php echo ($enabledNavLink === "Images" ? "active" : "") ?>" href="/images">Images on sale</a>
+                <li class="nav-link">
+                    <a class="nav-btn <?php echo ($enabledNavLink === "Images" ? "nav-enabled" : "") ?>" href="/images">Images on sale</a>
                 </li>
                 <?php if ($_SESSION["user"]->getRole() === UserRole::Admin){?>
-                    <li class="nav-item">
-                        <a class="nav-link <?php echo ($enabledNavLink === "Users" ? "active" : "") ?>" href="/users">Users</a>
+                    <li class="nav-link">
+                        <a class="nav-btn <?php echo ($enabledNavLink === "Users" ? "nav-enabled" : "") ?>" href="/users">Users</a>
                     </li>
                 <?php } ?>
             </ul>

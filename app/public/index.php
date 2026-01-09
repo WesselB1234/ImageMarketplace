@@ -86,6 +86,27 @@ $dotenv->load();
 $httpMethod = $_SERVER["REQUEST_METHOD"];
 $uri = strtok($_SERVER["REQUEST_URI"], "?");
 
+function getControllerNameSpaceOfDir($dir): ?string
+{
+    $pos = strpos($dir, "/Controllers"); 
+    
+    if ($pos !== false) { 
+        $namespaceWithExtension = substr($dir, $pos + 1); 
+        $namespaceWithForwardSlashes = "App\\".pathinfo($namespaceWithExtension, PATHINFO_DIRNAME) . '\\' . pathinfo($namespaceWithExtension, PATHINFO_FILENAME);
+
+        return str_replace("/", "\\", $namespaceWithForwardSlashes);
+    }
+
+    return null;
+}
+
+function callRouteMethodIfPresentInController(string $dir)
+{
+    $controllerNamespace = getControllerNameSpaceOfDir($dir);
+
+    var_dump($controllerNamespace);
+}
+
 function loopThroughControllersFolder(string $dir)
 {
     $files = array_diff(scandir($dir), [".", ".."]);
@@ -95,7 +116,7 @@ function loopThroughControllersFolder(string $dir)
         $fileExtension = pathinfo($fileName, PATHINFO_EXTENSION);
 
         if ($fileExtension === "php"){
-            var_dump($fileName);
+            callRouteMethodIfPresentInController("$dir/$fileName");
         }
         else if ($fileExtension === "") {
             loopThroughControllersFolder("$dir/$fileName");

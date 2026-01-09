@@ -70,6 +70,15 @@ switch ($routeInfo[0]) {
         $controllerName = $routeInfo[1][0];
         $methodName = $routeInfo[1][1];
         $queryVars = $routeInfo[2];
+
+        $refClass = new ReflectionClass($controllerName); 
+        $refMethod = $refClass->getMethod($methodName);
+        $attributes = $refMethod->getAttributes();
+
+        foreach ($attributes as $attr) { 
+            $instance = $attr->newInstance(); // ← THIS creates your Route object 
+            var_dump($instance); 
+        }
         
         $controller = new $controllerName();
         $controller->$methodName($queryVars);

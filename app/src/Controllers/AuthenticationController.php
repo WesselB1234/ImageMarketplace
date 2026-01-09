@@ -8,6 +8,7 @@ use App\Services\Interfaces\IUsersService;
 use App\Models\User;
 use App\Models\Enums\UserRole;
 use App\Models\ViewModels\AuthenticationVM;
+use App\Models\Attributes\Route;
 use Exception;
 
 class AuthenticationController extends Controller 
@@ -18,6 +19,7 @@ class AuthenticationController extends Controller
         $this->usersService = new UsersService();
     }
 
+    #[Route("GET", ["bruh" => "test"])]
     public function login()
     {
         $this->displayView(null, null);

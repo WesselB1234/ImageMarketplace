@@ -20,13 +20,13 @@ class UsersApiController extends ApiController
     public function __construct()
     {
         parent::__construct();
-
         $this->usersService = new UsersService();
+        
+        $this->loggedInAuthorization();
     }
 
     public function delete(array $vars)
     {
-        $this->loggedInAuthorization();
         $this->adminAuthorization();   
         
         $input = file_get_contents("php://input"); 
@@ -42,46 +42,31 @@ class UsersApiController extends ApiController
 
             http_response_code(200); 
             echo json_encode(new UserDeletionResponse($userId), JSON_PRETTY_PRINT);
-            exit;
         }
         catch(ForbiddenException $e){
-            http_response_code(403); 
+            $this->displayErrorJson(403, $e->getMessage());
         }  
-        catch(NotAuthorizedException $e){
-            http_response_code(401); 
-        } 
         catch(NotFoundException $e){
-            http_response_code(404); 
+            $this->displayErrorJson(404, $e->getMessage()); 
         }
-        catch(Exception $e){
-            http_response_code(400); 
-        }  
-
-        $this->displayErrorJson($e->getMessage());
+        catch(Exception $e){ 
+            $this->displayErrorJson(400, $e->getMessage());
+        }
     }
 
     public function getLoggedInUser()
     {
-        $this->loggedInAuthorization();
-
         try{    
             $user = $this->usersService->getUserByUserIdOrThrow($_SESSION["user"]->getUserId());
 
             http_response_code(200); 
             echo json_encode($user, JSON_PRETTY_PRINT);
-            exit;
         }
-        catch(NotAuthorizedException $e){
-            http_response_code(401);
-            $this->displayErrorJson($e->getMessage()); 
-        } 
         catch(NotFoundException $e){
-            http_response_code(404); 
-            $this->displayErrorJson($e->getMessage());
+            $this->displayErrorJson(404, $e->getMessage());
         }
         catch(Exception $e){
-            http_response_code(400); 
-            $this->displayErrorJson($e->getMessage());
+            $this->displayErrorJson(400, $e->getMessage());
         }  
     }
 }

@@ -14,28 +14,21 @@ class ImagesApiController extends ApiController
     public function __construct()
     {
         parent::__construct();
-
         $this->imagesService = new ImagesService();
+        
+        $this->loggedInAuthorization();
     }
 
     public function getOnSaleImages()
     {
-        try{
-            $this->loggedInAuthorization();   
-            
+        try{            
             $images = $this->imagesService->getAllOnSaleImages();
 
             http_response_code(200); 
             echo json_encode($images, JSON_PRETTY_PRINT);
-            exit;
-        }
-        catch(NotAuthorizedException $e){
-            http_response_code(401); 
         }
         catch(Exception $e){
-            http_response_code(400); 
+            $this->displayErrorJson(400, $e->getMessage());
         }  
-
-        $this->displayErrorJson($e->getMessage());
     }
 } 

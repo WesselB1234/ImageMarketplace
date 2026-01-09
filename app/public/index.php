@@ -6,6 +6,7 @@ $loader = require __DIR__ . "/../vendor/autoload.php";
 //use FastRoute\Dispatcher;
 //use function FastRoute\simpleDispatcher;
 use Dotenv\Dotenv;
+use App\Models\Attributes\Route;
 
 session_start();
 
@@ -83,9 +84,6 @@ $dotenv->load();
 //         break;
 // }
 
-$httpMethod = $_SERVER["REQUEST_METHOD"];
-$uri = strtok($_SERVER["REQUEST_URI"], "?");
-
 function getControllerNameSpaceOfDir($dir): ?string
 {
     $pos = strpos($dir, "/Controllers"); 
@@ -100,6 +98,32 @@ function getControllerNameSpaceOfDir($dir): ?string
     return null;
 }
 
+function getMethodNameAndRouteFromRefClassEqualToHttp(ReflectionClass $refClass): ?array
+{
+    $httpMethod = $_SERVER["REQUEST_METHOD"];
+    $uri = strtok($_SERVER["REQUEST_URI"], "?");
+
+    foreach ($refClass->getMethods() as $refMethod) { 
+        foreach ($refMethod->getAttributes() as $attribute) { 
+            
+            $attributeObj = $attribute->newInstance();
+
+            if (!$attributeObj instanceof Route){
+                continue;
+            }
+
+            if ($attributeObj->getRoute() === $uri){
+                return [
+                    "routeObj" => $attributeObj,
+                    "methodName" => $refMethod->getName()
+                ];
+            }
+        }  
+    }
+
+    return null;
+}
+
 function callRouteMethodIfPresentInController(string $dir)
 {
     $controllerNamespace = getControllerNameSpaceOfDir($dir);
@@ -109,13 +133,14 @@ function callRouteMethodIfPresentInController(string $dir)
     }
 
     $refClass = new ReflectionClass($controllerNamespace); 
+    $methodNameAndRouteObj = getMethodNameAndRouteFromRefClassEqualToHttp($refClass); 
 
-    foreach ($refClass->getMethods() as $refMethod) { 
-        foreach ($refMethod->getAttributes() as $attribute) { 
-            $instance = $attribute->newInstance();
-            var_dump($instance); 
-            var_dump($refMethod->getName());
-        }  
+    if ($methodNameAndRouteObj !== null){
+
+        $methodName = $methodNameAndRouteObj["methodName"];
+
+        $controller = new $controllerNamespace();
+        $controller->$methodName();
     }
 }
 

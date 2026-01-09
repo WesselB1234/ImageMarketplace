@@ -19,7 +19,7 @@ class AuthenticationController extends Controller
         $this->usersService = new UsersService();
     }
 
-    #[Route("GET", ["bruh" => "test"])]
+    #[Route("GET", "/login", ["bruh" => "test"])]
     public function login()
     {
         $this->displayView(null, null);

@@ -104,7 +104,19 @@ function callRouteMethodIfPresentInController(string $dir)
 {
     $controllerNamespace = getControllerNameSpaceOfDir($dir);
 
-    var_dump($controllerNamespace);
+    if (!class_exists($controllerNamespace)){
+        throw new Exception("$controllerNamespace does not exist as a class.");
+    }
+
+    $refClass = new ReflectionClass($controllerNamespace); 
+
+    foreach ($refClass->getMethods() as $refMethod) { 
+        foreach ($refMethod->getAttributes() as $attribute) { 
+            $instance = $attribute->newInstance();
+            var_dump($instance); 
+            var_dump($refMethod->getName());
+        }  
+    }
 }
 
 function loopThroughControllersFolder(string $dir)

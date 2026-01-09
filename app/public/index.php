@@ -9,6 +9,7 @@ use Dotenv\Dotenv;
 use App\Models\Attributes\Route;
 use App\Models\Exceptions\NotAllowedException;
 use App\Models\Exceptions\NotFoundException;
+use App\Models\RouterDispatchData;
 
 session_start();
 
@@ -100,7 +101,7 @@ function getControllerNameSpaceOfDir($dir): ?string
     return null;
 }
 
-function getMethodNameAndRouteFromRefController(ReflectionClass $refController): ?array
+function getDispatchDataFromRefController(ReflectionClass $refController): ?RouterDispatchData
 {
     $httpMethod = $_SERVER["REQUEST_METHOD"];
     $uri = strtok($_SERVER["REQUEST_URI"], "?");
@@ -108,21 +109,18 @@ function getMethodNameAndRouteFromRefController(ReflectionClass $refController):
     foreach ($refController->getMethods() as $refMethod) { 
         foreach ($refMethod->getAttributes() as $attribute) { 
             
-            $attributeObj = $attribute->newInstance();
+            $route = $attribute->newInstance();
 
-            if (!$attributeObj instanceof Route){
+            if (!$route instanceof Route){
                 continue;
             }
 
-            if (str_contains($uri, $attributeObj->getRoute())){
+            if (str_contains($uri, $route->getRoute())){
 
-                $allowedMethod = $attributeObj->getHttpMethod();
+                $allowedMethod = $route->getHttpMethod();
 
                 if ($allowedMethod === $httpMethod){
-                    return [
-                        "routeObj" => $attributeObj,
-                        "methodName" => $refMethod->getName()
-                    ];
+                    return new RouterDispatchData($route, $refMethod->getName());
                 }
                 else{
                     throw new NotAllowedException("This route can only be accessed by a $allowedMethod request.");
@@ -134,18 +132,17 @@ function getMethodNameAndRouteFromRefController(ReflectionClass $refController):
     return null;
 }
 
-function getParamsFromUriAndRouteObj(Route $routeObj): ?array
+function getParamsFromUriAndRoute(Route $route): ?array
 {
     $uri = strtok($_SERVER["REQUEST_URI"], "?");
-      
-    $uriParamsStr = str_replace($routeObj->getRoute(), "", $uri);
+    $uriParamsStr = str_replace($route->getRoute(), "", $uri);
 
     if (str_starts_with($uriParamsStr, "/")) {
         $uriParamsStr = substr($uriParamsStr, 1);
     }
 
     $uriParams = (empty($uriParamsStr) ? [] : explode("/", $uriParamsStr));
-    $routeParams = $routeObj->getParams(); 
+    $routeParams = $route->getParams(); 
 
     $uriParamsCount = count($uriParams);
     $routeParamsCount = ($routeParams === null ? 0 : count($routeParams));
@@ -167,7 +164,7 @@ function getParamsFromUriAndRouteObj(Route $routeObj): ?array
     return $params;
 }
 
-function getMethodNameAndRouteObjFromDir(string $dir): ?array
+function getDispatchDataFromDir(string $dir): ?RouterDispatchData
 {
     $controllerNamespace = getControllerNameSpaceOfDir($dir);
 
@@ -176,31 +173,19 @@ function getMethodNameAndRouteObjFromDir(string $dir): ?array
     }
 
     $refController = new ReflectionClass($controllerNamespace); 
-    $methodNameAndRouteObj = getMethodNameAndRouteFromRefController($refController); 
+    $dispatchData = getDispatchDataFromRefController($refController); 
 
-    if ($methodNameAndRouteObj !== null){
+    if ($dispatchData !== null){
         
-        $methodNameAndRouteObj["controllerNamespace"] = $controllerNamespace; 
+        $dispatchData->setControllerNamespace($controllerNamespace); 
     
-        return $methodNameAndRouteObj;
+        return $dispatchData;
     }
 
     return null;
 }
 
-function callRouteMethod(array $methodNameAndRouteObj)
-{
-    $methodName = $methodNameAndRouteObj["methodName"];
-    $routeObj = $methodNameAndRouteObj["routeObj"];
-    $controllerNamespace = $methodNameAndRouteObj["controllerNamespace"];
-
-    $params = getParamsFromUriAndRouteObj($routeObj);
-                
-    $controller = new $controllerNamespace();
-    $controller->$methodName($params);
-}
-
-function recursivelyIterateThroughControllersFolder(string $dir): ?array
+function getDispatchDataRecursivelyThroughControllersFolder(string $dir): ?RouterDispatchData
 {
     $files = array_diff(scandir($dir), [".", ".."]);
 
@@ -210,18 +195,18 @@ function recursivelyIterateThroughControllersFolder(string $dir): ?array
 
         if ($fileExtension === "php"){
 
-            $methodNameAndRouteObj = getMethodNameAndRouteObjFromDir("$dir/$fileName");
+            $dispatchData = getDispatchDataFromDir("$dir/$fileName");
 
-            if ($methodNameAndRouteObj !== null){
-                return $methodNameAndRouteObj;
+            if ($dispatchData !== null){
+                return $dispatchData;
             }
         }
         else if ($fileExtension === "") {
             
-            $methodNameAndRouteObj = recursivelyIterateThroughControllersFolder("$dir/$fileName");
+            $dispatchData = getDispatchDataRecursivelyThroughControllersFolder("$dir/$fileName");
 
-            if ($methodNameAndRouteObj !== null){
-                return $methodNameAndRouteObj;
+            if ($dispatchData !== null){
+                return $dispatchData;
             }
         }
     }
@@ -229,9 +214,21 @@ function recursivelyIterateThroughControllersFolder(string $dir): ?array
     return null;
 }
 
+function callRouteMethod(RouterDispatchData $dispatchData)
+{
+    $methodName = $dispatchData->getMethodName();
+    $route = $dispatchData->getRoute();
+    $controllerNamespace = $dispatchData->getControllerNamespace();
+
+    $params = getParamsFromUriAndRoute($route);
+                
+    $controller = new $controllerNamespace();
+    $controller->$methodName($params);
+}
+
 function dispatch()
 {
-    $methodNameAndRouteObj = recursivelyIterateThroughControllersFolder(__DIR__."/../src/Controllers");
+    $methodNameAndRouteObj = getDispatchDataRecursivelyThroughControllersFolder(__DIR__."/../src/Controllers");
 
     if ($methodNameAndRouteObj !== null){
         callRouteMethod($methodNameAndRouteObj);

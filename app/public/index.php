@@ -7,6 +7,8 @@ $loader = require __DIR__ . "/../vendor/autoload.php";
 //use function FastRoute\simpleDispatcher;
 use Dotenv\Dotenv;
 use App\Models\Attributes\Route;
+use App\Models\Exceptions\NotAllowedException;
+use App\Models\Exceptions\NotFoundException;
 
 session_start();
 
@@ -98,12 +100,12 @@ function getControllerNameSpaceOfDir($dir): ?string
     return null;
 }
 
-function getMethodNameAndRouteFromRefClassEqualToHttp(ReflectionClass $refClass): ?array
+function getMethodNameAndRouteFromRefController(ReflectionClass $refController): ?array
 {
     $httpMethod = $_SERVER["REQUEST_METHOD"];
     $uri = strtok($_SERVER["REQUEST_URI"], "?");
 
-    foreach ($refClass->getMethods() as $refMethod) { 
+    foreach ($refController->getMethods() as $refMethod) { 
         foreach ($refMethod->getAttributes() as $attribute) { 
             
             $attributeObj = $attribute->newInstance();
@@ -112,11 +114,19 @@ function getMethodNameAndRouteFromRefClassEqualToHttp(ReflectionClass $refClass)
                 continue;
             }
 
-            if (str_contains($uri, $attributeObj->getRoute()) && $attributeObj->getHttpMethod() === $httpMethod){
-                return [
-                    "routeObj" => $attributeObj,
-                    "methodName" => $refMethod->getName()
-                ];
+            if (str_contains($uri, $attributeObj->getRoute())){
+
+                $allowedMethod = $attributeObj->getHttpMethod();
+
+                if ($allowedMethod === $httpMethod){
+                    return [
+                        "routeObj" => $attributeObj,
+                        "methodName" => $refMethod->getName()
+                    ];
+                }
+                else{
+                    throw new NotAllowedException("This route can only be accessed by a $allowedMethod request.");
+                }
             }
         }  
     }
@@ -124,31 +134,40 @@ function getMethodNameAndRouteFromRefClassEqualToHttp(ReflectionClass $refClass)
     return null;
 }
 
-function getParamsFromUriAndRouteObj(Route $route): ?array
+function getParamsFromUriAndRouteObj(Route $routeObj): ?array
 {
     $uri = strtok($_SERVER["REQUEST_URI"], "?");
-    $wildCardsInStr = str_replace($route->getRoute(), "", $uri);
+      
+    $uriParamsStr = str_replace($routeObj->getRoute(), "", $uri);
 
-    if (str_starts_with($wildCardsInStr, "/")) {
-        $wildCardsInStr = substr($wildCardsInStr, 1);
+    if (str_starts_with($uriParamsStr, "/")) {
+        $uriParamsStr = substr($uriParamsStr, 1);
     }
 
-    $wildCardVars = explode("/", $wildCardsInStr);
+    $uriParams = (empty($uriParamsStr) ? [] : explode("/", $uriParamsStr));
+    $routeParams = $routeObj->getParams(); 
 
-    if (count($wildCardVars) <= 0){
+    $uriParamsCount = count($uriParams);
+    $routeParamsCount = ($routeParams === null ? 0 : count($routeParams));
+    
+    if ($uriParamsCount > $routeParamsCount || $uriParamsCount < $routeParamsCount){
+        throw new NotFoundException("This route does not have the right amount of parameters.");
+    }
+    
+    if ($routeParamsCount === 0){
         return null;
     }
 
     $params = [];
 
-    foreach($route->getParams() as $i => $param){
-        $params[$param] = $wildCardVars[$i];
+    foreach($routeParams as $i => $param){
+        $params[$param] = $uriParams[$i];
     }
 
     return $params;
 }
 
-function callRouteMethodIfPresentInController(string $dir)
+function getMethodNameAndRouteObjFromDir(string $dir): ?array
 {
     $controllerNamespace = getControllerNameSpaceOfDir($dir);
 
@@ -156,24 +175,32 @@ function callRouteMethodIfPresentInController(string $dir)
         throw new Exception("$controllerNamespace does not exist as a class.");
     }
 
-    $refClass = new ReflectionClass($controllerNamespace); 
-    $methodNameAndRouteObj = getMethodNameAndRouteFromRefClassEqualToHttp($refClass); 
+    $refController = new ReflectionClass($controllerNamespace); 
+    $methodNameAndRouteObj = getMethodNameAndRouteFromRefController($refController); 
 
     if ($methodNameAndRouteObj !== null){
-
-        $methodName = $methodNameAndRouteObj["methodName"];
-        $routeObj = $methodNameAndRouteObj["routeObj"];
-
-        $params = getParamsFromUriAndRouteObj($routeObj);
-
-        var_dump($params);
         
-        $controller = new $controllerNamespace();
-        $controller->$methodName($params);
+        $methodNameAndRouteObj["controllerNamespace"] = $controllerNamespace; 
+    
+        return $methodNameAndRouteObj;
     }
+
+    return null;
 }
 
-function loopThroughControllersFolder(string $dir)
+function callRouteMethod(array $methodNameAndRouteObj)
+{
+    $methodName = $methodNameAndRouteObj["methodName"];
+    $routeObj = $methodNameAndRouteObj["routeObj"];
+    $controllerNamespace = $methodNameAndRouteObj["controllerNamespace"];
+
+    $params = getParamsFromUriAndRouteObj($routeObj);
+                
+    $controller = new $controllerNamespace();
+    $controller->$methodName($params);
+}
+
+function recursivelyIterateThroughControllersFolder(string $dir): ?array
 {
     $files = array_diff(scandir($dir), [".", ".."]);
 
@@ -182,17 +209,56 @@ function loopThroughControllersFolder(string $dir)
         $fileExtension = pathinfo($fileName, PATHINFO_EXTENSION);
 
         if ($fileExtension === "php"){
-            callRouteMethodIfPresentInController("$dir/$fileName");
+
+            $methodNameAndRouteObj = getMethodNameAndRouteObjFromDir("$dir/$fileName");
+
+            if ($methodNameAndRouteObj !== null){
+                return $methodNameAndRouteObj;
+            }
         }
         else if ($fileExtension === "") {
-            loopThroughControllersFolder("$dir/$fileName");
+            
+            $methodNameAndRouteObj = recursivelyIterateThroughControllersFolder("$dir/$fileName");
+
+            if ($methodNameAndRouteObj !== null){
+                return $methodNameAndRouteObj;
+            }
         }
-    }    
+    }
+
+    return null;
+}
+
+function dispatch()
+{
+    $methodNameAndRouteObj = recursivelyIterateThroughControllersFolder(__DIR__."/../src/Controllers");
+
+    if ($methodNameAndRouteObj !== null){
+        callRouteMethod($methodNameAndRouteObj);
+    }
+    else{
+        throw new NotFoundException("Cannot find specified route.");
+    }
 }
 
 function init()
 {
-    loopThroughControllersFolder(__DIR__."/../src/Controllers");
+    try{
+        dispatch();
+        // CLAAAASSSES
+    }
+    catch(NotAllowedException $e){
+        http_response_code(405);
+        echo $e->getMessage(); 
+    }
+    catch(NotFoundException $e){
+        http_response_code(404);
+        echo $e->getMessage(); 
+    }
+    catch(Exception $e){ 
+        http_response_code(400);
+        echo $e->getMessage(); 
+    }
 }
 
 init();

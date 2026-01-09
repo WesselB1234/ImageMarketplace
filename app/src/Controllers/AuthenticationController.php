@@ -20,7 +20,7 @@ class AuthenticationController extends Controller
     }
 
     #[Route("GET", "/login", ["bruh"])]
-    public function login()
+    public function login(array $vars)
     {
         $this->displayView(null, null);
     }

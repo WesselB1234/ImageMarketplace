@@ -168,7 +168,7 @@ function getDispatchDataFromDir(string $dir): ?RouterDispatchData
 {
     $controllerNamespace = getControllerNameSpaceOfDir($dir);
 
-    if (!class_exists($controllerNamespace)){
+    if ($controllerNamespace === null || !class_exists($controllerNamespace)){
         throw new Exception("$controllerNamespace does not exist as a class.");
     }
 
@@ -192,22 +192,17 @@ function getDispatchDataRecursivelyThroughControllersFolder(string $dir): ?Route
     foreach ($files as $fileName){
 
         $fileExtension = pathinfo($fileName, PATHINFO_EXTENSION);
+        $dispatchData = null;
 
         if ($fileExtension === "php"){
-
             $dispatchData = getDispatchDataFromDir("$dir/$fileName");
-
-            if ($dispatchData !== null){
-                return $dispatchData;
-            }
         }
         else if ($fileExtension === "") {
-            
-            $dispatchData = getDispatchDataRecursivelyThroughControllersFolder("$dir/$fileName");
-
-            if ($dispatchData !== null){
-                return $dispatchData;
-            }
+            $dispatchData = getDispatchDataRecursivelyThroughControllersFolder("$dir/$fileName");   
+        }
+        
+        if ($dispatchData !== null){
+            return $dispatchData;
         }
     }
 

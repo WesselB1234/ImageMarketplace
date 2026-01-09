@@ -12,6 +12,7 @@ use App\Models\Exceptions\NotAuthorizedException;
 use App\Models\Exceptions\ForbiddenException;
 use App\Models\ApiResponses\UserDeletionResponse;
 use App\Models\ApiResponses\ErrorResponse;
+use App\Models\Attributes\Route;
 
 class UsersApiController extends ApiController
 {
@@ -54,6 +55,7 @@ class UsersApiController extends ApiController
         }
     }
 
+    #[Route("GET", "/users/api/getloggedinuser", null)]
     public function getLoggedInUser()
     {
         try{    

@@ -24,13 +24,6 @@
         </div>
 
         <div class="mb-3">
-            <label for="email" class="form-label">Email</label>
-            <input type="email" class="form-control" id="email" name="email" placeholder="Enter email address" required value="<?php 
-                echo (isset($viewModel) ? htmlspecialchars($viewModel->getEmail(), ENT_QUOTES, "UTF-8") : "") 
-            ?>">
-        </div>
-
-        <div class="mb-3">
             <label for="image_tokens" class="form-label">Image tokens</label>
             <input type="number" class="form-control" id="image_tokens" name="image_tokens" min="0" placeholder="Enter number of tokens" required value="<?php 
                 echo (isset($viewModel) ? $viewModel->getImageTokens() : "") 

@@ -35,7 +35,7 @@ class UsersController extends Controller
 
     public function processCreate()
     {
-        $user = User::constructUnknownUser($_POST["username"], $_POST["email"], $_POST["password"], $_POST["image_tokens"], $_POST["role"]);
+        $user = User::constructUnknownUser($_POST["username"], $_POST["password"], $_POST["image_tokens"], $_POST["role"]);
         
         try{ 
             $userId = $this->usersService->createUser($user);
@@ -74,7 +74,7 @@ class UsersController extends Controller
     public function processUpdate(array $vars)
     {
         $userId = $vars["id"];
-        $user = User::constructFullyKnownUser($vars["id"], $_POST["username"], $_POST["email"], $_POST["password"], $_POST["image_tokens"], $_POST["role"]);
+        $user = User::constructFullyKnownUser($vars["id"], $_POST["username"], $_POST["password"], $_POST["image_tokens"], $_POST["role"]);
 
         try{
             $this->usersService->updateUser($user);

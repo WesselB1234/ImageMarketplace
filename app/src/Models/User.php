@@ -9,7 +9,6 @@ class User implements JsonSerializable
 {
     private ?int $userId;
     private string $username;
-    private string $email;
     private ?string $password;
     private int $imageTokens;
     private UserRole $role;
@@ -19,13 +18,12 @@ class User implements JsonSerializable
         
     }
 
-    public static function constructFullyKnownUser(int $userId ,string $username, string $email, string $password, int $imageTokens, string $stringRole): User
+    public static function constructFullyKnownUser(int $userId ,string $username, string $password, int $imageTokens, string $stringRole): User
     {
         $user = new self();    
 
         $user->setUserId($userId);
         $user->setUsername($username);
-        $user->setEmail($email);
         $user->setPassword($password);
         $user->setImageTokens($imageTokens);
         $user->setRole(UserRole::from($stringRole));
@@ -33,12 +31,11 @@ class User implements JsonSerializable
         return $user;
     }
 
-    public static function constructUnknownUser(string $username, string $email, string $password, int $imageTokens, string $stringRole): User
+    public static function constructUnknownUser(string $username, string $password, int $imageTokens, string $stringRole): User
     {
         $user = new self();
 
         $user->setUsername($username);
-        $user->setEmail($email);
         $user->setPassword($password);
         $user->setImageTokens($imageTokens);
         $user->setRole(UserRole::from($stringRole));
@@ -46,13 +43,12 @@ class User implements JsonSerializable
         return $user;
     }
 
-    public static function constructKnownUserWithoutPassword(int $userId, string $username, string $email, int $imageTokens, string $stringRole): User
+    public static function constructKnownUserWithoutPassword(int $userId, string $username, int $imageTokens, string $stringRole): User
     {
         $user = new self();
 
         $user->setUserId($userId);
         $user->setUsername($username);
-        $user->setEmail($email);
         $user->setImageTokens($imageTokens);
         $user->setRole(UserRole::from($stringRole));
         
@@ -77,16 +73,6 @@ class User implements JsonSerializable
     public function setUsername(string $username): void
     {
         $this->username = $username;
-    }
-
-    public function getEmail(): string
-    {
-        return $this->email;
-    }
-
-    public function setEmail(string $email): void
-    {
-        $this->email = $email;
     }
 
     public function getPassword(): ?string
@@ -124,7 +110,6 @@ class User implements JsonSerializable
         return [ 
             "userId" => $this->userId, 
             "username" => $this->username, 
-            "email" => $this->email, 
             "imageTokens" => $this->imageTokens, 
             "role" => $this->role->value, 
         ]; 

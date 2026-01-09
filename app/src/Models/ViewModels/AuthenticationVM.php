@@ -2,7 +2,7 @@
 
 namespace App\Models\ViewModels;
 
-class LoginVm
+class AuthenticationVM
 {
     private string $username;
     private string $password;

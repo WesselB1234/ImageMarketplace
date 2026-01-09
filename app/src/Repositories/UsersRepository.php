@@ -16,7 +16,7 @@ class UsersRepository extends Repository implements IUsersRepository
     {
         $users = [];
 
-        $stmt = $this->connection->prepare("SELECT user_id, username, email, image_tokens, role FROM Users;");
+        $stmt = $this->connection->prepare("SELECT user_id, username, image_tokens, role FROM Users;");
         $stmt->execute();
         $assocUsers = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -30,7 +30,7 @@ class UsersRepository extends Repository implements IUsersRepository
     public function getUserByUserId(int $userId): ?User
     {
         $stmt = $this->connection->prepare(
-            "SELECT user_id, username, email, image_tokens, role 
+            "SELECT user_id, username, image_tokens, role 
             FROM Users
             WHERE user_id = :userId;"
         );
@@ -50,7 +50,7 @@ class UsersRepository extends Repository implements IUsersRepository
     public function getUserByUsername(string $username): ?User
     {
         $stmt = $this->connection->prepare(
-            "SELECT user_id, username, email, image_tokens, role 
+            "SELECT user_id, username, image_tokens, role 
             FROM Users
             WHERE username = :username;"
         );
@@ -70,7 +70,7 @@ class UsersRepository extends Repository implements IUsersRepository
     public function getFullyKnownUserByUsername(string $username): ?User
     {
         $stmt = $this->connection->prepare(
-            "SELECT user_id, username, email, password, image_tokens, role 
+            "SELECT user_id, username, password, image_tokens, role 
             FROM Users
             WHERE username = :username;"
         );
@@ -92,7 +92,6 @@ class UsersRepository extends Repository implements IUsersRepository
         $stmt = $this->connection->prepare(
             "UPDATE Users 
             SET username = :username,
-                email = :email, 
                 password = :password, 
                 image_tokens = :imageTokens, 
                 role = :role
@@ -101,7 +100,6 @@ class UsersRepository extends Repository implements IUsersRepository
 
         $stmt->bindValue(":userId", $user->getUserId(), PDO::PARAM_INT); 
         $stmt->bindValue(":username", $user->getUsername(), PDO::PARAM_STR); 
-        $stmt->bindValue(":email", $user->getEmail(), PDO::PARAM_STR); 
         $stmt->bindValue(":password", $user->getPassword(), PDO::PARAM_STR); 
         $stmt->bindValue(":imageTokens", $user->getImageTokens(), PDO::PARAM_INT); 
         $stmt->bindValue(":role", $user->getRole()->value, PDO::PARAM_STR);
@@ -116,12 +114,11 @@ class UsersRepository extends Repository implements IUsersRepository
     public function createUser(User $user): int
     {
         $stmt = $this->connection->prepare(
-            "INSERT INTO Users (username, email, password, image_tokens, role) 
-            VALUES (:username, :email, :password, :imageTokens, :role);"
+            "INSERT INTO Users (username, password, image_tokens, role) 
+            VALUES (:username, :password, :imageTokens, :role);"
         );
 
-        $stmt->bindValue(":username", $user->getUsername(), PDO::PARAM_STR); 
-        $stmt->bindValue(":email", $user->getEmail(), PDO::PARAM_STR); 
+        $stmt->bindValue(":username", $user->getUsername(), PDO::PARAM_STR);  
         $stmt->bindValue(":password", $user->getPassword(), PDO::PARAM_STR); 
         $stmt->bindValue(":imageTokens", $user->getImageTokens(), PDO::PARAM_INT); 
         $stmt->bindValue(":role", $user->getRole()->value, PDO::PARAM_STR);

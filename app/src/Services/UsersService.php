@@ -64,16 +64,6 @@ class UsersService implements IUsersService
         {
             throw new Exception("User with username ".$user->getUsername(). " already exists.");
         }
-
-        if (!$this->getIsValidEmail($user->getEmail()))
-        {
-            throw new Exception("Email is not valid.");
-        }
-    }
-
-    private function getIsValidEmail(string $email): bool
-    {
-        return filter_var($email, FILTER_VALIDATE_EMAIL);
     }
 
     private function getHashedPassword($rawPassword): string

@@ -23,7 +23,6 @@
         <thead class="table-dark">
             <th scope="col">User ID</th>
             <th scope="col">Username</th>
-            <th scope="col">Email</th>
             <th scope="col">Image tokens</th>
             <th scope="col">Role</th>
             <th scope="col">Actions</th>
@@ -33,7 +32,6 @@
                 <tr>
                     <th scope="row"><?php echo $user->getUserId(); ?></th>
                     <td><?php echo htmlspecialchars($user->getUsername(), ENT_QUOTES, 'UTF-8'); ?></td>
-                    <td><?php echo htmlspecialchars($user->getEmail(), ENT_QUOTES, 'UTF-8'); ?></td>
                     <td><?php echo StringFormatter::getDottedNumberStringFromNumber($user->getImageTokens()); ?></td>
                     <td><?php echo $user->getRole()->value; ?></td>
                     <td>

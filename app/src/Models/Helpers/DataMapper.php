@@ -13,7 +13,6 @@ class DataMapper{
         return User::constructKnownUserWithoutPassword(
             $assocUser["user_id"], 
             $assocUser["username"], 
-            $assocUser["email"], 
             $assocUser["image_tokens"],
             $assocUser["role"]
         );
@@ -24,7 +23,6 @@ class DataMapper{
         return User::constructFullyKnownUser(
             $assocUser["user_id"], 
             $assocUser["username"], 
-            $assocUser["email"], 
             $assocUser["password"], 
             $assocUser["image_tokens"],
             $assocUser["role"]

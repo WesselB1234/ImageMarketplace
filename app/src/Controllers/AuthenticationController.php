@@ -7,8 +7,7 @@ use App\Services\UsersService;
 use App\Services\Interfaces\IUsersService;
 use App\Models\User;
 use App\Models\Enums\UserRole;
-use App\Models\ViewModels\LoginVm;
-use App\Models\ViewModels\RegisterVm;
+use App\Models\ViewModels\AuthenticationVM;
 use Exception;
 
 class AuthenticationController extends Controller 
@@ -41,7 +40,7 @@ class AuthenticationController extends Controller
         catch(Exception $e){
 
             $this->displayView([
-                    "viewModel" => new LoginVm($_POST["username"], $_POST["password"]),  
+                    "viewModel" => new AuthenticationVM($_POST["username"], $_POST["password"]),  
                     "errorMessage" => $e->getMessage()
                 ],
                 "Authentication/Login.php"
@@ -56,7 +55,7 @@ class AuthenticationController extends Controller
 
     public function processRegister()
     {
-        $user = User::constructUnknownUser($_POST["username"], $_POST["email"], $_POST["password"], 100, UserRole::User->value);
+        $user = User::constructUnknownUser($_POST["username"], $_POST["password"], 100, UserRole::User->value);
         
         try{ 
             $this->usersService->createUser($user);
@@ -68,7 +67,7 @@ class AuthenticationController extends Controller
         catch(Exception $e){
 
             $this->displayView([
-                    "viewModel" => new RegisterVm($_POST["username"], $_POST["password"], $_POST["email"]), 
+                    "viewModel" => new AuthenticationVM($_POST["username"], $_POST["password"]), 
                     "errorMessage" => $e->getMessage()
                 ],
                 "Authentication/Register.php"

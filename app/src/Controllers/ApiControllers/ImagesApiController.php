@@ -6,7 +6,6 @@ use App\Controllers\ApiControllers\ApiController;
 use App\Services\Interfaces\IImagesService;
 use App\Services\ImagesService;
 use Exception;
-use App\Models\ApiResponses\ErrorResponse;
 
 class ImagesApiController extends ApiController
 {
@@ -14,14 +13,13 @@ class ImagesApiController extends ApiController
 
     public function __construct()
     {
+        parent::__construct();
+
         $this->imagesService = new ImagesService();
     }
 
     public function getOnSaleImages()
     {
-        header("Access-Control-Allow-Origin: *"); 
-        header("Content-Type: application/json");
-
         try{
             $this->loggedInAuthorization();   
             
@@ -38,6 +36,6 @@ class ImagesApiController extends ApiController
             http_response_code(400); 
         }  
 
-        echo json_encode(new ErrorResponse($e->getMessage()), JSON_PRETTY_PRINT);
+        $this->displayErrorJson($e->getMessage());
     }
 } 

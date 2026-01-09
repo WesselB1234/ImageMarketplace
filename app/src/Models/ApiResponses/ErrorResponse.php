@@ -2,7 +2,9 @@
 
 namespace App\Models\ApiResponses;
 
-class ErrorResponse
+use JsonSerializable;
+
+class ErrorResponse implements JsonSerializable
 {
     private string $message;
 
@@ -19,5 +21,12 @@ class ErrorResponse
     public function setMessage(string $message): void
     {
         $this->message = $message;
+    }
+
+    public function jsonSerialize(): array
+    {
+        return [
+            "message" => $this->message
+        ];
     }
 }

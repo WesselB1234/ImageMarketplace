@@ -19,22 +19,21 @@ class UsersApiController extends ApiController
 
     public function __construct()
     {
+        parent::__construct();
+
         $this->usersService = new UsersService();
     }
 
     public function delete(array $vars)
-    {   
-        header("Access-Control-Allow-Origin: *"); 
-        header("Content-Type: application/json");
-
+    {
+        $this->loggedInAuthorization();
+        $this->adminAuthorization();   
+        
         $input = file_get_contents("php://input"); 
         $data = json_decode($input, true); 
         $userId = $data["id"];
 
         try{
-            $this->loggedInAuthorization();
-            $this->adminAuthorization();
-
             if (intval($userId) === $_SESSION["user"]->getUserId()){
                 throw new ForbiddenException("You cannot delete yourself.");
             }
@@ -58,38 +57,31 @@ class UsersApiController extends ApiController
             http_response_code(400); 
         }  
 
-        echo json_encode(new ErrorResponse($e->getMessage()), JSON_PRETTY_PRINT);
+        $this->displayErrorJson($e->getMessage());
     }
 
     public function getLoggedInUser()
     {
-        header("Access-Control-Allow-Origin: *"); 
-        header("Content-Type: application/json");
+        $this->loggedInAuthorization();
 
-        try{
-            $this->loggedInAuthorization();
-            
-            $userId = $_SESSION["user"]->getUserId();
-            $user = $this->usersService->getUserByUserId($userId);
-
-            if ($user === null){
-                throw new NotFoundException("Logged in user with user ID $userId does not exist.");
-            }
+        try{    
+            $user = $this->usersService->getUserByUserIdOrThrow($_SESSION["user"]->getUserId());
 
             http_response_code(200); 
             echo json_encode($user, JSON_PRETTY_PRINT);
             exit;
         }
         catch(NotAuthorizedException $e){
-            http_response_code(401); 
+            http_response_code(401);
+            $this->displayErrorJson($e->getMessage()); 
         } 
         catch(NotFoundException $e){
             http_response_code(404); 
+            $this->displayErrorJson($e->getMessage());
         }
         catch(Exception $e){
             http_response_code(400); 
+            $this->displayErrorJson($e->getMessage());
         }  
-
-        echo json_encode(new ErrorResponse($e->getMessage()), JSON_PRETTY_PRINT);
     }
 }

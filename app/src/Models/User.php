@@ -3,8 +3,9 @@
 namespace App\Models;
 
 use App\Models\Enums\UserRole;
+use JsonSerializable;
 
-class User
+class User implements JsonSerializable
 {
     private ?int $userId;
     private string $username;
@@ -116,5 +117,16 @@ class User
     public function setRole(UserRole $role): void
     {
         $this->role = $role;
+    }
+
+    public function jsonSerialize(): array 
+    { 
+        return [ 
+            "userId" => $this->userId, 
+            "username" => $this->username, 
+            "email" => $this->email, 
+            "imageTokens" => $this->imageTokens, 
+            "role" => $this->role->value, 
+        ]; 
     }
 }

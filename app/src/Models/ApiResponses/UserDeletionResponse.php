@@ -2,7 +2,9 @@
 
 namespace App\Models\ApiResponses;
 
-class UserDeletionResponse
+use JsonSerializable;
+
+class UserDeletionResponse implements JsonSerializable
 {
     private int $userId;
 
@@ -19,5 +21,12 @@ class UserDeletionResponse
     public function setUserId(int $userId): void
     {
         $this->userId = $userId;
+    }
+
+    public function jsonSerialize(): array
+    {
+        return [
+            "userId" => $this->userId
+        ];
     }
 }

@@ -112,7 +112,7 @@ function getMethodNameAndRouteFromRefClassEqualToHttp(ReflectionClass $refClass)
                 continue;
             }
 
-            if ($attributeObj->getRoute() === $uri){
+            if (str_contains($uri, $attributeObj->getRoute()) && $attributeObj->getHttpMethod() === $httpMethod){
                 return [
                     "routeObj" => $attributeObj,
                     "methodName" => $refMethod->getName()
@@ -120,6 +120,22 @@ function getMethodNameAndRouteFromRefClassEqualToHttp(ReflectionClass $refClass)
             }
         }  
     }
+
+    return null;
+}
+
+function getWildCardsFromUriAndRouteObj(Route $route): ?array
+{
+    $uri = strtok($_SERVER["REQUEST_URI"], "?");
+    $wildCardsInStr = str_replace($route->getRoute(), "", $uri);
+
+    if (str_starts_with($wildCardsInStr, "/")) {
+        $wildCardsInStr = substr($wildCardsInStr, 1);
+    }
+
+    $wildCardVars = explode("/", $wildCardsInStr);
+
+    var_dump($wildCardVars);
 
     return null;
 }
@@ -138,9 +154,12 @@ function callRouteMethodIfPresentInController(string $dir)
     if ($methodNameAndRouteObj !== null){
 
         $methodName = $methodNameAndRouteObj["methodName"];
+        $routeObj = $methodNameAndRouteObj["routeObj"];
+
+        $wildcardVars = getWildCardsFromUriAndRouteObj($routeObj);
 
         $controller = new $controllerNamespace();
-        $controller->$methodName();
+        $controller->$methodName($wildcardVars);
     }
 }
 

@@ -7,20 +7,20 @@ use Attribute;
 #[Attribute]
 class Route
 {
-    private string $method;
+    private string $httpMethod;
     private string $route;
     private ?array $params;
 
-    public function __construct(string $method, string $route, ?array $params) 
+    public function __construct(string $httpMethod, string $route, ?array $params) 
     {
-        $this->method = $method;
+        $this->httpMethod = $httpMethod;
         $this->route = $route;
         $this->params = $params;
     }
 
-    public function getMethod(): string 
+    public function getHttpMethod(): string 
     {
-        return $this->method;
+        return $this->httpMethod;
     }
 
     public function getRoute(): string

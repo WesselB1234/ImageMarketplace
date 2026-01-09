@@ -18,7 +18,7 @@ class AuthenticationVM
         return $this->username;
     }
 
-    public function setUsername(string $username): void
+    public function setUsername(string $username)
     {
         $this->username = $username;
     }
@@ -28,7 +28,7 @@ class AuthenticationVM
         return $this->password;
     }
 
-    public function setPassword(string $password): void
+    public function setPassword(string $password)
     {
         $this->password = $password;
     }

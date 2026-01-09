@@ -60,7 +60,7 @@ class User implements JsonSerializable
         return $this->userId;
     }
 
-    public function setUserId(?int $userId): void
+    public function setUserId(?int $userId)
     {
         $this->userId = $userId;
     }
@@ -70,7 +70,7 @@ class User implements JsonSerializable
         return $this->username;
     }
 
-    public function setUsername(string $username): void
+    public function setUsername(string $username)
     {
         $this->username = $username;
     }
@@ -80,7 +80,7 @@ class User implements JsonSerializable
         return $this->password;
     }
 
-    public function setPassword(?string $password): void
+    public function setPassword(?string $password)
     {
         $this->password = $password;
     }
@@ -90,7 +90,7 @@ class User implements JsonSerializable
         return $this->imageTokens;
     }
 
-    public function setImageTokens(int $imageTokens): void
+    public function setImageTokens(int $imageTokens)
     {
         $this->imageTokens = $imageTokens;
     }
@@ -100,7 +100,7 @@ class User implements JsonSerializable
         return $this->role;
     }
 
-    public function setRole(UserRole $role): void
+    public function setRole(UserRole $role)
     {
         $this->role = $role;
     }

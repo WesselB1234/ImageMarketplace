@@ -20,7 +20,7 @@ class ImageSellingVM
         return $this->image;
     }
 
-    public function setImage(Image $image): void
+    public function setImage(Image $image)
     {
         $this->image = $image;
     }
@@ -30,7 +30,7 @@ class ImageSellingVM
         return $this->price;
     }
 
-    public function setPrice(?int $price): void
+    public function setPrice(?int $price)
     {
         $this->price = $price;
     }

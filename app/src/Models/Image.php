@@ -62,7 +62,7 @@ class Image implements JsonSerializable
         return $this->imageId;
     }
 
-    public function setImageId(int $imageId): void
+    public function setImageId(int $imageId)
     {
         $this->imageId = $imageId;
     }
@@ -72,7 +72,7 @@ class Image implements JsonSerializable
         return $this->ownerId;
     }
 
-    public function setOwnerId(?int $ownerId): void
+    public function setOwnerId(?int $ownerId)
     {
         $this->ownerId = $ownerId;
     }
@@ -82,7 +82,7 @@ class Image implements JsonSerializable
         return $this->creatorId;
     }
 
-    public function setCreatorId(?int $creatorId): void
+    public function setCreatorId(?int $creatorId)
     {
         $this->creatorId = $creatorId;
     }
@@ -92,7 +92,7 @@ class Image implements JsonSerializable
         return $this->name;
     }
 
-    public function setName(string $name): void
+    public function setName(string $name)
     {
         $this->name = $name;
     }
@@ -102,7 +102,7 @@ class Image implements JsonSerializable
         return $this->description;
     }
 
-    public function setDescription(string $description): void
+    public function setDescription(string $description)
     {
         $this->description = $description;
     }
@@ -112,7 +112,7 @@ class Image implements JsonSerializable
         return $this->price;
     }
 
-    public function setPrice(?int $price): void
+    public function setPrice(?int $price)
     {
         $this->price = $price;
     }
@@ -122,7 +122,7 @@ class Image implements JsonSerializable
         return $this->isModerated;
     }
 
-    public function setIsModerated(bool $isModerated): void
+    public function setIsModerated(bool $isModerated)
     {
         $this->isModerated = $isModerated;
     }
@@ -132,7 +132,7 @@ class Image implements JsonSerializable
         return $this->isOnSale;
     }
 
-    public function setIsOnSale(bool $isOnSale): void
+    public function setIsOnSale(bool $isOnSale)
     {
         $this->isOnSale = $isOnSale;
     }
@@ -142,7 +142,7 @@ class Image implements JsonSerializable
         return $this->timeCreated;
     }
 
-    public function setTimeCreated(DateTime $timeCreated): void
+    public function setTimeCreated(DateTime $timeCreated)
     {
         $this->timeCreated = $timeCreated;
     }
@@ -152,7 +152,7 @@ class Image implements JsonSerializable
         return $this->altText;
     }
 
-    public function setAltText(string $altText): void
+    public function setAltText(string $altText)
     {
         $this->altText = $altText;
     }

@@ -137,7 +137,7 @@ class Router
         return null;
     }
 
-    private function callRouteMethod(RouterDispatchData $dispatchData, string $uri)
+    private function callRouteMethod(RouterDispatchData $dispatchData)
     {
         $methodName = $dispatchData->getMethodName();
         $route = $dispatchData->getRoute();

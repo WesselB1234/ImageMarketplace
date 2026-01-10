@@ -7,13 +7,13 @@ use App\Framework\Router;
 use App\Models\Exceptions\NotAllowedException;
 use App\Models\Exceptions\NotFoundException;
 
-session_start();
-
-$dotenv = Dotenv::createImmutable(__DIR__."/../");
-$dotenv->load();
-
-function init()
+function start()
 {
+    session_start();
+
+    $dotenv = Dotenv::createImmutable(__DIR__."/../");
+    $dotenv->load();
+
     try{
         $httpMethod = $_SERVER["REQUEST_METHOD"];
         $uri = strtok($_SERVER["REQUEST_URI"], "?");
@@ -35,4 +35,4 @@ function init()
     }
 }
 
-init();
+start();

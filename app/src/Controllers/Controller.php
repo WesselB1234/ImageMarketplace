@@ -7,7 +7,7 @@ use App\Models\Exceptions\NotAuthorizedException;
 
 class Controller
 {
-    public function displayView(?array $viewData, ?string $dir)
+    public function displayView(?array $viewData = null, ?string $dir = null)
     {
         if ($viewData !== null){
             extract($viewData);

@@ -11,7 +11,7 @@ class Route
     private string $route;
     private ?array $params;
 
-    public function __construct(string $httpMethod, string $route, ?array $params) 
+    public function __construct(string $httpMethod, string $route, ?array $params = null) 
     {
         $this->httpMethod = $httpMethod;
         $this->route = $route;

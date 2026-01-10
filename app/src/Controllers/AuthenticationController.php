@@ -19,12 +19,13 @@ class AuthenticationController extends Controller
         $this->usersService = new UsersService();
     }
 
-    #[Route("GET", "/login", ["bruh"])]
-    public function login(array $vars)
+    #[Route("GET", "/login")]
+    public function login()
     {
-        $this->displayView(null, null);
+        $this->displayView();
     }
 
+    #[Route("POST", "/login")]
     public function processLogin()
     {       
         try{ 
@@ -50,9 +51,10 @@ class AuthenticationController extends Controller
         }
     }
 
+    #[Route("GET", "/register")]
     public function register()
     {
-        $this->displayView(null, null);
+        $this->displayView();
     }
 
     public function processRegister()

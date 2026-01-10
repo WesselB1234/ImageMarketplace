@@ -11,8 +11,6 @@ use ReflectionClass;
 
 class Router
 {
-
-
     private function getControllerNameSpaceOfDir($dir): ?string
     {
         $pos = strpos($dir, "/Controllers"); 
@@ -29,6 +27,8 @@ class Router
 
     private function getDispatchDataFromRefController(ReflectionClass $refController, string $httpMethod, string $uri): ?RouterDispatchData
     {
+        $foundRouteWithIncapableMethod = null;
+
         foreach ($refController->getMethods() as $refMethod) { 
             foreach ($refMethod->getAttributes() as $attribute) { 
                 
@@ -46,12 +46,16 @@ class Router
                         return new RouterDispatchData($route, $refMethod->getName());
                     }
                     else{
-                        throw new NotAllowedException("This route can only be accessed by a $allowedMethod request.");
+                        $foundRouteWithIncapableMethod = $route;
                     }
                 }
             }  
         }
 
+        if ($foundRouteWithIncapableMethod !== null){
+            throw new NotAllowedException("This route can only be accessed by a ".$foundRouteWithIncapableMethod->getHttpMethod()." request.");
+        }
+        
         return null;
     }
 

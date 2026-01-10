@@ -31,10 +31,10 @@ class Router
         $routeSegments = explode("/", trim($route->getRoute(), "/")); 
 
         $paramsCount = ($routeParams === null ? 0 : count($routeParams)); 
-        $totalRouteCount = count($routeSegments) + $paramsCount;
-        $totalUriCount = count($uriSegments);
+        $totalRouteSegmentCount = count($routeSegments) + $paramsCount;
+        $totalUriSegmentCount = count($uriSegments);
 
-        if ($totalRouteCount !== $totalUriCount){
+        if ($totalRouteSegmentCount !== $totalUriSegmentCount){
             return false;
         }
 
@@ -50,7 +50,8 @@ class Router
     private function getDispatchDataFromRefController(ReflectionClass $refController, string $httpMethod, string $uri): ?RouterDispatchData
     {
         $foundRouteWithIncapableMethod = null;
-
+        $uriSegments = explode("/", trim($uri, "/"));
+        
         foreach ($refController->getMethods() as $refMethod) { 
             foreach ($refMethod->getAttributes() as $attribute) { 
                 
@@ -59,8 +60,6 @@ class Router
                 if (!$route instanceof Route){
                     continue;
                 }
-
-                $uriSegments = explode("/", trim($uri, "/"));
 
                 if ($this->getIsRouteMatch($route, $uriSegments)){
 
@@ -85,30 +84,20 @@ class Router
 
     private function getParamsFromUriAndRoute(Route $route, string $uri): ?array
     {
-        $uriParamsStr = str_replace($route->getRoute(), "", $uri);
+        $routeParams = $route->getParams();
 
-        if (str_starts_with($uriParamsStr, "/")) {
-            $uriParamsStr = substr($uriParamsStr, 1);
-        }
-
-        $uriParams = (empty($uriParamsStr) ? [] : explode("/", $uriParamsStr));
-        $routeParams = $route->getParams(); 
-
-        $uriParamsCount = count($uriParams);
-        $routeParamsCount = ($routeParams === null ? 0 : count($routeParams));
-        
-        if ($uriParamsCount > $routeParamsCount || $uriParamsCount < $routeParamsCount){
-            throw new NotFoundException("This route does not have the right amount of parameters.");
-        }
-        
-        if ($routeParamsCount === 0){
+        if ($routeParams === null){
             return null;
         }
+
+        $uriSegments = explode("/", trim($uri, "/"));
+        $routeSegments = explode("/", trim($route->getRoute(), "/")); 
+        $totalRouteSegmentCount = count($routeSegments);
 
         $params = [];
 
         foreach($routeParams as $i => $param){
-            $params[$param] = $uriParams[$i];
+            $params[$param] = $uriSegments[$i + $totalRouteSegmentCount];
         }
 
         return $params;

@@ -11,15 +11,15 @@ use ReflectionClass;
 
 class Router
 {
-    private function getControllerNameSpaceOfDir($dir): ?string
+    private function getControllerClassPathOfDir($dir): ?string
     {
-        $pos = strpos($dir, "/Controllers"); 
+        $classPathPosition = strpos($dir, "/Controllers"); 
         
-        if ($pos !== false) { 
-            $namespaceWithExtension = substr($dir, $pos + 1); 
-            $namespaceWithForwardSlashes = "App\\".pathinfo($namespaceWithExtension, PATHINFO_DIRNAME) . '\\' . pathinfo($namespaceWithExtension, PATHINFO_FILENAME);
+        if ($classPathPosition !== false) { 
+            $classPathWithExtension = substr($dir, $classPathPosition + 1); 
+            $classPathWithForwardSlashes = "App\\".pathinfo($classPathWithExtension, PATHINFO_DIRNAME) . "\\" . pathinfo($classPathWithExtension, PATHINFO_FILENAME);
 
-            return str_replace("/", "\\", $namespaceWithForwardSlashes);
+            return str_replace("/", "\\", $classPathWithForwardSlashes);
         }
 
         return null;
@@ -103,13 +103,13 @@ class Router
 
     private function getDispatchDataFromDir(string $dir, string $httpMethod, string $uri): ?RouterDispatchData
     {
-        $controllerNamespace = $this->getControllerNameSpaceOfDir($dir);
+        $controllerClassPath = $this->getControllerClassPathOfDir($dir);
 
-        if ($controllerNamespace === null || !class_exists($controllerNamespace)){
-            throw new Exception("$controllerNamespace does not exist as a class.");
+        if ($controllerClassPath === null || !class_exists($controllerClassPath)){
+            throw new Exception("$controllerClassPath does not exist as a class.");
         }
 
-        $refController = new ReflectionClass($controllerNamespace); 
+        $refController = new ReflectionClass($controllerClassPath); 
         return $this->getDispatchDataFromRefController($refController, $httpMethod, $uri); 
     }
 
@@ -125,7 +125,7 @@ class Router
             if ($fileExtension === "php"){
                 $dispatchData = $this->getDispatchDataFromDir("$dir/$fileName", $httpMethod, $uri);
             }
-            else if ($fileExtension === "") {
+            else if (empty($fileExtension)) {
                 $dispatchData = $this->getDispatchDataRecursivelyThroughControllersFolder("$dir/$fileName", $httpMethod, $uri);   
             }
             
@@ -141,10 +141,10 @@ class Router
     {
         $methodName = $dispatchData->getMethodName();
         $route = $dispatchData->getRoute();
-        $controllerNamespace = $dispatchData->getControllerNamespace();
+        $controllerClassPath = $dispatchData->getControllerClassPath();
         $requestParams = $dispatchData->getRequestParams();
                     
-        $controller = new $controllerNamespace();
+        $controller = new $controllerClassPath();
         $controller->$methodName($requestParams);
     }
 

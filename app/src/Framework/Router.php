@@ -25,6 +25,19 @@ class Router
         return null;
     }
 
+    function getIsRouteMatch(string $route, string $uri): bool
+    {
+        if (!str_starts_with($uri, $route)) {
+            return false;
+        }
+
+        if ($uri === $route) {
+            return true;
+        }
+
+        return $uri[strlen($route)] === "/";
+    }
+
     private function getDispatchDataFromRefController(ReflectionClass $refController, string $httpMethod, string $uri): ?RouterDispatchData
     {
         $foundRouteWithIncapableMethod = null;
@@ -38,7 +51,7 @@ class Router
                     continue;
                 }
 
-                if (str_contains($uri, $route->getRoute())){
+                if ($this->getIsRouteMatch($route->getRoute(), $uri)){
 
                     $allowedMethod = $route->getHttpMethod();
 

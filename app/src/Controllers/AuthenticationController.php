@@ -57,6 +57,7 @@ class AuthenticationController extends Controller
         $this->displayView();
     }
 
+    #[Route("POST", "/register")]
     public function processRegister()
     {
         $user = User::constructUnknownUser($_POST["username"], $_POST["password"], 100, UserRole::User->value);
@@ -79,6 +80,7 @@ class AuthenticationController extends Controller
         }
     }
     
+    #[Route("GET", "/logout")]
     public function logout()
     {
         $this->loggedInAuthorization();

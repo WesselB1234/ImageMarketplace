@@ -55,7 +55,7 @@ class UsersApiController extends ApiController
         }
     }
 
-    #[Route("GET", "/users/api/getloggedinuser", null)]
+    #[Route("GET", "/users/api/getloggedinuser")]
     public function getLoggedInUser()
     {
         try{    

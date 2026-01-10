@@ -4,7 +4,7 @@ namespace App\Models\Attributes;
 
 use Attribute;
 
-#[Attribute]
+#[Attribute(Attribute::TARGET_METHOD | Attribute::IS_REPEATABLE)]
 class Route
 {
     private string $httpMethod;

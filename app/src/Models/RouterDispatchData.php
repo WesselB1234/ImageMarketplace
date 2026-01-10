@@ -8,12 +8,15 @@ class RouterDispatchData
 {
     private Route $route;
     private string $methodName;
-    private ?string $controllerNamespace;
+    private string $controllerNamespace;
+    private ?array $requestParams;
 
-    public function __construct(Route $route, string $methodName)
+    public function __construct(Route $route, string $methodName, string $controllerNamespace, ?array $requestParams)
     {
         $this->route = $route;
         $this->methodName = $methodName;
+        $this->controllerNamespace = $controllerNamespace;
+        $this->requestParams = $requestParams;
     }
 
     public function getRoute(): Route
@@ -44,5 +47,15 @@ class RouterDispatchData
     public function setControllerNamespace(string $controllerNamespace)
     {
         $this->controllerNamespace = $controllerNamespace;
+    }
+
+    public function getRequestParams(): ?array
+    {
+        return $this->requestParams;
+    }
+
+    public function setRequestParams(?array $requestParams)
+    {
+        $this->requestParams = $requestParams;
     }
 }

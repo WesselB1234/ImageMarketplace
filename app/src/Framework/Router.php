@@ -25,11 +25,8 @@ class Router
         return null;
     }
 
-    function getIsRouteMatch(Route $route, array $uriSegments): bool
-    {
-        $routeParams = $route->getParams();
-        $routeSegments = explode("/", trim($route->getRoute(), "/")); 
-
+    function getIsRouteMatch(array $routeSegments, ?array $routeParams, array $uriSegments): bool
+    { 
         $paramsCount = ($routeParams === null ? 0 : count($routeParams)); 
         $totalRouteSegmentCount = count($routeSegments) + $paramsCount;
         $totalUriSegmentCount = count($uriSegments);
@@ -61,12 +58,18 @@ class Router
                     continue;
                 }
 
-                if ($this->getIsRouteMatch($route, $uriSegments)){
+                $routeSegments = explode("/", trim($route->getRoute(), "/"));
+                $routeParams = $route->getParams();
+
+                if ($this->getIsRouteMatch($routeSegments, $routeParams, $uriSegments)){
 
                     $allowedMethod = $route->getHttpMethod();
 
                     if ($allowedMethod === $httpMethod){
-                        return new RouterDispatchData($route, $refMethod->getName());
+
+                        $requestParams = $this->getRequestParamsFromSegments($routeSegments, $routeParams, $uriSegments);
+ 
+                        return new RouterDispatchData($route, $refMethod->getName(), $refController->getName(), $requestParams);
                     }
                     else{
                         $foundRouteWithIncapableMethod = $route;
@@ -82,22 +85,17 @@ class Router
         return null;
     }
 
-    private function getParamsFromUriAndRoute(Route $route, string $uri): ?array
+    private function getRequestParamsFromSegments(array $routeSegments, ?array $routeParams, array $uriSegments): ?array
     {
-        $routeParams = $route->getParams();
-
         if ($routeParams === null){
             return null;
         }
 
-        $uriSegments = explode("/", trim($uri, "/"));
-        $routeSegments = explode("/", trim($route->getRoute(), "/")); 
-        $totalRouteSegmentCount = count($routeSegments);
-
+        $routeSegmentCount = count($routeSegments);
         $params = [];
 
         foreach($routeParams as $i => $param){
-            $params[$param] = $uriSegments[$i + $totalRouteSegmentCount];
+            $params[$param] = $uriSegments[$i + $routeSegmentCount];
         }
 
         return $params;
@@ -112,16 +110,7 @@ class Router
         }
 
         $refController = new ReflectionClass($controllerNamespace); 
-        $dispatchData = $this->getDispatchDataFromRefController($refController, $httpMethod, $uri); 
-
-        if ($dispatchData !== null){
-            
-            $dispatchData->setControllerNamespace($controllerNamespace); 
-        
-            return $dispatchData;
-        }
-
-        return null;
+        return $this->getDispatchDataFromRefController($refController, $httpMethod, $uri); 
     }
 
     private function getDispatchDataRecursivelyThroughControllersFolder(string $dir, string $httpMethod, string $uri): ?RouterDispatchData
@@ -153,11 +142,10 @@ class Router
         $methodName = $dispatchData->getMethodName();
         $route = $dispatchData->getRoute();
         $controllerNamespace = $dispatchData->getControllerNamespace();
-
-        $params = $this->getParamsFromUriAndRoute($route, $uri);
+        $requestParams = $dispatchData->getRequestParams();
                     
         $controller = new $controllerNamespace();
-        $controller->$methodName($params);
+        $controller->$methodName($requestParams);
     }
 
     public function dispatch(string $httpMethod, string $uri)

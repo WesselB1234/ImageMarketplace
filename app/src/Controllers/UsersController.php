@@ -8,6 +8,7 @@ use App\Services\UsersService;
 use App\Models\User;
 use Exception;
 use App\Models\Exceptions\NotFoundException;
+use App\Models\Attributes\Route;
 
 class UsersController extends Controller
 {

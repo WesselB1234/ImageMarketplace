@@ -25,17 +25,26 @@ class Router
         return null;
     }
 
-    function getIsRouteMatch(string $route, string $uri): bool
+    function getIsRouteMatch(Route $route, array $uriSegments): bool
     {
-        if (!str_starts_with($uri, $route)) {
+        $routeParams = $route->getParams();
+        $routeSegments = explode("/", trim($route->getRoute(), "/")); 
+
+        $paramsCount = ($routeParams === null ? 0 : count($routeParams)); 
+        $totalRouteCount = count($routeSegments) + $paramsCount;
+        $totalUriCount = count($uriSegments);
+
+        if ($totalRouteCount !== $totalUriCount){
             return false;
         }
 
-        if ($uri === $route) {
-            return true;
+        foreach ($routeSegments as $i => $routeSegment){
+            if ($uriSegments[$i] !== $routeSegment){
+                return false;
+            }
         }
 
-        return $uri[strlen($route)] === "/";
+        return true;
     }
 
     private function getDispatchDataFromRefController(ReflectionClass $refController, string $httpMethod, string $uri): ?RouterDispatchData
@@ -51,7 +60,9 @@ class Router
                     continue;
                 }
 
-                if ($this->getIsRouteMatch($route->getRoute(), $uri)){
+                $uriSegments = explode("/", trim($uri, "/"));
+
+                if ($this->getIsRouteMatch($route, $uriSegments)){
 
                     $allowedMethod = $route->getHttpMethod();
 

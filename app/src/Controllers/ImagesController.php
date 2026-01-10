@@ -15,6 +15,7 @@ use App\Models\ViewModels\ImageSellingVM;
 use Exception;
 use App\Models\Exceptions\NotFoundException;
 use App\Models\Exceptions\NotAuthorizedException;
+use App\Models\Attributes\Route;
 
 class ImagesController extends Controller
 {
@@ -29,6 +30,7 @@ class ImagesController extends Controller
         $this->usersService = new UsersService();
     }
 
+    #[Route("GET", "/images")]
     public function index()
     {
         $images = $this->imagesService->getAllOnSaleImages();
@@ -36,6 +38,7 @@ class ImagesController extends Controller
         $this->displayView(["viewModel" => $images], "Images/index.php");
     }
 
+    #[Route("GET", "/images/details", ["id"])]
     public function details(array $vars)
     {
         $imageId = $vars["id"];

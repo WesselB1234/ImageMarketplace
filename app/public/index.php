@@ -16,7 +16,7 @@ function start()
     $dotenv->load();
 
     $builder = new ContainerBuilder(); 
-    $builder->addDefinitions(__DIR__ . "/../src/framework/dependencies.php"); 
+    $builder->addDefinitions(__DIR__ . "/../src/framework/Dependencies.php"); 
     $container = $builder->build();
 
     $httpMethod = $_SERVER["REQUEST_METHOD"];

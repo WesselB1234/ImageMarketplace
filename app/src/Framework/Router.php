@@ -33,7 +33,7 @@ class Router
         return null;
     }
 
-    function getIsRouteMatch(array $routeSegments, ?array $routeParams, array $uriSegments): bool
+    private function getIsRouteMatch(array $routeSegments, ?array $routeParams, array $uriSegments): bool
     { 
         $paramsCount = ($routeParams === null ? 0 : count($routeParams)); 
         $totalRouteSegmentCount = count($routeSegments) + $paramsCount;
@@ -148,7 +148,6 @@ class Router
     private function callRouteMethod(RouterDispatchData $dispatchData)
     {
         $methodName = $dispatchData->getMethodName();
-        $route = $dispatchData->getRoute();
         $controllerClassPath = $dispatchData->getControllerClassPath();
         $requestParams = $dispatchData->getRequestParams();
                     

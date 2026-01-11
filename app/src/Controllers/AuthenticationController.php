@@ -15,8 +15,8 @@ class AuthenticationController extends Controller
 {
     private IUsersService $usersService;
 
-    public function __construct(){
-        $this->usersService = new UsersService();
+    public function __construct(IUsersService $usersService){
+        $this->usersService = $usersService;
     }
 
     #[Route("GET", "/login")]

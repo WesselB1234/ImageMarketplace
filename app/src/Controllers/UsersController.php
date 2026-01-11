@@ -10,6 +10,7 @@ use App\Models\Enums\UserRole;
 use Exception;
 use App\Models\Exceptions\NotFoundException;
 use App\Models\Attributes\Route;
+use App\Models\Helpers\RequestParamValidator;
 
 class UsersController extends Controller
 {
@@ -65,9 +66,7 @@ class UsersController extends Controller
         $userId = $vars["id"];        
         
         try{
-            if (filter_var($userId, FILTER_VALIDATE_INT) === false){
-                throw new Exception("User ID is not valid.");
-            }
+            RequestParamValidator::validateRequestParamId($userId);
             
             $user = $this->usersService->getUserByUserIdOrThrow($userId);
 

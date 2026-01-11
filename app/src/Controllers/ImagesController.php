@@ -16,6 +16,7 @@ use Exception;
 use App\Models\Exceptions\NotFoundException;
 use App\Models\Exceptions\NotAuthorizedException;
 use App\Models\Attributes\Route;
+use App\Models\Helpers\RequestParamValidator;
 
 class ImagesController extends Controller
 {
@@ -44,9 +45,7 @@ class ImagesController extends Controller
         $imageId = $vars["id"];
 
         try{
-            if (filter_var($imageId, FILTER_VALIDATE_INT) === false) {
-                throw new Exception("Image ID is not valid.");
-            }
+            RequestParamValidator::validateRequestParamId($imageId);
 
             $image = $this->imagesService->getImageByImageIdOrThrow($imageId);
             
@@ -79,9 +78,7 @@ class ImagesController extends Controller
         $imageId = $vars["id"];
         
         try{
-            if (filter_var($imageId, FILTER_VALIDATE_INT) === false) {
-                throw new Exception("Image ID is not valid.");
-            }
+            RequestParamValidator::validateRequestParamId($imageId);
             
             $image = $this->imagesService->getImageByImageIdOrThrow($imageId);
 
@@ -130,9 +127,7 @@ class ImagesController extends Controller
         $imageId = $vars["id"];       
 
         try{
-            if (filter_var($imageId, FILTER_VALIDATE_INT) === false) {
-                throw new NotFoundException("Image ID is not valid.");
-            }
+            RequestParamValidator::validateRequestParamId($imageId);
 
             $this->imagesService->takeImageOffSaleByImageId($imageId, null);
 
@@ -155,9 +150,7 @@ class ImagesController extends Controller
         $imageId = $vars["id"];    
 
         try{
-            if (filter_var($imageId, FILTER_VALIDATE_INT) === false) {
-                throw new NotFoundException("Image ID is not valid.");
-            }
+            RequestParamValidator::validateRequestParamId($imageId);
 
             $image = $this->imagesService->getImageByImageIdOrThrow($imageId);
             $this->imagesService->buyImage($image);
@@ -216,18 +209,12 @@ class ImagesController extends Controller
         $this->adminAuthorization();
         
         $imageId = $vars["id"];
-        
+        $isModerateRaw = $vars["isModerate"];
 
         try{
-            if (filter_var($vars["id"], FILTER_VALIDATE_INT) === false) {
-                throw new Exception("Image ID is not valid.");
-            }
+            RequestParamValidator::validateRequestParamId($imageId);
             
-            $isModerate = filter_var($vars["isModerate"], FILTER_VALIDATE_BOOL);
-
-            if ($isModerate === null) {
-                throw new Exception("IsModerate is not valid.");
-            }
+            $isModerate = filter_var($isModerateRaw, FILTER_VALIDATE_BOOL);
 
             $this->imagesService->updateImageModerationByImageId($imageId, $isModerate);
             
@@ -250,9 +237,7 @@ class ImagesController extends Controller
         $imageId = $vars["id"];
         
         try{
-            if (filter_var($imageId, FILTER_VALIDATE_INT) === false) {
-                throw new Exception("Image ID is not valid.");
-            }
+            RequestParamValidator::validateRequestParamId($imageId);
             
             $this->imagesService->deleteImageByImageId($imageId);
             $_SESSION["success_message"] = "Successfully deleted image.";

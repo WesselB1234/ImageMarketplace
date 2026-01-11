@@ -51,6 +51,8 @@ class ImagesService implements IImagesService
         return $image;
     }
 
+    public function vali
+
     public function uploadImageFile(int $imageId)
     {
         if (!isset($_FILES["image"]) || $_FILES["image"]["error"] !== UPLOAD_ERR_OK) {

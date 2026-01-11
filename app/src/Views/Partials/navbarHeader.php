@@ -6,7 +6,7 @@
 ?> 
 
 <header>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow mb-4">
+    <nav class="navbar navbar-expand-xl navbar-light bg-light shadow mb-4">
 
         <div class="navbar-brand" href="#">Image Marketplace</div>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -20,6 +20,9 @@
                 </li>
                 <li class="nav-link">
                     <a class="nav-btn <?php echo ($enabledNavLink === "Images" ? "nav-enabled" : "") ?>" href="/images">Images on sale</a>
+                </li>
+                <li class="nav-link">
+                    <a class="nav-btn <?php echo ($enabledNavLink === "Privacy" ? "nav-enabled" : "") ?>" href="/privacy">Privacy</a>
                 </li>
                 <?php if ($_SESSION["user"]->getRole() === UserRole::Admin){?>
                     <li class="nav-link">

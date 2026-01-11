@@ -77,7 +77,7 @@ class Router
 
                         $requestParams = $this->getRequestParamsFromSegments($routeSegments, $routeParams, $uriSegments);
  
-                        return new RouterDispatchData($route, $refMethod->getName(), $refController->getName(), $requestParams);
+                        return new RouterDispatchData($refMethod->getName(), $refController->getName(), $requestParams);
                     }
                     else{
                         $foundRouteWithIncapableMethod = $route;

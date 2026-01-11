@@ -13,8 +13,8 @@ class UsersService implements IUsersService
 {
     private IUsersRepository $usersRepository; 
 
-    public function __construct(){
-        $this->usersRepository = new UsersRepository();
+    public function __construct(IUsersRepository $usersRepository){
+        $this->usersRepository = $usersRepository;
     }
 
     public function getAllUsers(): array

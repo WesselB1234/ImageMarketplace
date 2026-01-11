@@ -12,12 +12,12 @@ class ImagesApiController extends ApiController
 {
     private IImagesService $imagesService;
 
-    public function __construct()
+    public function __construct(IImagesService $imagesService)
     {
         parent::__construct();
         $this->loggedInAuthorization();
 
-        $this->imagesService = new ImagesService();
+        $this->imagesService = $imagesService;
     }
 
     #[Route("GET", "/images/api/getonsaleimages")]

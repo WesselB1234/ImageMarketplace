@@ -18,12 +18,12 @@ class UsersApiController extends ApiController
 {
     private IUsersService $usersService;
 
-    public function __construct()
+    public function __construct(IUsersService $usersService)
     {
         parent::__construct();
         $this->loggedInAuthorization();
 
-        $this->usersService = new UsersService();
+        $this->usersService = $usersService;
     }
 
     #[Route("POST", "/users/api/delete")]

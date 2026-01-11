@@ -14,12 +14,12 @@ class UsersController extends Controller
 {
     private IUsersService $usersService;
 
-    public function __construct()
+    public function __construct(IUsersService $usersService)
     {
         $this->loggedInAuthorization();
         $this->adminAuthorization();
 
-        $this->usersService = new UsersService();
+        $this->usersService = $usersService;
     }
 
     #[Route("GET", "/users")]

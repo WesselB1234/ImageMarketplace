@@ -19,10 +19,10 @@ class ImagesService implements IImagesService
     private IImagesRepository $imagesRepository; 
     private IUsersRepository $usersRepository; 
 
-    public function __construct()
+    public function __construct(IImagesRepository $imagesRepository, IUsersRepository $usersRepository)
     {
-        $this->imagesRepository = new ImagesRepository();
-        $this->usersRepository = new UsersRepository();
+        $this->imagesRepository = $imagesRepository;
+        $this->usersRepository = $usersRepository;
     }
 
     public function getAllImagesFromUserId(int $userId): array

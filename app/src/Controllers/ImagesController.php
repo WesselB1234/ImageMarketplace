@@ -22,12 +22,12 @@ class ImagesController extends Controller
     private IImagesService $imagesService;
     private IUsersService $usersService;
 
-    public function __construct()
+    public function __construct(IImagesService $imagesService, IUsersService $usersService)
     {
         $this->loggedInAuthorization();
 
-        $this->imagesService = new ImagesService();
-        $this->usersService = new UsersService();
+        $this->imagesService = $imagesService;
+        $this->usersService = $usersService;
     }
 
     #[Route("GET", "/images")]

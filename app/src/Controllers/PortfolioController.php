@@ -11,11 +11,11 @@ class PortfolioController extends Controller
 {
     private IImagesService $imagesService;
 
-    public function __construct()
+    public function __construct(IImagesService $imagesService)
     {
         $this->loggedInAuthorization();
 
-        $this->imagesService = new ImagesService();
+        $this->imagesService = $imagesService;
     }
     
     #[Route("GET", "/")] 

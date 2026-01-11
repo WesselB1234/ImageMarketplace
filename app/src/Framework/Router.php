@@ -8,9 +8,17 @@ use App\Models\Exceptions\NotFoundException;
 use App\Models\RouterDispatchData;
 use Exception;
 use ReflectionClass;
+use DI\Container ;
 
 class Router
 {
+    private Container $container;
+
+    public function __construct(Container $container){
+        
+        $this->container = $container;
+    }
+
     private function getControllerClassPathOfDir($dir): ?string
     {
         $classPathPosition = strpos($dir, "/Controllers"); 
@@ -144,7 +152,7 @@ class Router
         $controllerClassPath = $dispatchData->getControllerClassPath();
         $requestParams = $dispatchData->getRequestParams();
                     
-        $controller = new $controllerClassPath();
+        $controller = $this->container->get($controllerClassPath);
         $controller->$methodName($requestParams);
     }
 

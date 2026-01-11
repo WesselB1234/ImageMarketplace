@@ -6,6 +6,7 @@ use Dotenv\Dotenv;
 use App\Framework\Router;
 use App\Models\Exceptions\NotAllowedException;
 use App\Models\Exceptions\NotFoundException;
+use DI\ContainerBuilder;
 
 function start()
 {
@@ -14,11 +15,16 @@ function start()
     $dotenv = Dotenv::createImmutable(__DIR__."/../");
     $dotenv->load();
 
-    try{
-        $httpMethod = $_SERVER["REQUEST_METHOD"];
-        $uri = strtok($_SERVER["REQUEST_URI"], "?");
+    $builder = new ContainerBuilder(); 
+    $builder->addDefinitions(__DIR__ . "/../src/framework/dependencies.php"); 
+    $container = $builder->build();
 
-        $router = new Router();
+    $httpMethod = $_SERVER["REQUEST_METHOD"];
+    $uri = strtok($_SERVER["REQUEST_URI"], "?");
+
+    $router = new Router($container);
+
+    try{
         $router->dispatch($httpMethod, $uri);
     }
     catch(NotAllowedException $e){

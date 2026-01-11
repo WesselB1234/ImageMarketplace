@@ -103,7 +103,7 @@ class UsersController extends Controller
                     "viewModel" => $user,
                     "errorMessage" => $e->getMessage()
                 ],
-                "Admin/Users/update.php"
+                "Users/update.php"
             );
         } 
     }

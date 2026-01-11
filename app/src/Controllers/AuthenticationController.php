@@ -41,7 +41,6 @@ class AuthenticationController extends Controller
             header("Location: /");
         }
         catch(Exception $e){
-
             $this->displayView([
                     "viewModel" => new AuthenticationVM($_POST["username"], $_POST["password"]),  
                     "errorMessage" => $e->getMessage()
@@ -70,7 +69,6 @@ class AuthenticationController extends Controller
             $this->processLogin();
         }
         catch(Exception $e){
-
             $this->displayView([
                     "viewModel" => new AuthenticationVM($_POST["username"], $_POST["password"]), 
                     "errorMessage" => $e->getMessage()

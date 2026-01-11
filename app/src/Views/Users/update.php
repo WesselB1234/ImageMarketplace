@@ -44,7 +44,7 @@
 
         <div class="mb-3">
             <label for="password" class="form-label">Password (optional, will not update if left empty)</label>
-            <input type="password" class="form-control" id="password" name="password" placeholder="Enter password" required>
+            <input type="password" class="form-control" id="password" name="password" placeholder="Enter password">
         </div>
 
         <button type="submit" class="btn btn-primary">Update</button>

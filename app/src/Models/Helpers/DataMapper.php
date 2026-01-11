@@ -5,27 +5,28 @@ namespace App\Models\Helpers;
 use App\Models\User;
 use App\Models\Image;
 use DateTime;
+use App\Models\Enums\UserRole;
 
 class DataMapper{
 
-    public static function mapAssocUserToUser(array $assocUser): User
+    public static function mapAssocUserToUserWithoutPassword(array $assocUser): User
     {
         return User::constructKnownUserWithoutPassword(
             $assocUser["user_id"], 
             $assocUser["username"], 
             $assocUser["image_tokens"],
-            $assocUser["role"]
+            UserRole::from($assocUser["role"])
         );
     }
 
-    public static function mapAssocUserToFullyKnownUser(array $assocUser): User
+    public static function mapAssocUserToUser(array $assocUser): User
     {
         return User::constructFullyKnownUser(
             $assocUser["user_id"], 
             $assocUser["username"], 
             $assocUser["password"], 
             $assocUser["image_tokens"],
-            $assocUser["role"]
+            UserRole::from($assocUser["role"])
         );
     }
 

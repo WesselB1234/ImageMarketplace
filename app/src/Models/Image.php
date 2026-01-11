@@ -7,7 +7,7 @@ use JsonSerializable;
 
 class Image implements JsonSerializable
 {
-    private int $imageId;
+    private ?int $imageId;
     private ?int $ownerId;
     private ?int $creatorId;
     private string $name;
@@ -18,43 +18,50 @@ class Image implements JsonSerializable
     private ?DateTime $timeCreated;
     private string $altText;
 
-    public function __construct()
+    private function __construct(?int $imageId, ?int $ownerId, ?int $creatorId, string $name, string $description, ?int $price, bool $isModerated, bool $isOnSale, ?DateTime $timeCreated, string $altText) 
     {
-        
+        $this->imageId = $imageId;
+        $this->ownerId = $ownerId;
+        $this->creatorId = $creatorId;
+        $this->name = $name;
+        $this->description = $description;
+        $this->price = $price;
+        $this->isModerated = $isModerated;
+        $this->isOnSale = $isOnSale;
+        $this->timeCreated = $timeCreated;
+        $this->altText = $altText;
     }
 
     public static function constructUnknownImage(?int $ownerId, ?int $creatorId, string $name, string $description, string $altText): Image
     {
-        $image = new self(); 
-        
-        $image->setOwnerId($ownerId); 
-        $image->setCreatorId($creatorId); 
-        $image->setName($name); 
-        $image->setDescription($description); 
-        $image->setAltText($altText); 
-
-        $image->setIsModerated(false); 
-        $image->setIsOnSale(false); 
- 
-        return $image;
+        return new self(
+            null,
+            $ownerId,
+            $creatorId,
+            $name,
+            $description,
+            null,
+            false,
+            false,
+            null,
+            $altText
+        ); 
     }
 
-    public static function constructFullyKnownImage(int $imageId, ?int $ownerId, ?int $creatorId, string $name, string $description, ?int $price, bool $isModerated, bool $isOnSale, DateTime $timeCreated, string $altText): Image
+    public static function constructFullyKnownImage(?int $imageId, ?int $ownerId, ?int $creatorId, string $name, string $description, ?int $price, bool $isModerated, bool $isOnSale, DateTime $timeCreated, string $altText): Image
     {
-        $image = new self();
-
-        $image->setImageId($imageId); 
-        $image->setOwnerId($ownerId); 
-        $image->setCreatorId($creatorId); 
-        $image->setName($name); 
-        $image->setDescription($description); 
-        $image->setPrice($price); 
-        $image->setIsModerated($isModerated); 
-        $image->setIsOnSale($isOnSale); 
-        $image->setTimeCreated($timeCreated); 
-        $image->setAltText($altText);
-        
-        return $image;
+        return new self(
+            $imageId,
+            $ownerId,
+            $creatorId,
+            $name,
+            $description,
+            $price,
+            $isModerated,
+            $isOnSale,
+            $timeCreated,
+            $altText
+        ); 
     }
 
     public function getImageId(): int

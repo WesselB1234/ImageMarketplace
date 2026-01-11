@@ -13,46 +13,46 @@ class User implements JsonSerializable
     private int $imageTokens;
     private UserRole $role;
 
-    public function __construct()
+    private function __construct(?int $userId, string $username, ?string $password, int $imageTokens, UserRole $role) 
     {
-        
+        $this->userId = $userId;
+        $this->username = $username;
+        $this->password = $password;
+        $this->imageTokens = $imageTokens;
+        $this->role = $role;
     }
 
-    public static function constructFullyKnownUser(int $userId ,string $username, string $password, int $imageTokens, string $stringRole): User
+    public static function constructUnknownUser(string $username, string $password, int $imageTokens, UserRole $role): User
     {
-        $user = new self();    
-
-        $user->setUserId($userId);
-        $user->setUsername($username);
-        $user->setPassword($password);
-        $user->setImageTokens($imageTokens);
-        $user->setRole(UserRole::from($stringRole));
-        
-        return $user;
+        return new self(
+            null,
+            $username,
+            $password,
+            $imageTokens,
+            $role
+        );
     }
 
-    public static function constructUnknownUser(string $username, string $password, int $imageTokens, string $stringRole): User
+    public static function constructKnownUserWithoutPassword(int $userId, string $username, int $imageTokens, UserRole $role): User
     {
-        $user = new self();
-
-        $user->setUsername($username);
-        $user->setPassword($password);
-        $user->setImageTokens($imageTokens);
-        $user->setRole(UserRole::from($stringRole));
-        
-        return $user;
+        return new self(
+            $userId,
+            $username,
+            null,
+            $imageTokens,
+            $role
+        );
     }
 
-    public static function constructKnownUserWithoutPassword(int $userId, string $username, int $imageTokens, string $stringRole): User
+    public static function constructFullyKnownUser(?int $userId, string $username, string $password, int $imageTokens, UserRole $role): User
     {
-        $user = new self();
-
-        $user->setUserId($userId);
-        $user->setUsername($username);
-        $user->setImageTokens($imageTokens);
-        $user->setRole(UserRole::from($stringRole));
-        
-        return $user;
+        return new self(
+            $userId,
+            $username,
+            $password,
+            $imageTokens,
+            $role
+        );
     }
 
     public function getUserId(): ?int

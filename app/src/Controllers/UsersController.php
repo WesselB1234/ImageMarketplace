@@ -6,6 +6,7 @@ use App\Controllers\Controller;
 use App\Services\Interfaces\IUsersService;
 use App\Services\UsersService;
 use App\Models\User;
+use App\Models\Enums\UserRole;
 use Exception;
 use App\Models\Exceptions\NotFoundException;
 use App\Models\Attributes\Route;
@@ -39,9 +40,10 @@ class UsersController extends Controller
     #[Route("POST", "/users/create")]
     public function processCreate()
     {
-        $user = User::constructUnknownUser($_POST["username"], $_POST["password"], $_POST["image_tokens"], $_POST["role"]);
-        
-        try{ 
+        $user = null;
+    
+        try{
+            $user = User::constructUnknownUser($_POST["username"], $_POST["password"], intval($_POST["image_tokens"]), UserRole::from($_POST["role"])); 
             $userId = $this->usersService->createUser($user);
 
             $_SESSION["success_message"] = "Successfully created a new user with User ID $userId.";
@@ -59,13 +61,14 @@ class UsersController extends Controller
 
     #[Route("GET", "/users/update", ["id"])]
     public function update(array $vars)
-    {        
+    {
+        $userId = $vars["id"];        
+        
         try{
-            if (filter_var($vars["id"], FILTER_VALIDATE_INT) === false){
+            if (filter_var($userId, FILTER_VALIDATE_INT) === false){
                 throw new Exception("User ID is not valid.");
             }
             
-            $userId = $vars["id"];
             $user = $this->usersService->getUserByUserIdOrThrow($userId);
 
             $this->displayView(["viewModel" => $user]);
@@ -79,14 +82,20 @@ class UsersController extends Controller
     #[Route("POST", "/users/update", ["id"])]
     public function processUpdate(array $vars)
     {
-        $userId = $vars["id"];
-        $user = User::constructFullyKnownUser($vars["id"], $_POST["username"], $_POST["password"], $_POST["image_tokens"], $_POST["role"]);
+        $user = null;
+        $userId = $vars["id"];   
 
         try{
+            if (empty($_POST["password"])) {
+                $user = User::constructKnownUserWithoutPassword($userId, $_POST["username"], intval($_POST["image_tokens"]), UserRole::from($_POST["role"])); 
+            }
+            else{
+                $user = User::constructFullyKnownUser($userId, $_POST["username"], $_POST["password"], $_POST["image_tokens"], UserRole::from($_POST["role"]));
+            }
+            
             $this->usersService->updateUser($user);
             
             if ($user->getUserId() === $_SESSION["user"]->getUserId()){
-                $user->setUserId($userId);
                 $user->setPassword(null);
                 $_SESSION["user"] = $user;
             }

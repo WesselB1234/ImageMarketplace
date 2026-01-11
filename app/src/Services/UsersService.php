@@ -52,7 +52,13 @@ class UsersService implements IUsersService
     public function updateUser(User $user)
     {
         $this->throwIfUserIsNotValid($user);
-        $user->setPassword($this->getHashedPassword($user->getPassword()));
+
+        $password = $user->getPassword();
+
+        if ($password !== null){
+            $user->setPassword($this->getHashedPassword($password));
+        }
+
         $this->usersRepository->updateUser($user);
     }
  

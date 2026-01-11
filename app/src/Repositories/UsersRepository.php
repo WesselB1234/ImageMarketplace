@@ -21,7 +21,7 @@ class UsersRepository extends Repository implements IUsersRepository
         $assocUsers = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         foreach($assocUsers as $assocUser){
-            array_push($users, DataMapper::mapAssocUserToUser($assocUser));
+            array_push($users, DataMapper::mapAssocUserToUserWithoutPassword($assocUser));
         }
 
         return $users;
@@ -41,7 +41,7 @@ class UsersRepository extends Repository implements IUsersRepository
         $assocUser = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($assocUser !== false){
-            return DataMapper::mapAssocUserToUser($assocUser);
+            return DataMapper::mapAssocUserToUserWithoutPassword($assocUser);
         }
 
         return null;
@@ -61,7 +61,7 @@ class UsersRepository extends Repository implements IUsersRepository
         $assocUser = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($assocUser !== false){
-            return DataMapper::mapAssocUserToUser($assocUser);
+            return DataMapper::mapAssocUserToUserWithoutPassword($assocUser);
         }
 
         return null;
@@ -81,7 +81,7 @@ class UsersRepository extends Repository implements IUsersRepository
         $assocUser = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($assocUser !== false){
-            return DataMapper::mapAssocUserToFullyKnownUser($assocUser);
+            return DataMapper::mapAssocUserToUser($assocUser);
         }
 
         return null;
@@ -91,16 +91,20 @@ class UsersRepository extends Repository implements IUsersRepository
     {
         $stmt = $this->connection->prepare(
             "UPDATE Users 
-            SET username = :username,
-                password = :password, 
-                image_tokens = :imageTokens, 
+            SET username = :username, "
+                .($user->getPassword() !== null ? "password = :password, " : ""). 
+                "image_tokens = :imageTokens, 
                 role = :role
             WHERE user_id = :userId;"
         );
 
         $stmt->bindValue(":userId", $user->getUserId(), PDO::PARAM_INT); 
         $stmt->bindValue(":username", $user->getUsername(), PDO::PARAM_STR); 
-        $stmt->bindValue(":password", $user->getPassword(), PDO::PARAM_STR); 
+
+        if ($user->getPassword() !== null){
+            $stmt->bindValue(":password", $user->getPassword(), PDO::PARAM_STR);
+        }
+
         $stmt->bindValue(":imageTokens", $user->getImageTokens(), PDO::PARAM_INT); 
         $stmt->bindValue(":role", $user->getRole()->value, PDO::PARAM_STR);
 

@@ -115,9 +115,8 @@ class ImagesController extends Controller
             header("Location: /portfolio");
         }
         catch(Exception $e){
-
             $this->displayView([
-                    "viewModel" => new ImageSellingVM($image, $imageId),
+                    "viewModel" => new ImageSellingVM($image, $_POST["price"]),
                     "errorMessage" => $e->getMessage()
                 ],
                 "Images/sell.php"
@@ -202,10 +201,12 @@ class ImagesController extends Controller
             }
         }
         catch(Exception $e){
-            $this->displayView("Images/upload.php", [
-                "viewModel" => $image, 
-                "errorMessage" => $e->getMessage()
-            ]);
+            $this->displayView([
+                    "viewModel" => $image, 
+                    "errorMessage" => $e->getMessage()
+                ],
+                "Images/upload.php",
+            );
         }                
     }
 
@@ -213,13 +214,15 @@ class ImagesController extends Controller
     public function moderateImage(array $vars)
     {
         $this->adminAuthorization();
+        
+        $imageId = $vars["id"];
+        
 
         try{
             if (filter_var($vars["id"], FILTER_VALIDATE_INT) === false) {
                 throw new Exception("Image ID is not valid.");
             }
-
-            $imageId = $vars["id"];
+            
             $isModerate = filter_var($vars["isModerate"], FILTER_VALIDATE_BOOL);
 
             if ($isModerate === null) {
@@ -227,6 +230,7 @@ class ImagesController extends Controller
             }
 
             $this->imagesService->updateImageModerationByImageId($imageId, $isModerate);
+            
             $_SESSION["success_message"] = "Image successfully ".($isModerate ? "moderated" : "unmoderated").".";
             header("Location: /images/details/$imageId");
         }
@@ -246,7 +250,7 @@ class ImagesController extends Controller
         $imageId = $vars["id"];
         
         try{
-            if (filter_var($vars["id"], FILTER_VALIDATE_INT) === false) {
+            if (filter_var($imageId, FILTER_VALIDATE_INT) === false) {
                 throw new Exception("Image ID is not valid.");
             }
             

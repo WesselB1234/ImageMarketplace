@@ -6,6 +6,7 @@ use App\Controllers\ApiControllers\ApiController;
 use App\Services\Interfaces\IImagesService;
 use App\Services\ImagesService;
 use Exception;
+use App\Models\Attributes\Route;
 
 class ImagesApiController extends ApiController
 {
@@ -14,11 +15,12 @@ class ImagesApiController extends ApiController
     public function __construct()
     {
         parent::__construct();
-        $this->imagesService = new ImagesService();
-        
         $this->loggedInAuthorization();
+
+        $this->imagesService = new ImagesService();
     }
 
+    #[Route("GET", "/images/api/getonsaleimages")]
     public function getOnSaleImages()
     {
         try{            

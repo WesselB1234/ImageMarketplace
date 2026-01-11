@@ -12,15 +12,13 @@ class Controller
         if ($viewData !== null){
             extract($viewData);
         }
-
-        if(isset($_SESSION["error_message"])){
-
+        
+        if (isset($_SESSION["error_message"])){
             $errorMessage = $_SESSION["error_message"];
             unset($_SESSION["error_message"]);
         }
 
-        if(isset($_SESSION["success_message"])){
-
+        if (isset($_SESSION["success_message"])){
             $successMessage = $_SESSION["success_message"];
             unset($_SESSION["success_message"]);
         }
@@ -45,16 +43,18 @@ class Controller
     public function loggedInAuthorization()
     {
         if (!isset($_SESSION["user"])){
-            setcookie("error_message", "You need to be logged in to perform this action.", time() + 5, "/");
+            $_SESSION["error_message"] = "You need to be logged in to perform this action.";
             header("Location: /login");
+            exit;
         }
     }
 
     public function adminAuthorization()
     {
-        if ($_SESSION["user"]->getRole() != UserRole::Admin){
-            setcookie("error_message", "Your account doesn't have the right role to perform this action.", time() + 5, "/");
-            header("Location: /login");
+        if ($_SESSION["user"]->getRole() !== UserRole::Admin){
+            $_SESSION["error_message"] = "Your account doesn't have the right role to perform this action.";
+            header("Location: /portfolio");
+            exit;
         }
     }
 }

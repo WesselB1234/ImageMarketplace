@@ -22,18 +22,21 @@ class UsersController extends Controller
         $this->usersService = new UsersService();
     }
 
+    #[Route("GET", "/users")]
     public function index()
     {
         $users = $this->usersService->getAllUsers();
 
-        $this->displayView(["viewModel" => $users], null);
+        $this->displayView(["viewModel" => $users]);
     }
 
+    #[Route("GET", "/users/create")]
     public function create()
     {
-        $this->displayView(null, null);
+        $this->displayView();
     }
 
+    #[Route("POST", "/users/create")]
     public function processCreate()
     {
         $user = User::constructUnknownUser($_POST["username"], $_POST["password"], $_POST["image_tokens"], $_POST["role"]);
@@ -54,6 +57,7 @@ class UsersController extends Controller
         }
     }
 
+    #[Route("GET", "/users/update", ["id"])]
     public function update(array $vars)
     {        
         try{
@@ -64,7 +68,7 @@ class UsersController extends Controller
             $userId = $vars["id"];
             $user = $this->usersService->getUserByUserIdOrThrow($userId);
 
-            $this->displayView(["viewModel" => $user], null);
+            $this->displayView(["viewModel" => $user]);
         }
         catch(Exception $e){
             $_SESSION["error_message"] = $e->getMessage();
@@ -72,6 +76,7 @@ class UsersController extends Controller
         }        
     }
 
+    #[Route("POST", "/users/update", ["id"])]
     public function processUpdate(array $vars)
     {
         $userId = $vars["id"];

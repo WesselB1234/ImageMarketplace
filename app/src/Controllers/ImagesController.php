@@ -73,6 +73,7 @@ class ImagesController extends Controller
         }
     }
 
+    #[Route("GET", "/images/sell", ["id"])]
     public function sell(array $vars)
     {
         $imageId = $vars["id"];
@@ -88,7 +89,7 @@ class ImagesController extends Controller
                 throw new NotAuthorizedException("You are not authorized to sell this image.");
             }
 
-            $this->displayView(["viewModel" => new ImageSellingVM($image, null)], null);
+            $this->displayView(["viewModel" => new ImageSellingVM($image, null)]);
         }
         catch(Exception $e){
             $_SESSION["error_message"] = $e->getMessage();
@@ -96,6 +97,7 @@ class ImagesController extends Controller
         }
     }
 
+    #[Route("POST", "/images/sell", ["id"])]
     public function processSell(array $vars)
     {
         $image = null;
@@ -123,6 +125,7 @@ class ImagesController extends Controller
         }
     }
 
+    #[Route("GET", "/images/takeoffsale", ["id"])]
     public function takeOffSale(array $vars)
     {
         $imageId = $vars["id"];       
@@ -147,6 +150,7 @@ class ImagesController extends Controller
         }
     }
 
+    #[Route("GET", "/images/buy", ["id"])]
     public function buyImage(array $vars)
     {
         $imageId = $vars["id"];    
@@ -172,11 +176,13 @@ class ImagesController extends Controller
         }
     }
 
+    #[Route("GET", "/images/upload")]
     public function upload()
     {
-        $this->displayView(null, null);
+        $this->displayView();
     }
 
+    #[Route("POST", "/images/upload")]
     public function processUpload()
     {
         $image = Image::constructUnknownImage($_SESSION["user"]->getUserId(), $_SESSION["user"]->getUserId(), $_POST["name"], $_POST["description"], $_POST["alt_text"]);
@@ -203,6 +209,7 @@ class ImagesController extends Controller
         }                
     }
 
+    #[Route("GET", "/images/moderate", ["id", "isModerate"])]
     public function moderateImage(array $vars)
     {
         $this->adminAuthorization();
@@ -233,6 +240,7 @@ class ImagesController extends Controller
         }
     }
 
+    #[Route("GET", "/images/delete", ["id"])]
     public function deleteImage(array $vars)
     {
         $imageId = $vars["id"];

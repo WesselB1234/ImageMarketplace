@@ -24,6 +24,6 @@ class PortfolioController extends Controller
     {
         $images = $this->imagesService->getAllImagesFromUserId($_SESSION["user"]->getUserId());
 
-        $this->displayView(["viewModel" => $images], null);
+        $this->displayView(["viewModel" => $images]);
     }
 }

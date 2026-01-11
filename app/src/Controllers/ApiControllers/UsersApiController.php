@@ -21,20 +21,21 @@ class UsersApiController extends ApiController
     public function __construct()
     {
         parent::__construct();
-        $this->usersService = new UsersService();
-        
         $this->loggedInAuthorization();
+
+        $this->usersService = new UsersService();
     }
 
-    public function delete(array $vars)
+    #[Route("POST", "/users/api/delete")]
+    public function delete()
     {
         $this->adminAuthorization();   
-        
-        $input = file_get_contents("php://input"); 
-        $data = json_decode($input, true); 
-        $userId = $data["id"];
 
         try{
+            $input = file_get_contents("php://input"); 
+            $data = json_decode($input, true); 
+            $userId = $data["id"];
+
             if (intval($userId) === $_SESSION["user"]->getUserId()){
                 throw new ForbiddenException("You cannot delete yourself.");
             }

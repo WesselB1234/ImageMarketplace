@@ -62,42 +62,42 @@
 
     <hr class="my-4">
 
-    <h2 class="h4 mt-4">4. How we share your information</h2>
+    <h2 class="h4 mt-4">3. How we share your information</h2>
     <p>
         We do not sell your personal information to third parties.
     </p>
 
     <hr class="my-4">
 
-    <h2 class="h4 mt-4">5. Cookies</h2>
+    <h2 class="h4 mt-4">4. Cookies</h2>
     <p>
         At the moment, we do not make use of cookies.
     </p>
 
     <hr class="my-4">
 
-    <h2 class="h4 mt-4">6. Data retention</h2>
+    <h2 class="h4 mt-4">5. Data retention</h2>
     <p>
         We retain information only as long as necessary or required by law.
     </p>
 
     <hr class="my-4">
 
-    <h2 class="h4 mt-4">7. Data security</h2>
+    <h2 class="h4 mt-4">6. Data security</h2>
     <p>
         We implement reasonable safeguards but cannot guarantee absolute security.
     </p>
 
     <hr class="my-4">
 
-    <h2 class="h4 mt-4">8. Your right to delete your account</h2>
+    <h2 class="h4 mt-4">7. Your right to delete your account</h2>
     <p>
         You have the right to delete your account. You can send an account deletion request by contacting us.
     </p>
 
     <hr class="my-4">
 
-    <h2 id="contact" class="h4 mt-4">9. Contact us</h2>
+    <h2 id="contact" class="h4 mt-4">8. Contact us</h2>
     <p class="mb-4">
         Email: <a href="mailto:[729848@student.inholland.nl]">729848@student.inholland.nl</a><br>
     </p>

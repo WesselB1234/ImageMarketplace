@@ -177,19 +177,31 @@ class ImagesController extends Controller
     #[Route("POST", "/images/upload")]
     public function processUpload()
     {
-        $image = Image::constructUnknownImage($_SESSION["user"]->getUserId(), $_SESSION["user"]->getUserId(), $_POST["name"], $_POST["description"], $_POST["alt_text"]);
-        
         try{
-            $imageId = $this->imagesService->createImage($image);
-        
-            try{
-                $this->imagesService->uploadImageFile($imageId);
+            $imageId = null;
+            
+            try{ 
+                $image = Image::constructUnknownImage($_SESSION["user"]->getUserId(), $_SESSION["user"]->getUserId(), $_POST["name"], $_POST["description"], $_POST["alt_text"]);
+                
+                if (!isset($_FILES["image"])){
+                    throw new NotFoundException("No image file has been sent to the server.");
+                }
+                
+                $imageFile = $_FILES["image"];
 
-                $_SESSION["success_message"] = "Image successfully uploaded!";
+                $this->imagesService->validateImageFile($imageFile);
+                $imageId = $this->imagesService->createImage($image);
+                $this->imagesService->uploadImageFile($imageFile, $imageId);
+
+                $_SESSION["success_message"] = "Image successfully uploaded.";
                 header("Location: /portfolio");
             }
             catch(Exception $e){
-                $this->imagesService->deleteImageByImageId($imageId);
+
+                if ($imageId !== null){
+                    $this->imagesService->deleteImageByImageId($imageId);       
+                }
+                
                 throw new Exception($e->getMessage());
             }
         }

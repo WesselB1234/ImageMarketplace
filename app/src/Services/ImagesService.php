@@ -51,26 +51,27 @@ class ImagesService implements IImagesService
         return $image;
     }
 
-    public function vali
-
-    public function uploadImageFile(int $imageId)
-    {
-        if (!isset($_FILES["image"]) || $_FILES["image"]["error"] !== UPLOAD_ERR_OK) {
+    public function validateImageFile(array $imageFile)
+    {    
+        if (!isset($imageFile) || $imageFile["error"] !== UPLOAD_ERR_OK) {
             throw new Exception("The uploading of the file to the server has failed.");
         }
 
         $finfo = finfo_open(FILEINFO_MIME_TYPE);
-        $mimeType = finfo_file($finfo, $_FILES["image"]["tmp_name"]);
+        $mimeType = finfo_file($finfo, $imageFile["tmp_name"]);
 
         if ($mimeType !== "image/png") {
             throw new Exception("You cannot use any other image extension other than .png");
         }
-
-        $extension = pathinfo($_FILES["image"]["name"], PATHINFO_EXTENSION);
+    }
+    //$_FILES["image"]
+    public function uploadImageFile(array $imageFile, int $imageId)
+    {
+        $extension = pathinfo($imageFile["name"], PATHINFO_EXTENSION);
         $filename = strval($imageId).".".$extension;
         $destination = "assets/img/UserUploadedImages/$filename";
 
-        if (!move_uploaded_file($_FILES["image"]["tmp_name"], $destination)) {
+        if (!move_uploaded_file($imageFile["tmp_name"], $destination)) {
             throw new Exception("Failed to save image to file structure.");
         }
     }

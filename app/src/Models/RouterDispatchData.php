@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\Attributes\Route;
-
 class RouterDispatchData
 {
     private string $methodName;

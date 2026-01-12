@@ -4,7 +4,6 @@ namespace App\Controllers\ApiControllers;
 
 use App\Controllers\ApiControllers\ApiController;
 use App\Services\Interfaces\IImagesService;
-use App\Services\ImagesService;
 use Exception;
 use App\Models\Attributes\Route;
 

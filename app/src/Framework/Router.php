@@ -157,10 +157,10 @@ class Router
 
     public function dispatch(string $httpMethod, string $uri)
     {
-        $methodNameAndRouteObj = $this->getDispatchDataRecursivelyThroughControllersFolder(__DIR__."/../Controllers", $httpMethod, $uri);
+        $dispatchData = $this->getDispatchDataRecursivelyThroughControllersFolder(__DIR__."/../Controllers", $httpMethod, $uri);
 
-        if ($methodNameAndRouteObj !== null){
-            $this->callRouteMethod($methodNameAndRouteObj, $uri);
+        if ($dispatchData !== null){
+            $this->callRouteMethod($dispatchData);
         }
         else{
             throw new NotFoundException("Cannot find specified route.");

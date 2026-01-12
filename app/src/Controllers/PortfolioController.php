@@ -4,7 +4,6 @@ namespace App\Controllers;
 
 use App\Controllers\Controller;
 use App\Services\Interfaces\IImagesService;
-use App\Services\ImagesService;
 use App\Models\Attributes\Route;
 
 class PortfolioController extends Controller

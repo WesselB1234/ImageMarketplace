@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Services\Interfaces\IUsersService;
 use App\Repositories\Interfaces\IUsersRepository;
-use App\Repositories\UsersRepository;
 use App\Models\User;
 use Exception;
 use App\Models\Exceptions\NotFoundException;

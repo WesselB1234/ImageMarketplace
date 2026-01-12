@@ -3,7 +3,6 @@
 namespace App\Controllers;
 
 use App\Controllers\Controller;
-use App\Services\UsersService;
 use App\Services\Interfaces\IUsersService;
 use App\Models\User;
 use App\Models\Enums\UserRole;

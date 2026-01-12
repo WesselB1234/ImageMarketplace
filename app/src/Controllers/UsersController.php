@@ -4,7 +4,6 @@ namespace App\Controllers;
 
 use App\Controllers\Controller;
 use App\Services\Interfaces\IUsersService;
-use App\Services\UsersService;
 use App\Models\User;
 use App\Models\Enums\UserRole;
 use Exception;

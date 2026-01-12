@@ -4,11 +4,8 @@ namespace App\Controllers;
 
 use App\Controllers\Controller;
 use App\Services\Interfaces\IImagesService;
-use App\Services\ImagesService;
 use App\Services\Interfaces\IUsersService;
-use App\Services\UsersService;
 use App\Models\Image;
-use App\Models\User;
 use App\Models\Enums\UserRole;
 use App\Models\ViewModels\ImageDetailsVM;
 use App\Models\ViewModels\ImageSellingVM;

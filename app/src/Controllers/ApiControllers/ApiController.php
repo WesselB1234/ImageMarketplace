@@ -2,7 +2,6 @@
 
 namespace App\Controllers\ApiControllers;
 
-use App\Models\Exceptions\NotAuthorizedException;
 use App\Models\ApiResponses\ErrorResponse;
 use App\Models\Enums\UserRole;
 

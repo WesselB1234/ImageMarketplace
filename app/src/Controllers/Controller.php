@@ -3,7 +3,6 @@
 namespace App\Controllers;
 
 use App\Models\Enums\UserRole;
-use App\Models\Exceptions\NotAuthorizedException;
 
 class Controller
 {

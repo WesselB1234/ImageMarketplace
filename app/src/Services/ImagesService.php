@@ -4,11 +4,8 @@ namespace App\Services;
 
 use App\Services\Interfaces\IImagesService;
 use App\Repositories\Interfaces\IImagesRepository;
-use App\Repositories\ImagesRepository;
 use App\Repositories\Interfaces\IUsersRepository;
-use App\Repositories\UsersRepository;
 use App\Models\Image;
-use App\Models\User;
 use Exception;
 use App\Models\Exceptions\NotFoundException;
 use App\Models\Exceptions\NotAuthorizedException;
@@ -64,7 +61,7 @@ class ImagesService implements IImagesService
             throw new Exception("You cannot use any other image extension other than .png");
         }
     }
-    //$_FILES["image"]
+
     public function uploadImageFile(array $imageFile, int $imageId)
     {
         $extension = pathinfo($imageFile["name"], PATHINFO_EXTENSION);

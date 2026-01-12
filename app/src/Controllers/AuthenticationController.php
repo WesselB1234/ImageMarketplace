@@ -59,7 +59,7 @@ class AuthenticationController extends Controller
     #[Route("POST", "/register")]
     public function processRegister()
     {
-        $user = User::constructUnknownUser($_POST["username"], $_POST["password"], 100, UserRole::User->value);
+        $user = User::constructUnknownUser($_POST["username"], $_POST["password"], 100, UserRole::User);
         
         try{ 
             $this->usersService->createUser($user);

@@ -129,7 +129,7 @@ class ImagesController extends Controller
         try{
             RequestParamValidator::validateRequestParamId($imageId);
 
-            $this->imagesService->takeImageOffSaleByImageId($imageId, null);
+            $this->imagesService->takeImageOffSaleByImageId($imageId);
 
             $_SESSION["success_message"] = "Successfully put image off sale.";
             header("Location: /images/details/$imageId");

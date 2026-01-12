@@ -71,7 +71,7 @@
 
     <h2 class="h4 mt-4">4. Cookies</h2>
     <p>
-        At the moment, we do not make use of cookies.
+        We do not make use of cookies.
     </p>
 
     <hr class="my-4">

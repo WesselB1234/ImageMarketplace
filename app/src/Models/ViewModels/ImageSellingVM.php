@@ -20,18 +20,8 @@ class ImageSellingVM
         return $this->image;
     }
 
-    public function setImage(Image $image)
-    {
-        $this->image = $image;
-    }
-
     public function getPrice(): ?int
     {
         return $this->price;
-    }
-
-    public function setPrice(?int $price)
-    {
-        $this->price = $price;
     }
 }

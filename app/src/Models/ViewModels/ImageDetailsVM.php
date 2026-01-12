@@ -23,28 +23,13 @@ class ImageDetailsVM
         return $this->ownerUser;
     }
 
-    public function setOwnerUser(?User $ownerUser)
-    {
-        $this->ownerUser = $ownerUser;
-    }
-
     public function getCreatorUser(): ?User
     {
         return $this->creatorUser;
     }
 
-    public function setCreatorUser(?User $creatorUser)
-    {
-        $this->creatorUser = $creatorUser;
-    }
-
     public function getImage(): Image
     {
         return $this->image;
-    }
-
-    public function setImage(Image $image)
-    {
-        $this->image = $image;
     }
 }

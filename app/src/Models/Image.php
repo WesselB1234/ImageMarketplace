@@ -69,19 +69,9 @@ class Image implements JsonSerializable
         return $this->imageId;
     }
 
-    public function setImageId(int $imageId)
-    {
-        $this->imageId = $imageId;
-    }
-
     public function getOwnerId(): ?int
     {
         return $this->ownerId;
-    }
-
-    public function setOwnerId(?int $ownerId)
-    {
-        $this->ownerId = $ownerId;
     }
 
     public function getCreatorId(): ?int
@@ -89,19 +79,9 @@ class Image implements JsonSerializable
         return $this->creatorId;
     }
 
-    public function setCreatorId(?int $creatorId)
-    {
-        $this->creatorId = $creatorId;
-    }
-
     public function getName(): string
     {
         return $this->name;
-    }
-
-    public function setName(string $name)
-    {
-        $this->name = $name;
     }
 
     public function getDescription(): string
@@ -109,19 +89,9 @@ class Image implements JsonSerializable
         return $this->description;
     }
 
-    public function setDescription(string $description)
-    {
-        $this->description = $description;
-    }
-
     public function getPrice(): ?int
     {
         return $this->price;
-    }
-
-    public function setPrice(?int $price)
-    {
-        $this->price = $price;
     }
 
     public function getIsModerated(): bool
@@ -129,19 +99,9 @@ class Image implements JsonSerializable
         return $this->isModerated;
     }
 
-    public function setIsModerated(bool $isModerated)
-    {
-        $this->isModerated = $isModerated;
-    }
-
     public function getIsOnSale(): bool
     {
         return $this->isOnSale;
-    }
-
-    public function setIsOnSale(bool $isOnSale)
-    {
-        $this->isOnSale = $isOnSale;
     }
 
     public function getTimeCreated(): DateTime
@@ -149,19 +109,9 @@ class Image implements JsonSerializable
         return $this->timeCreated;
     }
 
-    public function setTimeCreated(DateTime $timeCreated)
-    {
-        $this->timeCreated = $timeCreated;
-    }
-
     public function getAltText(): string
     {
         return $this->altText;
-    }
-
-    public function setAltText(string $altText)
-    {
-        $this->altText = $altText;
     }
 
     public function jsonSerialize(): array 

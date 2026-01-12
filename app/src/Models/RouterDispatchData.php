@@ -21,29 +21,14 @@ class RouterDispatchData
     {
         return $this->methodName;
     }
-    
-    public function setMethodName(string $methodName)
-    {
-        $this->methodName = $methodName;
-    }
 
     public function getControllerClassPath(): string
     {
         return $this->controllerClassPath;
     }
 
-    public function setControllerClassPath(string $controllerClassPath)
-    {
-        $this->controllerClassPath = $controllerClassPath;
-    }
-
     public function getRequestParams(): ?array
     {
         return $this->requestParams;
-    }
-
-    public function setRequestParams(?array $requestParams)
-    {
-        $this->requestParams = $requestParams;
     }
 }

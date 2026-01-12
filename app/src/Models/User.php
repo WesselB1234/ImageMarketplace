@@ -60,19 +60,9 @@ class User implements JsonSerializable
         return $this->userId;
     }
 
-    public function setUserId(?int $userId)
-    {
-        $this->userId = $userId;
-    }
-
     public function getUsername(): string
     {
         return $this->username;
-    }
-
-    public function setUsername(string $username)
-    {
-        $this->username = $username;
     }
 
     public function getPassword(): ?string
@@ -98,11 +88,6 @@ class User implements JsonSerializable
     public function getRole(): UserRole
     {
         return $this->role;
-    }
-
-    public function setRole(UserRole $role)
-    {
-        $this->role = $role;
     }
 
     public function jsonSerialize(): array 

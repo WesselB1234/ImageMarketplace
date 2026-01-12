@@ -18,11 +18,6 @@ class ErrorResponse implements JsonSerializable
         return $this->message;
     }
 
-    public function setMessage(string $message)
-    {
-        $this->message = $message;
-    }
-
     public function jsonSerialize(): array
     {
         return [

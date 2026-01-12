@@ -18,11 +18,6 @@ class UserDeletionResponse implements JsonSerializable
         return $this->userId;
     }
 
-    public function setUserId(int $userId)
-    {
-        $this->userId = $userId;
-    }
-
     public function jsonSerialize(): array
     {
         return [

@@ -4,14 +4,10 @@ namespace App\Controllers\ApiControllers;
 
 use App\Controllers\ApiControllers\ApiController;
 use App\Services\Interfaces\IUsersService;
-use App\Services\UsersService;
-use App\Models\User;
 use Exception;
 use App\Models\Exceptions\NotFoundException;
-use App\Models\Exceptions\NotAuthorizedException;
 use App\Models\Exceptions\ForbiddenException;
 use App\Models\ApiResponses\UserDeletionResponse;
-use App\Models\ApiResponses\ErrorResponse;
 use App\Models\Attributes\Route;
 
 class UsersApiController extends ApiController

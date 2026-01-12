@@ -61,9 +61,9 @@ class UsersController extends Controller
     }
 
     #[Route("GET", "/users/update", ["id"])]
-    public function update(array $vars)
+    public function update(array $requestParams)
     {
-        $userId = $vars["id"];        
+        $userId = $requestParams["id"];        
         
         try{
             RequestParamValidator::validateRequestParamId($userId);
@@ -79,10 +79,10 @@ class UsersController extends Controller
     }
 
     #[Route("POST", "/users/update", ["id"])]
-    public function processUpdate(array $vars)
+    public function processUpdate(array $requestParams)
     {
         $user = null;
-        $userId = $vars["id"];   
+        $userId = $requestParams["id"];   
 
         try{
             if (empty($_POST["password"])) {

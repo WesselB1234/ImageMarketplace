@@ -40,9 +40,9 @@ class ImagesController extends Controller
     }
 
     #[Route("GET", "/images/details", ["id"])]
-    public function details(array $vars)
+    public function details(array $requestParams)
     {
-        $imageId = $vars["id"];
+        $imageId = $requestParams["id"];
 
         try{
             RequestParamValidator::validateRequestParamId($imageId);
@@ -73,9 +73,9 @@ class ImagesController extends Controller
     }
 
     #[Route("GET", "/images/sell", ["id"])]
-    public function sell(array $vars)
+    public function sell(array $requestParams)
     {
-        $imageId = $vars["id"];
+        $imageId = $requestParams["id"];
         
         try{
             RequestParamValidator::validateRequestParamId($imageId);
@@ -95,10 +95,10 @@ class ImagesController extends Controller
     }
 
     #[Route("POST", "/images/sell", ["id"])]
-    public function processSell(array $vars)
+    public function processSell(array $requestParams)
     {
         $image = null;
-        $imageId = $vars["id"];       
+        $imageId = $requestParams["id"];       
 
         try{
             $image = $this->imagesService->getImageByImageIdOrThrow($imageId);
@@ -122,9 +122,9 @@ class ImagesController extends Controller
     }
 
     #[Route("GET", "/images/takeoffsale", ["id"])]
-    public function takeOffSale(array $vars)
+    public function takeOffSale(array $requestParams)
     {
-        $imageId = $vars["id"];       
+        $imageId = $requestParams["id"];       
 
         try{
             RequestParamValidator::validateRequestParamId($imageId);
@@ -145,9 +145,9 @@ class ImagesController extends Controller
     }
 
     #[Route("GET", "/images/buy", ["id"])]
-    public function buyImage(array $vars)
+    public function buyImage(array $requestParams)
     {
-        $imageId = $vars["id"];    
+        $imageId = $requestParams["id"];    
 
         try{
             RequestParamValidator::validateRequestParamId($imageId);
@@ -216,12 +216,12 @@ class ImagesController extends Controller
     }
 
     #[Route("GET", "/images/moderate", ["id", "isModerate"])]
-    public function moderateImage(array $vars)
+    public function moderateImage(array $requestParams)
     {
         $this->adminAuthorization();
         
-        $imageId = $vars["id"];
-        $isModerateRaw = $vars["isModerate"];
+        $imageId = $requestParams["id"];
+        $isModerateRaw = $requestParams["isModerate"];
 
         try{
             RequestParamValidator::validateRequestParamId($imageId);
@@ -244,9 +244,9 @@ class ImagesController extends Controller
     }
 
     #[Route("GET", "/images/delete", ["id"])]
-    public function deleteImage(array $vars)
+    public function deleteImage(array $requestParams)
     {
-        $imageId = $vars["id"];
+        $imageId = $requestParams["id"];
         
         try{
             RequestParamValidator::validateRequestParamId($imageId);

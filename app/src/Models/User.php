@@ -3,58 +3,100 @@
 namespace App\Models;
 
 use App\Models\Enums\UserRole;
+use JsonSerializable;
 
-class User
+class User implements JsonSerializable
 {
-    public ?int $userId;
-    public string $username;
-    public string $email;
-    public ?string $password;
-    public int $imageTokens;
-    public UserRole $role;
+    private ?int $userId;
+    private string $username;
+    private ?string $password;
+    private int $imageTokens;
+    private UserRole $role;
 
-    public function __construct()
+    private function __construct(?int $userId, string $username, ?string $password, int $imageTokens, UserRole $role) 
     {
-        
+        $this->userId = $userId;
+        $this->username = $username;
+        $this->password = $password;
+        $this->imageTokens = $imageTokens;
+        $this->role = $role;
     }
 
-    public static function constructFullyKnownUser(int $userId ,string $username, string $email, string $password, int $imageTokens, string $stringRole): User
+    public static function constructUnknownUser(string $username, string $password, int $imageTokens, UserRole $role): User
     {
-        $user = new self();    
-        
-        $user->userId = $userId;
-        $user->username = $username;
-        $user->email = $email;
-        $user->password = $password;
-        $user->imageTokens = $imageTokens;
-        $user->role = UserRole::from($stringRole);
-        
-        return $user;
+        return new self(
+            null,
+            $username,
+            $password,
+            $imageTokens,
+            $role
+        );
     }
 
-    public static function constructUnknownUser(string $username, string $email, string $password, int $imageTokens, string $stringRole): User
+    public static function constructKnownUserWithoutPassword(int $userId, string $username, int $imageTokens, UserRole $role): User
     {
-        $user = new self();
-
-        $user->username = $username;
-        $user->email = $email;
-        $user->password = $password;
-        $user->imageTokens = $imageTokens;
-        $user->role = UserRole::from($stringRole);
-        
-        return $user;
+        return new self(
+            $userId,
+            $username,
+            null,
+            $imageTokens,
+            $role
+        );
     }
 
-    public static function constructKnownUserWithoutPassword(int $userId, string $username, string $email, int $imageTokens, string $stringRole): User
+    public static function constructFullyKnownUser(?int $userId, string $username, string $password, int $imageTokens, UserRole $role): User
     {
-        $user = new self();
+        return new self(
+            $userId,
+            $username,
+            $password,
+            $imageTokens,
+            $role
+        );
+    }
 
-        $user->userId = $userId;
-        $user->username = $username;
-        $user->email = $email;
-        $user->imageTokens = $imageTokens;
-        $user->role = UserRole::from($stringRole);
-        
-        return $user;
+    public function getUserId(): ?int
+    {
+        return $this->userId;
+    }
+
+    public function getUsername(): string
+    {
+        return $this->username;
+    }
+
+    public function getPassword(): ?string
+    {
+        return $this->password;
+    }
+
+    public function setPassword(?string $password)
+    {
+        $this->password = $password;
+    }
+
+    public function getImageTokens(): int
+    {
+        return $this->imageTokens;
+    }
+
+    public function setImageTokens(int $imageTokens)
+    {
+        $this->imageTokens = $imageTokens;
+    }
+
+    public function getRole(): UserRole
+    {
+        return $this->role;
+    }
+
+    public function jsonSerialize(): array 
+    { 
+        return [ 
+            "userId" => $this->userId, 
+            "username" => $this->username, 
+            "imageTokens" => $this->imageTokens, 
+            "role" => $this->role->value, 
+        ]; 
     }
 }

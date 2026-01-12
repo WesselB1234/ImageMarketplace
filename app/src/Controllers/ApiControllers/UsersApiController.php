@@ -4,38 +4,35 @@ namespace App\Controllers\ApiControllers;
 
 use App\Controllers\ApiControllers\ApiController;
 use App\Services\Interfaces\IUsersService;
-use App\Services\UsersService;
-use App\Models\User;
 use Exception;
 use App\Models\Exceptions\NotFoundException;
-use App\Models\Exceptions\NotAuthorizedException;
 use App\Models\Exceptions\ForbiddenException;
 use App\Models\ApiResponses\UserDeletionResponse;
-use App\Models\ApiResponses\ErrorResponse;
+use App\Models\Attributes\Route;
 
 class UsersApiController extends ApiController
 {
     private IUsersService $usersService;
 
-    public function __construct()
+    public function __construct(IUsersService $usersService)
     {
-        $this->usersService = new UsersService();
+        parent::__construct();
+        $this->loggedInAuthorization();
+
+        $this->usersService = $usersService;
     }
 
-    public function delete(array $vars)
-    {   
-        header("Access-Control-Allow-Origin: *"); 
-        header("Content-Type: application/json");
-
-        $input = file_get_contents("php://input"); 
-        $data = json_decode($input, true); 
-        $userId = $data["id"];
+    #[Route("POST", "/users/api/delete")]
+    public function delete()
+    {
+        $this->adminAuthorization();   
 
         try{
-            $this->loggedInAuthorization();
-            $this->adminAuthorization();
+            $input = file_get_contents("php://input"); 
+            $data = json_decode($input, true); 
+            $userId = $data["id"];
 
-            if (intval($userId) === $_SESSION["user"]->userId){
+            if (intval($userId) === $_SESSION["user"]->getUserId()){
                 throw new ForbiddenException("You cannot delete yourself.");
             }
             
@@ -43,53 +40,32 @@ class UsersApiController extends ApiController
 
             http_response_code(200); 
             echo json_encode(new UserDeletionResponse($userId), JSON_PRETTY_PRINT);
-            exit;
         }
         catch(ForbiddenException $e){
-            http_response_code(403); 
+            $this->displayErrorJson(403, $e->getMessage());
         }  
-        catch(NotAuthorizedException $e){
-            http_response_code(401); 
-        } 
         catch(NotFoundException $e){
-            http_response_code(404); 
+            $this->displayErrorJson(404, $e->getMessage()); 
         }
-        catch(Exception $e){
-            http_response_code(400); 
-        }  
-
-        echo json_encode(new ErrorResponse($e->getMessage()), JSON_PRETTY_PRINT);
+        catch(Exception $e){ 
+            $this->displayErrorJson(400, $e->getMessage());
+        }
     }
 
+    #[Route("GET", "/users/api/getloggedinuser")]
     public function getLoggedInUser()
     {
-        header("Access-Control-Allow-Origin: *"); 
-        header("Content-Type: application/json");
-
-        try{
-            $this->loggedInAuthorization();
-            
-            $userId = $_SESSION["user"]->userId;
-            $user = $this->usersService->getUserByUserId($userId);
-
-            if ($user === null){
-                throw new NotFoundException("Logged in user with user ID $userId does not exist.");
-            }
+        try{    
+            $user = $this->usersService->getUserByUserIdOrThrow($_SESSION["user"]->getUserId());
 
             http_response_code(200); 
             echo json_encode($user, JSON_PRETTY_PRINT);
-            exit;
         }
-        catch(NotAuthorizedException $e){
-            http_response_code(401); 
-        } 
         catch(NotFoundException $e){
-            http_response_code(404); 
+            $this->displayErrorJson(404, $e->getMessage());
         }
         catch(Exception $e){
-            http_response_code(400); 
+            $this->displayErrorJson(400, $e->getMessage());
         }  
-
-        echo json_encode(new ErrorResponse($e->getMessage()), JSON_PRETTY_PRINT);
     }
 }

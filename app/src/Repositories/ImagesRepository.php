@@ -108,14 +108,14 @@ class ImagesRepository extends Repository implements IImagesRepository
             VALUES (:ownerId, :creatorId, :name, :description, :price, :isModerated, :isOnsale, :altText);"
         );
 
-        $stmt->bindValue(":ownerId", $image->ownerId, PDO::PARAM_INT); 
-        $stmt->bindValue(":creatorId", $image->creatorId, PDO::PARAM_INT); 
-        $stmt->bindValue(":name", $image->name, PDO::PARAM_STR); 
-        $stmt->bindValue(":description", $image->description, PDO::PARAM_STR); 
+        $stmt->bindValue(":ownerId", $image->getOwnerId(), PDO::PARAM_INT); 
+        $stmt->bindValue(":creatorId", $image->getCreatorId(), PDO::PARAM_INT); 
+        $stmt->bindValue(":name", $image->getName(), PDO::PARAM_STR); 
+        $stmt->bindValue(":description", $image->getDescription(), PDO::PARAM_STR); 
         $stmt->bindValue(":price", null, PDO::PARAM_NULL); 
-        $stmt->bindValue(":isModerated", $image->isModerated, PDO::PARAM_BOOL);
-        $stmt->bindValue(":isOnsale", $image->isOnSale, PDO::PARAM_BOOL);
-        $stmt->bindValue(":altText", $image->altText, PDO::PARAM_STR);
+        $stmt->bindValue(":isModerated", $image->getIsModerated(), PDO::PARAM_BOOL);
+        $stmt->bindValue(":isOnsale", $image->getIsOnSale(), PDO::PARAM_BOOL);
+        $stmt->bindValue(":altText", $image->getAltText(), PDO::PARAM_STR);
 
         $stmt->execute();
 
@@ -165,7 +165,7 @@ class ImagesRepository extends Repository implements IImagesRepository
         $stmt->execute();
 
         if($stmt->rowCount() === 0){
-            throw new NotFoundException("Image with ID ".$userId." does not exist.");
+            throw new NotFoundException("Image with ID ".$imageId." does not exist.");
         }
     }
 }

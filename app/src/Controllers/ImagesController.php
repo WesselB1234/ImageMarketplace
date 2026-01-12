@@ -4,31 +4,31 @@ namespace App\Controllers;
 
 use App\Controllers\Controller;
 use App\Services\Interfaces\IImagesService;
-use App\Services\ImagesService;
 use App\Services\Interfaces\IUsersService;
-use App\Services\UsersService;
 use App\Models\Image;
-use App\Models\User;
 use App\Models\Enums\UserRole;
 use App\Models\ViewModels\ImageDetailsVM;
 use App\Models\ViewModels\ImageSellingVM;
 use Exception;
 use App\Models\Exceptions\NotFoundException;
 use App\Models\Exceptions\NotAuthorizedException;
+use App\Models\Attributes\Route;
+use App\Models\Helpers\RequestParamValidator;
 
 class ImagesController extends Controller
 {
     private IImagesService $imagesService;
     private IUsersService $usersService;
 
-    public function __construct()
+    public function __construct(IImagesService $imagesService, IUsersService $usersService)
     {
         $this->loggedInAuthorization();
 
-        $this->imagesService = new ImagesService();
-        $this->usersService = new UsersService();
+        $this->imagesService = $imagesService;
+        $this->usersService = $usersService;
     }
 
+    #[Route("GET", "/images")]
     public function index()
     {
         $images = $this->imagesService->getAllOnSaleImages();
@@ -36,256 +36,223 @@ class ImagesController extends Controller
         $this->displayView(["viewModel" => $images], "Images/index.php");
     }
 
-    public function details(array $vars)
+    #[Route("GET", "/images/details", ["id"])]
+    public function details(array $requestParams)
     {
+        $imageId = $requestParams["id"];
+
         try{
-            if (filter_var($vars["id"], FILTER_VALIDATE_INT) === false) {
-                throw new Exception("Image ID is not valid.");
-            }
+            RequestParamValidator::validateRequestParamId($imageId);
 
-            $imageId = $vars["id"];
-            $image = $this->imagesService->getImageByImageId($imageId);
-
-            if ($image === null){
-                throw new NotFoundException("Image with ID $imageId does not exist.");
-            }
+            $image = $this->imagesService->getImageByImageIdOrThrow($imageId);
             
-            if ($image->isOnSale === false && $_SESSION["user"]->role !== UserRole::Admin && $image->ownerId !== $_SESSION["user"]->userId){
+            if ($image->getIsOnSale() === false && $_SESSION["user"]->getRole() !== UserRole::Admin && $image->getOwnerId() !== $_SESSION["user"]->getUserId()){
                 throw new NotAuthorizedException("You cannot view private off sale images.");
             }
 
             $ownerUser = null;
             $creatorUser = null;
 
-            if ($image->ownerId !== null){
-                $ownerUser = $this->usersService->getUserByUserId($image->ownerId);
+            if ($image->getOwnerId() !== null){
+                $ownerUser = $this->usersService->getUserByUserId($image->getOwnerId());
             }
 
-            if ($image->creatorId !== null){
-                $creatorUser = $this->usersService->getUserByUserId($image->creatorId);
+            if ($image->getCreatorId() !== null){
+                $creatorUser = $this->usersService->getUserByUserId($image->getCreatorId());
             }
            
             $this->displayView(["viewModel" => new ImageDetailsVM($image, $ownerUser, $creatorUser)], null);
         }
         catch(Exception $e){
-            setcookie("error_message", $e->getMessage(), time() + 5, "/");
+            $_SESSION["error_message"] = $e->getMessage();
             header("Location: /portfolio");
         }
     }
 
-    public function sell(array $vars)
+    #[Route("GET", "/images/sell", ["id"])]
+    public function sell(array $requestParams)
     {
+        $imageId = $requestParams["id"];
+        
         try{
-            if (filter_var($vars["id"], FILTER_VALIDATE_INT) === false) {
-                throw new Exception("Image ID is not valid.");
-            }
+            RequestParamValidator::validateRequestParamId($imageId);
+            
+            $image = $this->imagesService->getImageByImageIdOrThrow($imageId);
 
-            $imageId = $vars["id"];
-            $image = $this->imagesService->getImageByImageId($imageId);
-
-            if ($image === null){
-                throw new NotFoundException("Image with ID $imageId does not exist.");
-            }
-
-            if ($image->ownerId !== $_SESSION["user"]->userId && $_SESSION["user"]->role !== UserRole::Admin){
+            if (!$this->imagesService->isUserAuthorizedToImage($image)){
                 throw new NotAuthorizedException("You are not authorized to sell this image.");
             }
 
-            $this->displayView(["viewModel" => new ImageSellingVM($image, null)], null);
+            $this->displayView(["viewModel" => new ImageSellingVM($image, null)]);
         }
         catch(Exception $e){
-            setcookie("error_message", $e->getMessage(), time() + 5, "/");
+            $_SESSION["error_message"] = $e->getMessage();
             header("Location: /portfolio");
         }
     }
 
-    public function processSell(array $vars)
+    #[Route("POST", "/images/sell", ["id"])]
+    public function processSell(array $requestParams)
     {
         $image = null;
-        $imageId = $vars["id"];       
+        $imageId = $requestParams["id"];       
 
         try{
-            $image = $this->imagesService->getImageByImageId($imageId);
+            $image = $this->imagesService->getImageByImageIdOrThrow($imageId);
+            $this->imagesService->sellImage($image, $_POST["price"]);
 
-            if ($image === null){
-                throw new NotFoundException("Image with ID $imageId does not exist.");
-            }
-
-            if ($image->ownerId !== $_SESSION["user"]->userId && $_SESSION["user"]->role !== UserRole::Admin){
-                throw new NotAuthorizedException("You are not authorized to sell this image.");
-            }
-
-            $this->imagesService->updateImageSellingPrice($image->imageId, $_POST["price"]);
-
-            setcookie("success_message", "Image successfully put on sale.", time() + 5, "/");
+            $_SESSION["success_message"] = "Image successfully put on sale.";
             header("Location: /images/details/$imageId");
         }
         catch(NotFoundException | NotAuthorizedException $e){
-            setcookie("error_message", $e->getMessage(), time() + 5, "/");
+            $_SESSION["error_message"] = $e->getMessage();
             header("Location: /portfolio");
         }
         catch(Exception $e){
-
-            $this->displayView("Images/sell.php", [
-                "viewModel" => new ImageSellingVM($image, $imageId),
-                "errorMessage" => $e->getMessage()
-            ]);
+            $this->displayView([
+                    "viewModel" => new ImageSellingVM($image, $_POST["price"]),
+                    "errorMessage" => $e->getMessage()
+                ],
+                "Images/sell.php"
+            );
         }
     }
 
-    public function takeOffSale(array $vars)
+    #[Route("GET", "/images/takeoffsale", ["id"])]
+    public function takeOffSale(array $requestParams)
     {
-        $imageId = $vars["id"];       
+        $imageId = $requestParams["id"];       
 
         try{
-            if (filter_var($imageId, FILTER_VALIDATE_INT) === false) {
-                throw new NotFoundException("Image ID is not valid.");
-            }
+            RequestParamValidator::validateRequestParamId($imageId);
 
-            $image = $this->imagesService->getImageByImageId($imageId);
+            $this->imagesService->takeImageOffSaleByImageId($imageId);
 
-            if ($image === null){
-                throw new NotFoundException("Image with ID $imageId does not exist.");
-            }
-
-            if ($image->ownerId !== $_SESSION["user"]->userId && $_SESSION["user"]->role !== UserRole::Admin){
-                throw new NotAuthorizedException("You are not authorized to take this image off sale.");
-            }
-
-            $this->imagesService->updateImageSellingPrice($image->imageId, null);
-
-            setcookie("success_message", "Successfully put image off sale.", time() + 5, "/");
+            $_SESSION["success_message"] = "Successfully put image off sale.";
             header("Location: /images/details/$imageId");
         }
         catch(NotFoundException $e){
-            setcookie("error_message", $e->getMessage(), time() + 5, "/");
+            $_SESSION["error_message"] = $e->getMessage();
             header("Location: /portfolio");
         }
         catch(Exception $e){
-            setcookie("error_message", $e->getMessage(), time() + 5, "/");
+            $_SESSION["error_message"] = $e->getMessage();
             header("Location: /images/details/$imageId");
         }
     }
 
-    public function buyImage(array $vars)
+    #[Route("GET", "/images/buy", ["id"])]
+    public function buyImage(array $requestParams)
     {
-        $imageId = $vars["id"];    
+        $imageId = $requestParams["id"];    
 
         try{
-            if (filter_var($imageId, FILTER_VALIDATE_INT) === false) {
-                throw new NotFoundException("Image ID is not valid.");
-            }
+            RequestParamValidator::validateRequestParamId($imageId);
 
-            $image = $this->imagesService->getImageByImageId($imageId);
+            $image = $this->imagesService->getImageByImageIdOrThrow($imageId);
+            $this->imagesService->buyImage($image);
 
-            if ($image === null){
-                throw new NotFoundException("Image with ID $imageId does not exist.");
-            }
-
-            if ($image->ownerId === $_SESSION["user"]->userId){
-                throw new NotAuthorizedException("You cannot buy your own image.");
-            }
-
-            $this->imagesService->buyImage($image, $_SESSION["user"]);
-
-            setcookie("success_message", "Successfully bought image: $image->name (Image ID: $image->imageId).", time() + 5, "/");
+            $_SESSION["success_message"] = "Successfully bought image: ".$image->getName()." (Image ID: ".$image->getImageId().").";
             header("Location: /portfolio");
         }
         catch(NotFoundException $e){
-            setcookie("error_message", $e->getMessage(), time() + 5, "/");
+            $_SESSION["error_message"] = $e->getMessage();
             header("Location: /portfolio");
         }
         catch(Exception $e){
-            setcookie("error_message", $e->getMessage(), time() + 5, "/");
+            $_SESSION["error_message"] = $e->getMessage();
             header("Location: /images/details/$imageId");
         }
     }
 
+    #[Route("GET", "/images/upload")]
     public function upload()
     {
-        $this->displayView(null, null);
+        $this->displayView();
     }
 
+    #[Route("POST", "/images/upload")]
     public function processUpload()
     {
-        $image = Image::constructUnknownImage($_SESSION["user"]->userId, $_SESSION["user"]->userId, $_POST["name"], $_POST["description"], $_POST["alt_text"]);
-        
         try{
-            $imageId = $this->imagesService->createImage($image);
-        
-            try{
-                $this->imagesService->uploadImageFile($imageId);
+            $imageId = null;
+            
+            try{ 
+                $image = Image::constructUnknownImage($_SESSION["user"]->getUserId(), $_SESSION["user"]->getUserId(), $_POST["name"], $_POST["description"], $_POST["alt_text"]);
+                
+                if (!isset($_FILES["image"])){
+                    throw new NotFoundException("No image file has been sent to the server.");
+                }
+                
+                $imageFile = $_FILES["image"];
 
-                setcookie("success_message", "Image successfully uploaded!", time() + 5, "/");
+                $this->imagesService->validateImageFile($imageFile);
+                $imageId = $this->imagesService->createImage($image);
+                $this->imagesService->uploadImageFile($imageFile, $imageId);
+
+                $_SESSION["success_message"] = "Image successfully uploaded.";
                 header("Location: /portfolio");
             }
             catch(Exception $e){
-                $this->imagesService->deleteImageByImageId($imageId);
+
+                if ($imageId !== null){
+                    $this->imagesService->deleteImageByImageId($imageId);       
+                }
+                
                 throw new Exception($e->getMessage());
             }
         }
         catch(Exception $e){
-            $this->displayView("Images/upload.php", [
-                "viewModel" => $image, 
-                "errorMessage" => $e->getMessage()
-            ]);
+            $this->displayView([
+                    "viewModel" => $image, 
+                    "errorMessage" => $e->getMessage()
+                ],
+                "Images/upload.php",
+            );
         }                
     }
 
-    public function moderateImage(array $vars)
+    #[Route("GET", "/images/moderate", ["id", "isModerate"])]
+    public function moderateImage(array $requestParams)
     {
         $this->adminAuthorization();
+        
+        $imageId = $requestParams["id"];
+        $isModerateRaw = $requestParams["isModerate"];
 
         try{
-            if (filter_var($vars["id"], FILTER_VALIDATE_INT) === false) {
-                throw new Exception("Image ID is not valid.");
-            }
-
-            $imageId = $vars["id"];
-            $isModerate = filter_var($vars["isModerate"], FILTER_VALIDATE_BOOL);
-
-            if ($isModerate === null) {
-                throw new Exception("IsModerate is not valid.");
-            }
+            RequestParamValidator::validateRequestParamId($imageId);
+            
+            $isModerate = filter_var($isModerateRaw, FILTER_VALIDATE_BOOL);
 
             $this->imagesService->updateImageModerationByImageId($imageId, $isModerate);
-            setcookie("success_message", "Image successfully ".($isModerate ? "moderated" : "unmoderated").".", time() + 5, "/");
+            
+            $_SESSION["success_message"] = "Image successfully ".($isModerate ? "moderated" : "unmoderated").".";
             header("Location: /images/details/$imageId");
         }
         catch(NotFoundException $e){
-            setcookie("error_message", $e->getMessage(), time() + 5, "/");
+            $_SESSION["error_message"] = $e->getMessage();
             header("Location: /portfolio");
         }
         catch(Exception $e){
-            setcookie("error_message", $e->getMessage(), time() + 5, "/");
+            $_SESSION["error_message"] = $e->getMessage();
             header("Location: /images/details/$imageId");
         }
     }
 
-    public function deleteImage(array $vars)
+    #[Route("GET", "/images/delete", ["id"])]
+    public function deleteImage(array $requestParams)
     {
+        $imageId = $requestParams["id"];
+        
         try{
-            if (filter_var($vars["id"], FILTER_VALIDATE_INT) === false) {
-                throw new Exception("Image ID is not valid.");
-            }
-
-            $imageId = $vars["id"];
-            $image = $this->imagesService->getImageByImageId($imageId);
-
-            if ($image === null){
-                throw new NotFoundException("Image with ID $imageId does not exist.");
-            }
-
-            if ($image->ownerId !== $_SESSION["user"]->userId && $_SESSION["user"]->role !== UserRole::Admin){
-                throw new NotAuthorizedException("You are not authorized to delete this image.");
-            }
-
+            RequestParamValidator::validateRequestParamId($imageId);
+            
             $this->imagesService->deleteImageByImageId($imageId);
-
-            setcookie("success_message", "Successfully deleted image.", time() + 5, "/");
+            $_SESSION["success_message"] = "Successfully deleted image.";
         } 
         catch(Exception $e){
-            setcookie("error_message", $e->getMessage(), time() + 5, "/");
+            $_SESSION["error_message"] = $e->getMessage();
         } 
 
         header("Location: /portfolio");

@@ -3,30 +3,23 @@
 namespace App\Controllers;
 
 use App\Models\Enums\UserRole;
-use App\Models\Exceptions\NotAuthorizedException;
 
 class Controller
 {
-    public function displayView(?array $viewData, ?string $dir)
+    public function displayView(?array $viewData = null, ?string $dir = null)
     {
         if ($viewData !== null){
             extract($viewData);
         }
-
-        if(isset($_COOKIE["error_message"])){
-
-            $errorMessage = $_COOKIE["error_message"];
-            
-            unset($_COOKIE["error_message"]);
-            setcookie("error_message", false, -1, "/");
+        
+        if (isset($_SESSION["error_message"])){
+            $errorMessage = $_SESSION["error_message"];
+            unset($_SESSION["error_message"]);
         }
 
-        if(isset($_COOKIE["success_message"])){
-
-            $successMessage = $_COOKIE["success_message"];
-
-            unset($_COOKIE["success_message"]);
-            setcookie("success_message", false, -1, "/");
+        if (isset($_SESSION["success_message"])){
+            $successMessage = $_SESSION["success_message"];
+            unset($_SESSION["success_message"]);
         }
 
         if ($dir !== null){
@@ -49,16 +42,18 @@ class Controller
     public function loggedInAuthorization()
     {
         if (!isset($_SESSION["user"])){
-            setcookie("error_message", "You need to be logged in to perform this action.", time() + 5, "/");
+            $_SESSION["error_message"] = "You need to be logged in to perform this action.";
             header("Location: /login");
+            exit;
         }
     }
 
     public function adminAuthorization()
     {
-        if ($_SESSION["user"]->role != UserRole::Admin){
-            setcookie("error_message", "Your account doesn't have the right role to perform this action.", time() + 5, "/");
-            header("Location: /login");
+        if ($_SESSION["user"]->getRole() !== UserRole::Admin){
+            $_SESSION["error_message"] = "Your account doesn't have the right role to perform this action.";
+            header("Location: /portfolio");
+            exit;
         }
     }
 }

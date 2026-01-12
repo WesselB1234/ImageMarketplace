@@ -3,27 +3,28 @@
 namespace App\Controllers;
 
 use App\Controllers\Controller;
-use App\Services\UsersService;
 use App\Services\Interfaces\IUsersService;
 use App\Models\User;
 use App\Models\Enums\UserRole;
-use App\Models\ViewModels\LoginVm;
-use App\Models\ViewModels\RegisterVm;
+use App\Models\ViewModels\AuthenticationVM;
+use App\Models\Attributes\Route;
 use Exception;
 
 class AuthenticationController extends Controller 
 {
     private IUsersService $usersService;
 
-    public function __construct(){
-        $this->usersService = new UsersService();
+    public function __construct(IUsersService $usersService){
+        $this->usersService = $usersService;
     }
 
+    #[Route("GET", "/login")]
     public function login()
     {
-        $this->displayView(null, null);
+        $this->displayView();
     }
 
+    #[Route("POST", "/login")]
     public function processLogin()
     {       
         try{ 
@@ -33,15 +34,14 @@ class AuthenticationController extends Controller
                 throw new Exception("Password or username is not correct.");
             }
             
-            $user->password = null;
+            $user->setPassword(null);
             $_SESSION["user"] = $user;
 
             header("Location: /");
         }
         catch(Exception $e){
-
             $this->displayView([
-                    "viewModel" => new LoginVm($_POST["username"], $_POST["password"]),  
+                    "viewModel" => new AuthenticationVM($_POST["username"], $_POST["password"]),  
                     "errorMessage" => $e->getMessage()
                 ],
                 "Authentication/Login.php"
@@ -49,25 +49,27 @@ class AuthenticationController extends Controller
         }
     }
 
+    #[Route("GET", "/register")]
     public function register()
     {
-        $this->displayView(null, null);
+        $this->displayView();
     }
 
+    #[Route("POST", "/register")]
     public function processRegister()
     {
-        $user = User::constructUnknownUser($_POST["username"], $_POST["email"], $_POST["password"], 100, UserRole::User->value);
+        $user = User::constructUnknownUser($_POST["username"], $_POST["password"], 100, UserRole::User);
         
         try{ 
             $this->usersService->createUser($user);
 
-            setcookie("success_message", "Successfully created a new account.", time() + 5, "/");
+            $_SESSION["success_message"] = "Successfully created a new account.";
+            
             $this->processLogin();
         }
         catch(Exception $e){
-
             $this->displayView([
-                    "viewModel" => new RegisterVm($_POST["username"], $_POST["password"], $_POST["email"]), 
+                    "viewModel" => new AuthenticationVM($_POST["username"], $_POST["password"]), 
                     "errorMessage" => $e->getMessage()
                 ],
                 "Authentication/Register.php"
@@ -75,6 +77,7 @@ class AuthenticationController extends Controller
         }
     }
     
+    #[Route("GET", "/logout")]
     public function logout()
     {
         $this->loggedInAuthorization();

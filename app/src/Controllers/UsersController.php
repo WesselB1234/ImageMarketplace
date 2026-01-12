@@ -4,43 +4,49 @@ namespace App\Controllers;
 
 use App\Controllers\Controller;
 use App\Services\Interfaces\IUsersService;
-use App\Services\UsersService;
 use App\Models\User;
+use App\Models\Enums\UserRole;
 use Exception;
 use App\Models\Exceptions\NotFoundException;
+use App\Models\Attributes\Route;
+use App\Models\Helpers\RequestParamValidator;
 
 class UsersController extends Controller
 {
     private IUsersService $usersService;
 
-    public function __construct()
+    public function __construct(IUsersService $usersService)
     {
         $this->loggedInAuthorization();
         $this->adminAuthorization();
 
-        $this->usersService = new UsersService();
+        $this->usersService = $usersService;
     }
 
+    #[Route("GET", "/users")]
     public function index()
     {
         $users = $this->usersService->getAllUsers();
 
-        $this->displayView(["viewModel" => $users], null);
+        $this->displayView(["viewModel" => $users]);
     }
 
+    #[Route("GET", "/users/create")]
     public function create()
     {
-        $this->displayView(null, null);
+        $this->displayView();
     }
 
+    #[Route("POST", "/users/create")]
     public function processCreate()
     {
-        $user = User::constructUnknownUser($_POST["username"], $_POST["email"], $_POST["password"], $_POST["image_tokens"], $_POST["role"]);
-        
-        try{ 
+        $user = null;
+    
+        try{
+            $user = User::constructUnknownUser($_POST["username"], $_POST["password"], intval($_POST["image_tokens"]), UserRole::from($_POST["role"])); 
             $userId = $this->usersService->createUser($user);
 
-            setcookie("success_message", "Successfully created a new user with User ID $userId.", time() + 5, "/");
+            $_SESSION["success_message"] = "Successfully created a new user with User ID $userId.";
             header("Location: /users");
         }
         catch(Exception $e){
@@ -53,48 +59,50 @@ class UsersController extends Controller
         }
     }
 
-    public function update(array $vars)
-    {        
+    #[Route("GET", "/users/update", ["id"])]
+    public function update(array $requestParams)
+    {
+        $userId = $requestParams["id"];        
+        
         try{
-            if (filter_var($vars["id"], FILTER_VALIDATE_INT) === false) {
-                throw new Exception("User ID is not valid.");
-            }
+            RequestParamValidator::validateRequestParamId($userId);
             
-            $userId = $vars["id"];
-            $user = $this->usersService->getUserByUserId($userId);
+            $user = $this->usersService->getUserByUserIdOrThrow($userId);
 
-            if($user === null){
-                throw new NotFoundException("User with ID ".$userId." does not exist.");
-            }
-
-            $this->displayView(["viewModel" => $user], null);
+            $this->displayView(["viewModel" => $user]);
         }
         catch(Exception $e){
-            setcookie("error_message", $e->getMessage(), time() + 5, "/");
+            $_SESSION["error_message"] = $e->getMessage();
             header("Location: /users");
         }        
     }
 
-    public function processUpdate(array $vars)
+    #[Route("POST", "/users/update", ["id"])]
+    public function processUpdate(array $requestParams)
     {
-        $userId = $vars["id"];
-        $user = User::constructFullyKnownUser($vars["id"], $_POST["username"], $_POST["email"], $_POST["password"], $_POST["image_tokens"], $_POST["role"]);
+        $user = null;
+        $userId = $requestParams["id"];   
 
         try{
+            if (empty($_POST["password"])) {
+                $user = User::constructKnownUserWithoutPassword($userId, $_POST["username"], intval($_POST["image_tokens"]), UserRole::from($_POST["role"])); 
+            }
+            else{
+                $user = User::constructFullyKnownUser($userId, $_POST["username"], $_POST["password"], $_POST["image_tokens"], UserRole::from($_POST["role"]));
+            }
+            
             $this->usersService->updateUser($user);
             
-            if ($user->userId === $_SESSION["user"]->userId)
-            {
-                $user->userId = $userId;
-                $user->password = null;
+            if ($user->getUserId() === $_SESSION["user"]->getUserId()){
+                $user->setPassword(null);
                 $_SESSION["user"] = $user;
             }
             
-            setcookie("success_message", "Successfully updated user.", time() + 5, "/");
+            $_SESSION["success_message"] = "Successfully updated user.";
             header("Location: /users");
         } 
         catch(NotFoundException $e){
-            setcookie("error_message", $e->getMessage(), time() + 5, "/");
+            $_SESSION["error_message"] = $e->getMessage();
             header("Location: /users");
         } 
         catch(Exception $e){
@@ -102,7 +110,7 @@ class UsersController extends Controller
                     "viewModel" => $user,
                     "errorMessage" => $e->getMessage()
                 ],
-                "Admin/Users/update.php"
+                "Users/update.php"
             );
         } 
     }

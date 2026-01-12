@@ -15,21 +15,14 @@
                     <div class="mb-3">
                         <label for="username" class="form-label">Username</label>
                         <input type="text" class="form-control" id="username" name="username" placeholder="Enter username" value="<?php 
-                            echo (isset($viewModel) && $viewModel->username !== null ? htmlspecialchars($viewModel->username, ENT_QUOTES, "UTF-8") : "") 
-                        ?>" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="username" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="email" name="email" placeholder="Enter email address" value="<?php 
-                            echo (isset($viewModel) && $viewModel->email !== null ? htmlspecialchars($viewModel->email, ENT_QUOTES, "UTF-8") : "") 
+                            echo (isset($viewModel) ? htmlspecialchars($viewModel->getUsername(), ENT_QUOTES, "UTF-8") : "") 
                         ?>" required>
                     </div>
 
                     <div class="mb-3">
                         <label for="password" class="form-label">Password</label>
                         <input type="password" class="form-control" id="password" name="password" placeholder="Enter password" value="<?php 
-                            echo (isset($viewModel) && $viewModel->password !== null ? htmlspecialchars($viewModel->password, ENT_QUOTES, "UTF-8") : "") 
+                            echo (isset($viewModel) ? htmlspecialchars($viewModel->getPassword(), ENT_QUOTES, "UTF-8") : "") 
                         ?>" required>
                     </div>
 

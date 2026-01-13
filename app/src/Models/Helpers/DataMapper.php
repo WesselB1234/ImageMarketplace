@@ -7,8 +7,8 @@ use App\Models\Image;
 use DateTime;
 use App\Models\Enums\UserRole;
 
-class DataMapper{
-
+class DataMapper
+{
     public static function mapAssocUserToUserWithoutPassword(array $assocUser): User
     {
         return User::constructKnownUserWithoutPassword(

@@ -13,8 +13,11 @@ Upon making a request, the router will make sure that the right controller metho
 app\src\Framework\Router.php
 
 ## Dependency injection
-
+It is no longer neccessary to create objects such as services and repositories in this project. All dependencies can now be injected into the constructor. This issue has been solved by the use of the software module PHP-DI. This software module can be installed by calling "composer require php-di/php-di" in your CLI. If a controller requires an IImagesService then all the controller needs to do is inject the object into the constructor like this: public function __construct(IImagesService $imagesService). All dependency bindings can be found in the main dependencies file, see below.
+#### Files
+app\src\Framework\Dependencies.php
 
 ## WCAG 2.2
+
 
 ## GDPR

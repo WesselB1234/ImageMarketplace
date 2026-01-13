@@ -41,15 +41,14 @@ One of the reasons why the application is WCAG 2.2 compliant is due to the use o
 #### Labels and inputs
 Inputs and labels are also used correctly. This is how they are implemented on the register page: \<label for="repeat_password">Repeat password</label> \<input type="password" id="repeat_password">. As you can see, both for and id have the same values, which cause them to be connected to each other.
 
-
 #### Empty links or buttons
 All links also have a destination which prevents the empty link problem.
 
 #### Descriptive alt texts for images
-All images also have descriptive in alt text on them. This makes it possible to see the content of the image if they fail to load
+All images have descriptive in alt text in them. This is an example of how it has been implemented in the images displayer partial: \<img src="/assets/img/UserUploadedImages/1.png" alt="Alt image text example">. This makes it possible to see the content of the image even if they fail to load. It can also make screenreaders have the ability to read images for people with eyesight issues.
 
 #### Text resizing
-If the user decides to zoom in at 200% percent then the layout of the application also does not break.
+If the user decides to zoom in at 200% percent then the layout of the application will adapt. One example of adaptation is that the navbar wil turn to a hamburger menu if the screen becomes too small.
 
 #### Contrast ratio
 Finally, the application's contrast between text and backgrounds has been carefully implemented. For example, the contrast score between the enabled navbar button background and its text is 16.67.

@@ -3,7 +3,7 @@ Within this project it is possible for accounts to upload images and share them 
 This project has been made by Wessel B for Inholland University of Applied Sciences as an assignment. Different aspects of the project such as a custom router will be described below.
 
 ## Automatic view mapping
-When rendering a view, the application will automatically determine which view file to render and what data to pass to it. First it determines which view to render by getting the name of the called controller and the called method. Assuming the render method gets called From a PortfolioController from method index, it will render the view /Portfolio/index.php. If there is a directory passed to the render method, it will choose that view file instead, but that is optional. After the view file has been located, it will pass data to that view such as error messages, success messages and ViewData. All of these are optional of course. The renderer method can be found in the base controller, so if a PortfolioController wants to render a view then it will first need to inherit the base controller class and it will need call $this->displayView() with the neccessary parameters.
+When rendering a view, the application will automatically determine which view file to render and what data to pass to it. First it determines which view to render by getting the name of the called controller and the called method. Assuming the render method gets called From a PortfolioController from method index, it will render the view /Portfolio/index.php. If there is a directory passed to the render method, it will choose that view file instead, but that is optional. After the view file has been located, it will pass data to that view such as error messages, success messages and ViewData. All of these are optional of course. The render method can be found in the base controller, so if a PortfolioController wants to render a view then it will first need to inherit the base controller class and it will need call $this->displayView() with the necessary parameters.
 
 #### Files
 <ul>
@@ -33,17 +33,23 @@ It is no longer neccessary to create objects such as services and repositories i
 </ul>
 
 ## WCAG 2.2
-This project is compliant with the WCAG 2.2 guidelines. 
+This project is compliant with the WCAG 2.2 guidelines. One of the reasons why the application is WCAG 2.2 compliant is due to the use of semantic HTML tags. For example the register page uses the following symantic HTML tags: nav, form, main, header, footer and h3. Inputs and labels are also used correctly as intended which can also be seen on the register page. All links also have a destination which prevents the empty link problem. All images also have descriptive alt text on them. This makes it possible to see the content of the image if they fail to load in. If the user decides to zoom in at 200% percent then the layout of the application also does not break. Finally, the application's contrast between text and backgrounds has been carefully implemented. For example, the contrast score between the enabled navbar button background and its text is 16.67.
 
 #### Files
 <ul>
   <li>
-      
+      app\src\Views\Authentication\register.php (Register page)
+  </li>
+  <li>
+      app\src\Views\Partials\navbarHeader.php (Navbar Partial)
+  </li>
+  <li>
+      app\src\Views\Partials\imagesDisplay.php (Images displayer partial)
   </li>
 </ul>
 
 ## GDPR
-This project is also compliant with the GDPR guidelines. One of the examples why it is GDPR compliant is due to the implementation of account deletion. When a user wants to delete their acccount, then they can make contact with an admin and that admin can make sure to delete their account. Another example is that this project asks as little information as possible from the user. The only information that the project requires is their username and password. The project also makes sure to include POST methods on all form elements. This prevents personal data leaks that GET requests can cause. And last but not least, this project also includes privacy statement page. This privacy statement page can be found in the following url: /privacy.
+This project is also compliant with the GDPR guidelines. One of the examples why it is GDPR compliant is due to the implementation of account deletion. When a user wants to delete their acccount, then they can make contact with an admin and that admin can make sure to delete their account. Another example is that the application asks as little information as possible from the user. The only information that the application requires is username and password of the user. The project also makes sure to include POST methods on all form elements. This prevents personal data leaks that GET requests can cause. Finally, the application also includes privacy statement page. This privacy statement page can be found in the following url: /privacy.
 
 #### Files
 <ul>

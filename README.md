@@ -48,7 +48,7 @@ All links also have a destination which prevents the empty link problem.
 All images also have descriptive in alt text on them. This makes it possible to see the content of the image if they fail to load
 
 #### Text resizing
-If the user decides to zoom in at 200% percent then the layout of the application also does not break.
+If the user decides to zoom in at 200% percent then the application will adapt accordingly. For example, the navbar will turn into a hamburger menu if the screen becomes too small. The file of the navbar can be found in the files section.
 
 #### Contrast ratio
 Finally, the application's contrast between text and backgrounds has been carefully implemented. For example, the contrast score between the enabled navbar button background and its text is 16.67.

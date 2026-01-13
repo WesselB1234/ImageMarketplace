@@ -18,6 +18,13 @@ It is no longer neccessary to create objects such as services and repositories i
 app\src\Framework\Dependencies.php
 
 ## WCAG 2.2
+This project is compliant with the WCAG 2.2 guidelines. 
 
+#### Files
 
 ## GDPR
+This project is also compliant with the GDPR guidelines. One of the examples why it is GDPR compliant is due to the implementation of account deletion. When a user wants to delete their acccount, then they can make contact with an admin and that admin can make sure to delete their account. Another example is that this project asks as little information as possible from the user. The only information that the project requires is their username and password. The project also makes sure to include POST methods on all <form> elements. This prevents personal data leaks that GET requests can cause. And last but not least, this project also includes privacy statement page. This privacy statement page can be found in the following url: /privacy.
+
+#### Files
+
+

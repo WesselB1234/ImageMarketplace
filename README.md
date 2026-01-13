@@ -33,7 +33,7 @@ It is no longer neccessary to create objects such as services and repositories i
 </ul>
 
 ## WCAG 2.2
-This application is compliant with the WCAG 2.2 guidelines. 
+This application is compliant with the WCAG 2.2 guidelines. Below you can find a list of requirements that have been fulfilled.
 
 #### Semantic tags
 One of the reasons why the application is WCAG 2.2 compliant is due to the use of semantic HTML tags. For example the register page uses the following symantic HTML tags: nav, form, main, header, footer and h3.
@@ -67,16 +67,16 @@ Finally, the application's contrast between text and backgrounds has been carefu
 </ul>
 
 ## GDPR
-This application is also compliant with the GDPR guidelines. Below you can find a list of requirements that have been forfilled to make the application compliant with the GDPR guidelines.
+This application is also compliant with the GDPR guidelines. Below you can find a list of requirements that have been fulfilled.
 
 #### Account deletion
-One of the examples why it is GDPR compliant is due to the implementation of account deletion. When a user wants to delete their acccount, then they can make contact with an admin and then the admin will make sure to delete their account. 
+One of the examples why it is GDPR compliant is due to the implementation of account deletion. When a user wants to delete their acccount, then they can make contact with an admin and then the admin will make sure to delete their account. An example of how the application deletes an user is by calling the deleteUser method from the UsersService: $this->usersService->deleteUserByUserId($userId);. This code can also be found in the UsersApiController file.
 
 #### Storing sensitive data securely
-Upon creating an account or updating an existing account, the application will make sure that passwords will be stored as hashed strings in the database. The hashing algorithm can be found in the UserService file.
+Upon creating an account or updating an existing account, the application will make sure that passwords will be stored as hashed strings in the database. This is an example of how passwords get turned into hashes within the application: password_hash($rawPassword, PASSWORD_DEFAULT);. The hashing algorithm can also be found in the UserService file.
 
 #### Only collecting needed data
-The application asks as little data as possible from the user. The only information that the application requires is username and password of the user. You can find an example of this at registering page.
+The application asks as little data as possible from the user. The only data that the application collects is username and password of the user. You can find an example of this at the register page.
 
 #### Preventing GET request data leaks
 The application also makes sure to include POST methods on all form elements. As an example this is how it is implemented in the register page: \<form action="/register" method="POST" id="registerForm">. By making each form have a POST method, it prevents the data leaks theat GET requests can cause.

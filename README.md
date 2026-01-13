@@ -1,13 +1,19 @@
 # Image Market place
 Within this project it is possible for accounts to upload images and share them to users users by selling them to each other.
-This project has been made for University of Applied Sciences Inholland and different aspects of the project such as a custom router will be described below.
+This project has been made by Wessel B for Inholland University of Applied Sciences as an assignment. Different aspects of the project such as a custom router will be described below.
 
 ## Automatic view mapping
-
+When rendering a view, the application will automatically determine which view file to render and what data to pass to it. First it determines which view to render by getting the name of the called controller and the called method. Assuming the render method gets called From a PortfolioController from method index, it will render the view /Portfolio/index.php. If there is a directory passed to the render method, it will choose that view file instead, but that is optional. After the view file has been located, it will pass data to that view such as error messages, success messages and ViewData. All of these are optional of course. The renderer method can be found in the base controller, so if a PortfolioController wants to render a view then it will first need to inherit the base controller class and it will need call $this->displayView() with the neccessary parameters.
+#### Files
+app\src\Controllers\Controller.php
 
 ## Automated router
+Upon making a request, the router will make sure that the right controller method gets called. To ensure that the router knows which method to call, then each controller method needs to have a route attribute implemented. The need of having a big list of controllers hardcoded which each route has been AUTOMATED. If you want to link the route url /portfolio to the controller PortfolioController and the method index, then you need to add the attribute #[Route("GET", "/portfolio")] on top of the index method. If you want to add request parameters to the method then you can add them like this: #[Route("GET", "/portfolio", ["id"])] and add a array $requestParams parameter to the index method. Route /portfolio/5 will now call the index method of the portfolio controller and will pass the value 5 to $requestParams["id"]. Below you can find the file containing the source code of the custom made router.
+#### Files
+app\src\Framework\Router.php
 
 ## Dependency injection
+
 
 ## WCAG 2.2
 

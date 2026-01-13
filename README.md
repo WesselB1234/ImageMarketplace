@@ -33,7 +33,25 @@ It is no longer neccessary to create objects such as services and repositories i
 </ul>
 
 ## WCAG 2.2
-This project is compliant with the WCAG 2.2 guidelines. One of the reasons why the application is WCAG 2.2 compliant is due to the use of semantic HTML tags. For example the register page uses the following symantic HTML tags: nav, form, main, header, footer and h3. Inputs and labels are also used correctly as intended which can also be seen on the register page. All links also have a destination which prevents the empty link problem. All images also have descriptive alt text on them. This makes it possible to see the content of the image if they fail to load in. If the user decides to zoom in at 200% percent then the layout of the application also does not break. Finally, the application's contrast between text and backgrounds has been carefully implemented. For example, the contrast score between the enabled navbar button background and its text is 16.67.
+This project is compliant with the WCAG 2.2 guidelines. 
+
+#### Semantic tags
+One of the reasons why the application is WCAG 2.2 compliant is due to the use of semantic HTML tags. For example the register page uses the following symantic HTML tags: nav, form, main, header, footer and h3.
+
+#### Labels and inputs
+Inputs and labels are also used correctly as intended which can also be seen on the register page.
+
+#### Empty links or buttons
+All links also have a destination which prevents the empty link problem.
+
+#### Descriptive alt texts for images
+All images also have descriptive in alt text on them. This makes it possible to see the content of the image if they fail to load
+
+#### Text resizing
+If the user decides to zoom in at 200% percent then the layout of the application also does not break.
+
+#### Contrast ratio
+Finally, the application's contrast between text and backgrounds has been carefully implemented. For example, the contrast score between the enabled navbar button background and its text is 16.67.
 
 #### Files
 <ul>
@@ -49,18 +67,36 @@ This project is compliant with the WCAG 2.2 guidelines. One of the reasons why t
 </ul>
 
 ## GDPR
-This project is also compliant with the GDPR guidelines. One of the examples why it is GDPR compliant is due to the implementation of account deletion. When a user wants to delete their acccount, then they can make contact with an admin and that admin can make sure to delete their account. Another example is that the application asks as little information as possible from the user. The only information that the application requires is username and password of the user. The project also makes sure to include POST methods on all form elements. This prevents personal data leaks that GET requests can cause. Finally, the application also includes privacy statement page. This privacy statement page can be found in the following url: /privacy.
+This project is also compliant with the GDPR guidelines. Below you can find a list of requirements that have been forfilled to make the application compliant with the GDPR guidelines.
+
+#### Account deletion
+One of the examples why it is GDPR compliant is due to the implementation of account deletion. When a user wants to delete their acccount, then they can make contact with an admin and then the admin will make sure to delete their account. 
+
+#### Storing sensitive data securely
+Upon creating an account or updating an existing account, the application will make sure that passwords will be stored as hashed strings in the database. The hashing algorithm can be found in the UserService file.
+
+#### Only collecting needed data
+The application asks as little data as possible from the user. The only information that the application requires is username and password of the user. You can find an example of this at registering page.
+
+#### Preventing GET request data leaks
+The application also makes sure to include POST methods on all form elements. This prevents personal data leaks that GET requests can cause. 
+
+#### Privacy statement page
+Finally, the application also includes privacy statement page. This privacy statement page can be accessed by entering the following url when running the application: /privacy.
 
 #### Files
 <ul>
-  <li>
-      app\src\Views\Privacy\index.php (Privacy statement page)
-  </li>
   <li>
       app\src\Views\Authentication\register.php (An example of a form element using a POST method and minimizing personal information)
   </li>
   <li>
       app\src\Controllers\ApiControllers\UsersApiController.php (The controller containing the user deletion method)
+  </li>
+  <li>
+      app\src\Services\UsersService.php (The users service which contains the password hashing algorithm.)
+  </li>
+  <li>
+      app\src\Views\Privacy\index.php (Privacy statement page)
   </li>
 </ul>
 

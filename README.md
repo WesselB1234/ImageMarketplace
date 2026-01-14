@@ -13,6 +13,23 @@ This application has been made by Wessel B for Inholland University of Applied S
 </ul>
 
 ## Instructions for starting the application
+<ol>
+  <li>
+    Open the Docker desktop app.
+  </li>
+  <li>
+    Run "docker compose up" in the main project directory.
+  </li>
+  <li>
+    Enter "http://localhost/login" in your address bar.
+  </li>
+  <li>
+      Enter username and password of your account. The account credentials can be found above.
+  </li>
+  <li>
+      You should now be on the Portfolio page. You can now upload images and sell images to other users. Keep in mind that not all functionalities are available if your account has a "User" role.
+  </li>
+</ol>
 
 ## Automatic view mapping
 When rendering a view, the application will automatically determine which view file to render and what data to pass to it. First it determines which view to render by getting the name of the called controller and the called method. Assuming the render method gets called From a PortfolioController from method index, it will render the view /Portfolio/index.php. If there is a directory passed to the render method, it will choose that view file instead, but that is optional. After the view file has been located, it will pass data to that view such as error messages, success messages and ViewData. All of these are optional of course. The render method can be found in the base controller, so if a PortfolioController wants to render a view then it will first need to inherit the base controller class and it will need call $this->displayView() with the necessary parameters.

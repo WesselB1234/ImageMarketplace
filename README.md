@@ -2,6 +2,10 @@
 Within this application it is possible for accounts to upload images and share them to users users by selling them to each other.
 This application has been made by Wessel B for Inholland University of Applied Sciences as an assignment. Different aspects of the application such as a custom router will be described below.
 
+## Login credentials for test accounts
+
+## Instructions for starting the application
+
 ## Automatic view mapping
 When rendering a view, the application will automatically determine which view file to render and what data to pass to it. First it determines which view to render by getting the name of the called controller and the called method. Assuming the render method gets called From a PortfolioController from method index, it will render the view /Portfolio/index.php. If there is a directory passed to the render method, it will choose that view file instead, but that is optional. After the view file has been located, it will pass data to that view such as error messages, success messages and ViewData. All of these are optional of course. The render method can be found in the base controller, so if a PortfolioController wants to render a view then it will first need to inherit the base controller class and it will need call $this->displayView() with the necessary parameters.
 
@@ -39,7 +43,7 @@ This application is compliant with the WCAG 2.2 guidelines. Below you can find a
 One of the reasons why the application is WCAG 2.2 compliant is due to the use of semantic HTML tags. For example the register page uses the following symantic HTML tags: nav, form, main, header, footer and h3.
 
 #### Labels and inputs
-Inputs and labels are also used correctly. This is how they are implemented on the register page: \<label for="repeat_password">Repeat password</label> \<input type="password" id="repeat_password">. As you can see, both for and id have the same values, which cause them to be connected to each other.
+Input and label elements are also used correctly. This is how they are implemented on the register page: \<label for="repeat_password">Repeat password</label> \<input type="password" id="repeat_password">. As you can see, both for and id have the same values, which cause them to be connected to each other.
 
 #### Empty links or buttons
 All links also have a destination which prevents the empty link problem.
@@ -48,10 +52,10 @@ All links also have a destination which prevents the empty link problem.
 All images have descriptive in alt text in them. This is an example of how it has been implemented in the images displayer partial: \<img src="/assets/img/UserUploadedImages/1.png" alt="Alt image text example">. This makes it possible to see the content of the image even if they fail to load. It can also make screenreaders have the ability to read images for people with eyesight issues.
 
 #### Text resizing
-If the user decides to zoom in at 200% percent then the layout of the application will adapt. One example of adaptation is that the navbar wil turn to a hamburger menu if the screen becomes too small.
+If the user decides to zoom in at 200% percent then the layout of the application will adapt. One example of adaptation is that the navbar wil turn into a hamburger menu if the screen width becomes too small.
 
 #### Contrast ratio
-Finally, the application's contrast between text and backgrounds has been carefully implemented. For example, the contrast score between the enabled navbar button background and its text is 16.67.
+Finally, the application's contrast between text and backgrounds has been carefully implemented. For example, the contrast score between the color of enabled navbar button (#E5E5E5) and its text color (#000000) is 16.67.
 
 #### Files
 <ul>
@@ -93,7 +97,7 @@ Finally, the application also includes privacy statement page. This privacy stat
       app\src\Controllers\ApiControllers\UsersApiController.php (The controller containing the user deletion method)
   </li>
   <li>
-      app\src\Services\UsersService.php (The users service which contains the password hashing algorithm.)
+      app\src\Services\UsersService.php (The users service which contains the password hashing algorithm)
   </li>
   <li>
       app\src\Views\Privacy\index.php (Privacy statement page)

@@ -3,6 +3,14 @@ Within this application it is possible for accounts to upload images and share t
 This application has been made by Wessel B for Inholland University of Applied Sciences as an assignment. Different aspects of the application such as a custom router will be described below.
 
 ## Login credentials for test accounts
+<ul>
+  <li>
+    Username: admin, Password: admin (the role of this account is Admin)
+  </li>
+  <li>
+    Username: user, Password: user (the role of this account is User)
+  </li>
+</ul>
 
 ## Instructions for starting the application
 

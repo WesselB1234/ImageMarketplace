@@ -136,13 +136,6 @@ Finally, the application's contrast between text and backgrounds has been carefu
 ## GDPR
 This application also follows the GDPR guidelines. Below you can find a list of requirements that have been fulfilled.
 
-#### Account deletion
-One example of why it follows GDPR guidelines, is due to the implementation of account deletion. When a user wants to delete their account, then they can contact an admin and then the admin will make sure to delete their account. An example of how the application deletes a user is by calling the deleteUser() method from the UsersService: $this->usersService->deleteUserByUserId($userId);. This code can be found in the UsersApiController file.
-
-<img width="1895" height="475" alt="DeleteUser" src="https://github.com/user-attachments/assets/9247f57c-2138-4ed1-8c22-86754cee12e3" />
-<img width="1079" height="721" alt="UserDeletionCode" src="https://github.com/user-attachments/assets/965d7208-383e-4088-a0f1-9e4fab4d20a1" />
-<img width="784" height="309" alt="AccountDeletionStatement" src="https://github.com/user-attachments/assets/4fd36727-b38e-4ed5-b93b-ffc076ac0c89" />
-
 #### Storing sensitive data securely
 Upon creating an account or updating an existing account, the application will make sure that passwords are stored as hashed strings. This is an example of how passwords get turned into hashes within the application: password_hash($rawPassword, PASSWORD_DEFAULT);. The hashing algorithm can be found in the UserService file.
 
@@ -164,6 +157,13 @@ The application also makes sure to include POST methods on all form elements. As
 Finally, the application also includes a privacy statement page. This privacy statement page can be accessed by entering the following URL when running the application: /privacy.
 
 <img width="1875" height="895" alt="PrivacyStatement" src="https://github.com/user-attachments/assets/2edccb63-3a9a-4ee8-bda6-cece4117e9c8" />
+
+#### Account deletion
+One example of why it follows GDPR guidelines, is due to the implementation of account deletion. When a user wants to delete their account, then they can contact an admin and then the admin will make sure to delete their account. The email of the admin can be found on the privacy statement. An example of how the application deletes a user is by calling the deleteUser() method from the UsersService: $this->usersService->deleteUserByUserId($userId);. This code can be found in the UsersApiController file.
+
+<img width="1895" height="475" alt="DeleteUser" src="https://github.com/user-attachments/assets/9247f57c-2138-4ed1-8c22-86754cee12e3" />
+<img width="1079" height="721" alt="UserDeletionCode" src="https://github.com/user-attachments/assets/965d7208-383e-4088-a0f1-9e4fab4d20a1" />
+<img width="1474" height="368" alt="AccountDeletionStatement" src="https://github.com/user-attachments/assets/3ad89f40-8455-4065-82ed-2259630a0a6f" />
 
 #### Files
 <ul>

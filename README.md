@@ -46,6 +46,9 @@ After the view file has been located, it will display the view and pass the foll
   <li>
       app\src\Controllers\Controller.php (The base controller file)
   </li>
+  <li>
+      app\src\Controllers\PortfolioController.php (The PortfolioController file)
+  </li>
 </ul>
 
 ## Automated router

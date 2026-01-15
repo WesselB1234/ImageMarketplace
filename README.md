@@ -90,14 +90,14 @@ If a controller requires an IImagesService then all the controller needs to do i
 This application follows the WCAG 2.2 guidelines. Below you can find a list of requirements that have been fulfilled.
 
 #### Semantic tags
-One reason why the application is WCAG 2.2 compliant is due to the use of semantic HTML tags. For example, the register page uses the following semantic HTML tags: nav, form, main, header, footer, section and h3.
+One reason why the application follows the WCAG 2.2 guidelines, is due to the use of semantic HTML tags. For example, the register page uses the following semantic HTML tags: nav, form, main, header, footer, section and h3.
 
 <img width="883" height="632" alt="SemanticTagsRegister" src="https://github.com/user-attachments/assets/dcf2aff4-d182-4c13-87e3-f6c66d675e65" />
 <img width="785" height="357" alt="NavbarHeaderSemantic" src="https://github.com/user-attachments/assets/fd9915cb-c923-4089-88f2-c38ce41bc6c3" />
 <img width="849" height="195" alt="FooterSemanticTags" src="https://github.com/user-attachments/assets/e713bbf8-562b-48c9-af08-8f0b7719d7f4" />
 
 #### Labels and inputs
-Input and label elements are also used correctly. This is how they are implemented on the register page: \<label for="repeat_password">Repeat password</label> \<input type="password" id="repeat_password">. As you can see, both for and id have the same values, which cause them to be connected to each other.
+Input and label elements are also used correctly. This is how they are implemented on the register page: \<label for="repeat_password">Repeat password</label> \<input type="password" id="repeat_password">. As you can see, both for and id have the same values, which causes them to be connected to each other.
 
 <img width="1159" height="122" alt="RepeatPasswordLabels" src="https://github.com/user-attachments/assets/d88b4d58-809b-4ca7-b0dd-c1115c584f51" />
 
@@ -105,12 +105,12 @@ Input and label elements are also used correctly. This is how they are implement
 All links also have a destination which prevents the empty link problem.
 
 #### Descriptive alt texts for images
-All images have descriptive in alt text in them. This is an example of how it has been implemented in the image’s displayer partial: \<img src="/assets/img/UserUploadedImages/1.png" alt="Alt image text example">. This makes it possible to see the content of the image even if they fail to load. It can also make screen readers can read images for people with eyesight issues.
+All images have descriptive in alt text. This is an example of how it has been implemented in the image’s displayer partial: \<img src="/assets/img/UserUploadedImages/1.png" alt="Alt image text example">. This makes it possible to see the content of the image even if they fail to load. It also allows screen readers to read images for people with eyesight issues.
 
 <img width="1143" height="54" alt="ImgExample" src="https://github.com/user-attachments/assets/e2a4dd1f-1e3d-4b15-96bf-07010f6908d7" />
 
 #### Text resizing
-If the user decides to zoom in at 200% percent, then the layout of the application will adapt. One example of adaptation is that the navbar will turn into a hamburger menu if the screen width becomes too small.
+If the user decides to zoom in at 200%, then the layout of the application will adapt. One example of adaptation is that the navbar will turn into a hamburger menu if the screen width becomes too small.
 
 <img width="908" height="479" alt="BiggerLettersByZoomingIn" src="https://github.com/user-attachments/assets/ebc71e42-f7e6-418b-a584-19d8d41bff12" />
 
@@ -134,23 +134,23 @@ Finally, the application's contrast between text and backgrounds has been carefu
 </ul>
 
 ## GDPR
-This application is also compliant with the GDPR guidelines. Below you can find a list of requirements that have been fulfilled.
+This application also follows the GDPR guidelines. Below you can find a list of requirements that have been fulfilled.
 
 #### Account deletion
-One of the examples why it is GDPR compliant is due to the implementation of account deletion. When a user wants to delete their account, then they can contact an admin and then the admin will make sure to delete their account. An example of how the application deletes a user is by calling the deleteUser() method from the UsersService: $this->usersService->deleteUserByUserId($userId);. This code can be found in the UsersApiController file.
+One example of why it follows GDPR guidelines, is due to the implementation of account deletion. When a user wants to delete their account, then they can contact an admin and then the admin will make sure to delete their account. An example of how the application deletes a user is by calling the deleteUser() method from the UsersService: $this->usersService->deleteUserByUserId($userId);. This code can be found in the UsersApiController file.
 
 <img width="1895" height="475" alt="DeleteUser" src="https://github.com/user-attachments/assets/9247f57c-2138-4ed1-8c22-86754cee12e3" />
 <img width="1079" height="721" alt="UserDeletionCode" src="https://github.com/user-attachments/assets/965d7208-383e-4088-a0f1-9e4fab4d20a1" />
 <img width="784" height="309" alt="AccountDeletionStatement" src="https://github.com/user-attachments/assets/4fd36727-b38e-4ed5-b93b-ffc076ac0c89" />
 
 #### Storing sensitive data securely
-Upon creating an account or updating an existing account, the application will make sure that passwords will be stored as hashed strings in the database. This is an example of how passwords get turned into hashes within the application: password_hash($rawPassword, PASSWORD_DEFAULT);. The hashing algorithm can be found in the UserService file.
+Upon creating an account or updating an existing account, the application will make sure that passwords are stored as hashed strings. This is an example of how passwords get turned into hashes within the application: password_hash($rawPassword, PASSWORD_DEFAULT);. The hashing algorithm can be found in the UserService file.
 
 <img width="776" height="124" alt="HashedPassword" src="https://github.com/user-attachments/assets/54ca3f53-227e-445a-84d5-7c4c3f78a4e5" />
 <img width="501" height="105" alt="PasswordHashedInDb" src="https://github.com/user-attachments/assets/87186125-74cc-4557-b5ca-0b5669da66e1" />
 
-#### Only collecting needed data
-The application asks as little data as possible from the user. The only data that the application collects is username and password of the user. All other data such as image balance, userId and role will be generated by the application. You can find an example of this at the register page.
+#### Only necessary needed data
+The application asks as little data as possible from the user. The only data that the application collects is the user’s username and password. All other data such as image balance, userId and role will be generated by the application. You can find an example of this at the register page.
 
 <img width="722" height="676" alt="RegisterData" src="https://github.com/user-attachments/assets/05206ea4-6e6d-40ce-ab1e-1f714820db37" />
 <img width="876" height="109" alt="AllUserDataMinimal" src="https://github.com/user-attachments/assets/b87220b3-8c90-4f28-a320-a7479cbfce7d" />
@@ -161,7 +161,7 @@ The application also makes sure to include POST methods on all form elements. As
 <img width="565" height="27" alt="POST_Method" src="https://github.com/user-attachments/assets/58ecaea4-73e3-4930-aec0-cbb5e2b7b11e" />
 
 #### Privacy statement page
-Finally, the application also includes privacy statement page. This privacy statement page can be accessed by entering the following URL when running the application: /privacy.
+Finally, the application also includes a privacy statement page. This privacy statement page can be accessed by entering the following URL when running the application: /privacy.
 
 <img width="1875" height="895" alt="PrivacyStatement" src="https://github.com/user-attachments/assets/2edccb63-3a9a-4ee8-bda6-cece4117e9c8" />
 

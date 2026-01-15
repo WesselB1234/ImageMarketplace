@@ -8,4 +8,9 @@ class StringFormatter {
     {
         return number_format($number, 0, ',', '.');
     }
+
+    public static function getStringWithoutHtmlElements(string $string): string
+    {
+        return htmlspecialchars($string, ENT_QUOTES, "UTF-8");
+    }
 }

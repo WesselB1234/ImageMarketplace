@@ -10,9 +10,9 @@
         <div class="col mb-4">
             <div class="card h-100 image-card">
                 <img class="card-img-top card-image-top" src="/assets/img/UserUploadedImages/<?php echo $image->getImageId() ?>.png" 
-                    alt="<?php echo htmlspecialchars($image->getAltText(), ENT_QUOTES, 'UTF-8'); ?>">
+                    alt="<?php echo StringFormatter::getStringWithoutHtmlElements($image->getAltText()); ?>">
                 <div class="card-body d-flex flex-column">
-                    <h5 class="card-title"><?php echo htmlspecialchars($image->getName(), ENT_QUOTES, 'UTF-8');?></h5>
+                    <h5 class="card-title"><?php echo StringFormatter::getStringWithoutHtmlElements($image->getName());?></h5>
                     <p>
                         <?php if ($image->getIsModerated()){ ?>
                             <span class="text-danger">This image has been moderated</span>

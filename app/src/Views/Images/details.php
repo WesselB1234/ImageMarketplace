@@ -19,25 +19,29 @@
     <div class="row g-4">
         <div class="col-md-6">
             <div class="card">
-                <img src="/assets/img/UserUploadedImages/<?php echo $viewModel->getImage()->getImageId(); ?>.png" class="card-img-top" alt="<?php echo htmlspecialchars($viewModel->getImage()->getAltText(), ENT_QUOTES, "UTF-8"); ?>">
+                <img src="/assets/img/UserUploadedImages/<?php echo $viewModel->getImage()->getImageId(); ?>.png" class="card-img-top" alt="<?php echo StringFormatter::getStringWithoutHtmlElements($viewModel->getImage()->getAltText()); ?>">
             </div>
         </div>
 
         <div class="col-md-6">
             <div class="card">
                 <div class="card-body d-flex flex-column">
-                    <h3 class="card-title mb-3"><?php echo htmlspecialchars($viewModel->getImage()->getName(), ENT_QUOTES, "UTF-8"); ?></h3>
-                    <p class="card-text text-muted"><?php echo nl2br(htmlspecialchars($viewModel->getImage()->getDescription(), ENT_QUOTES, "UTF-8")); ?></p>
+                    <h3 class="card-title mb-3"><?php echo StringFormatter::getStringWithoutHtmlElements($viewModel->getImage()->getName()); ?></h3>
+                    <p class="card-text text-muted"><?php echo nl2br(StringFormatter::getStringWithoutHtmlElements($viewModel->getImage()->getDescription())); ?></p>
 
                     <ul class="list-group list-group-flush mb-3">
                         <li class="list-group-item">
                             <span class="font-weight-bold">Image ID:</span> <?php echo $viewModel->getImage()->getImageId(); ?>
                         </li>
                         <li class="list-group-item">
-                            <span class="font-weight-bold">Owned by:</span> <?php echo ($viewModel->getOwnerUser() !== null ? $viewModel->getOwnerUser()->getUsername() : "Unknown") ?> <?php echo ($viewModel->getImage()->getOwnerId() !== null ? "(User ID: ".$viewModel->getImage()->getOwnerId().")" : ""); ?>
+                            <span class="font-weight-bold">Owned by:</span> <?php echo ($viewModel->getOwnerUser() !== null ? 
+                                StringFormatter::getStringWithoutHtmlElements($viewModel->getOwnerUser()->getUsername()) 
+                                : "Unknown") ?> <?php echo ($viewModel->getImage()->getOwnerId() !== null ? "(User ID: ".$viewModel->getImage()->getOwnerId().")" : ""); ?>
                         </li>
                         <li class="list-group-item">
-                            <span class="font-weight-bold">Created by:</span> <?php echo ($viewModel->getCreatorUser() !== null ? $viewModel->getCreatorUser()->getUsername() : "Unknown") ?> <?php echo ($viewModel->getImage()->getCreatorId() !== null ? "(User ID: ".$viewModel->getImage()->getCreatorId().")" : ""); ?>
+                            <span class="font-weight-bold">Created by:</span> <?php echo ($viewModel->getOwnerUser() !== null ? 
+                                StringFormatter::getStringWithoutHtmlElements($viewModel->getCreatorUser()->getUsername()) 
+                                : "Unknown") ?> <?php echo ($viewModel->getImage()->getCreatorId() !== null ? "(User ID: ".$viewModel->getImage()->getCreatorId().")" : ""); ?>
                         </li>
                         <li class="list-group-item">
                             <span class="font-weight-bold">Time created:</span> <?php echo $viewModel->getImage()->getTimeCreated()->format('Y-m-d H:i:s'); ?>

@@ -33,7 +33,7 @@
             <div class="form-inline my-2 my-lg-0">
                 <div class="nav-link">
                     Image tokens balance: <?php echo StringFormatter::getDottedNumberStringFromNumber($_SESSION["user"]->getImageTokens()); ?> |
-                    Logged in as: <?php echo $_SESSION["user"]->getUsername(); ?>
+                    Logged in as: <?php echo StringFormatter::getStringWithoutHtmlElements($_SESSION["user"]->getUsername()); ?>
                 </div>
                 <a href="/logout" class="btn btn-danger text-light">Logout</a>
             </div>

@@ -1,5 +1,6 @@
 <?php 
     use App\Models\Enums\UserRole;
+    use App\Models\Helpers\StringFormatter;
 
     $title = "Create user";
     $partialsDir = __DIR__."../../Partials";
@@ -19,7 +20,7 @@
         <div class="mb-3">
             <label for="username" class="form-label">Username</label>
             <input type="text" class="form-control" id="username" name="username" placeholder="Enter username" required value="<?php 
-                echo (isset($viewModel) ? htmlspecialchars($viewModel->getUsername(), ENT_QUOTES, "UTF-8") : "") 
+                echo (isset($viewModel) ? StringFormatter::getStringWithoutHtmlElements($viewModel->getUsername()) : "") 
             ?>">
         </div>
 

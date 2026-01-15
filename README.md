@@ -15,6 +15,23 @@ This application was made by Wessel B for Inholland University of Applied Scienc
 ## Instructions for starting the application
 <ol>
   <li>
+      Create a .env file in the main project directory that contains the following values:
+      <ul>
+        <li>
+          DB_SERVER_NAME
+        </li>
+        <li>
+          DB_USERNAME
+        </li>
+        <li>
+          DB_PASSWORD
+        </li>
+        <li>
+          DB_NAME
+        </li>
+      </ul>
+  </li>
+  <li>
       Open the Docker desktop app.
   </li>
   <li>

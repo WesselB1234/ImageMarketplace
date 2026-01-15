@@ -16,7 +16,7 @@
 
     <p>
         This Privacy Policy describes how
-        <strong>Image Marketplace</strong>
+        <span class="fw-bold">Image Marketplace</span>
         collects and uses information
         about you when you use our website.
     </p>
@@ -29,11 +29,11 @@
     </p>
     <ul>
         <li>
-            <strong>Account information:</strong>
-            Username, password, image tokens balance, role and owned images.
+            <span class="fw-bold">Account information:</span>
+            Username, password, image tokens balance, role, and owned images.
         </li>
         <li>
-            <strong>Files:</strong>
+            <span class="fw-bold">Files:</span>
             Uploaded images will be placed in our file system.
         </li>
     </ul>
@@ -46,19 +46,18 @@
     </p>
     <ul>
         <li>
-            <strong>Authentication</strong>
+            <span class="fw-bold">Authentication</span>
             We use your account credentials (such as email and password) to verify your identity and allow you to securely sign in to the Service.
         </li>
         <li>
-            <strong>Authorization</strong>
+            <span class="fw-bold">Authorization</span>
             We use your account information and assigned permissions to determine what actions, features, and resources you are allowed to access within the Service.
         </li>
         <li>
-            <strong>Running the image marketplace</strong>
+            <span class="fw-bold">Running the image marketplace</span>
             We process information related to your uploads, purchases, and sales to operate, maintain, and improve the functionality of the image marketplace.
         </li>
     </ul>
-
 
     <hr class="my-4">
 
@@ -94,7 +93,7 @@
     <p>
         You have the right to request deletion of your account.
         You can submit an account deletion request by emailing us at 
-        <a href="mailto:[729848@student.inholland.nl]">729848@student.inholland.nl</a>.
+        <a href="mailto:729848@student.inholland.nl">729848@student.inholland.nl</a>.
         Upon request, your account and associated personal data will be deleted without undue delay.
     </p>
     <p>

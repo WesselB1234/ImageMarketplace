@@ -1,42 +1,45 @@
 # Image Marketplace
-Within this application it is possible for accounts to upload images and share them to users by selling them to each other.
-This application has been made by Wessel B for Inholland University of Applied Sciences as an assignment. Different aspects of the application such as a custom-made router will be described below.
+Within this application, accounts can upload images and sell them to other users.
+This application was made by Wessel B for Inholland University of Applied Sciences as an assignment. Different aspects of the application such as a custom-made router will be described below.
 
 ## Login credentials for test accounts
 <ul>
   <li>
-    Username: admin, Password: admin (the role of this account is Admin)
+    Username: admin, Password: admin (this account has the "Admin" role)
   </li>
   <li>
-    Username: user, Password: user (the role of this account is User)
+    Username: user, Password: user (this account has the "User" role)
   </li>
 </ul>
 
 ## Instructions for starting the application
 <ol>
   <li>
-    Open the Docker desktop app.
+      Open the Docker desktop app.
   </li>
   <li>
-    Run "docker compose up" in your CLI that is with the directory of the in the main project.
+      Run "docker compose up" in your CLI from the main project directory.
   </li>
   <li>
-    Enter "http://localhost/login" in your address bar.
+      Enter "http://localhost/login" into your address bar.
   </li>
   <li>
-      Enter username and password of your account. The account credentials can be found above in the account credentials section.
+      Enter the username and password of your account. The account credentials can be found above in the account credentials section.
+  </li>
+  <li> 
+      Press the "Login" button.
   </li>
   <li>
-      You should now be on the Portfolio page. You can now upload images and sell images to other users. Keep in mind that not all functionalities are available if your account has a "User" role.
+      You will now be redirected to the Portfolio page. You can now upload images and sell them to other users. Keep in mind that not all functionalities are available if your account has a "User" role.
   </li>
 </ol>
 
 ## Automatic view mapping
 When displaying a view, the application will automatically determine which view to display and what data to pass to it. 
 
-First it determines which view to file to display as a view by getting the name of the controller and name the method that the router has called. For example, if the displayView() method gets called by a PortfolioController from method index, it will display the view /Portfolio/index.php. If is a directory passed to the displayView() method, it will choose that view file instead, but that is optional. 
+First, it determines which view file to display by getting the name of the controller and name of the method that the router has called. For example, if the displayView() method gets called by a PortfolioController from method index, it will display the view /Portfolio/index.php. If is a directory passed to the displayView() method, it will choose that view file instead, but that is optional. 
 
-After the view file has been located, it will display the view and pass the following data to the view: error message, success message and ViewData. The displayView() method can be found in the base controller, so if a PortfolioController wants to display a view, then it will need to inherit the base controller class first. After inheriting, the PortfolioController can call $this->displayView().
+After the view file has been located, it will display the view and pass the following data to the view: error message, success message and view data. The displayView() method can be found in the base controller, so if a PortfolioController wants to display a view, then it will need to inherit the base controller class first. After inheriting, the PortfolioController can call $this->displayView().
 
 <img width="1011" height="791" alt="ViewMapper" src="https://github.com/user-attachments/assets/850e54f4-85c8-44e3-b510-3be68c59441a" />
 <img width="978" height="162" alt="DisplayViewMethod" src="https://github.com/user-attachments/assets/61c25dd8-e069-4e08-aa68-9a6e7390a873" />
@@ -52,9 +55,9 @@ After the view file has been located, it will display the view and pass the foll
 </ul>
 
 ## Automated router
-Upon making a request, the router will make sure that the right controller method gets called. If a controller method wants to be binded to a route URL, then the method needs to have a route attribute implemented. The need of having a big list of hardcoded controllers with routes has been AUTOMATED. 
+Upon making a request, the router will make sure that the right controller method gets called. If a controller method wants to be bound to a route URL, then the method needs to have a route attribute implemented. The need for maintaining a large list of hardcoded controllers and routes has been AUTOMATED.
 
-For example, if PortfolioController wants method index binded route /portfolio, then it needs to add the attribute #[Route("GET", "/portfolio")] on top of the method. If the route also needs request parameters, then they can be added like this: #[Route("GET", "/portfolio", ["id"])]. In the parameters section of the index method, there should also be an array $requestParams parameter like this: index(array $requestParams). Route /portfolio/5 will now call the index method of the portfolioController and will pass the value of 5 to $requestParams["id"]. Below you can find the file containing the source code of the custom-made router.
+For example, if the PortfolioController wants the index method to be bound to the /portfolio route, then it needs to add the attribute #[Route("GET", "/portfolio")] on top of the method. If the route also needs request parameters, then they can be added like this: #[Route("GET", "/portfolio", ["id"])]. In the parameters section of the index method, there should also be an array $requestParams parameter like this: index(array $requestParams). Route /portfolio/5 will now call the index method of the PortfolioController and will pass the value of 5 to $requestParams["id"]. Below you can find the file containing the source code of the custom-made router.
 
 <img width="1012" height="235" alt="RouterRouteBinding" src="https://github.com/user-attachments/assets/40389958-e73f-49e3-a5e1-64fbd436901f" />
 <img width="633" height="505" alt="RouterInitIndex" src="https://github.com/user-attachments/assets/00717ddf-44e4-4e74-901b-8d72faa9441a" />
@@ -68,9 +71,9 @@ For example, if PortfolioController wants method index binded route /portfolio, 
 </ul>
 
 ## Dependency injection
-It is no longer necessary to create objects such as services and repositories in this application. All dependencies can now be injected into the constructor. This issue has been solved using the software module PHP-DI. This software module can be installed by calling "composer require php-di/php-di" in the CLI. 
+It is no longer necessary to create objects such as services and repositories in this application. All dependencies can now be injected into the constructor. This issue has been solved using the PHP-DI library. This software module can be installed by calling "composer require php-di/php-di" in the CLI. 
 
-If a controller requires an IImagesService then all the controller needs to do is inject the object into the constructor like this: public function __construct(IImagesService $imagesService). Be aware that all dependencies that include interfaces need to be wired. All dependency wirings can be found in the main dependencies file.
+If a controller requires an IImagesService then all the controller needs to do is inject the object into the constructor like this: public function __construct(IImagesService $imagesService). Be aware that all dependencies that include interfaces need to be wired. All dependency definitions can be found in the main dependencies file.
 
 <img width="964" height="569" alt="DependencyWirings" src="https://github.com/user-attachments/assets/77404d57-c297-4344-9e40-06f53d1f03e5" />
 <img width="866" height="54" alt="DIDefinitionsAssign" src="https://github.com/user-attachments/assets/927fbfb2-3514-4020-af59-8368e6308811" />
@@ -84,10 +87,10 @@ If a controller requires an IImagesService then all the controller needs to do i
 </ul>
 
 ## WCAG 2.2
-This application is compliant with the WCAG 2.2 guidelines. Below you can find a list of requirements that have been fulfilled.
+This application follows the WCAG 2.2 guidelines. Below you can find a list of requirements that have been fulfilled.
 
 #### Semantic tags
-One of the reasons why the application is WCAG 2.2 compliant is due to the use of semantic HTML tags. For example, the register page uses the following semantic HTML tags: nav, form, main, header, footer, section and h3.
+One reason why the application is WCAG 2.2 compliant is due to the use of semantic HTML tags. For example, the register page uses the following semantic HTML tags: nav, form, main, header, footer, section and h3.
 
 <img width="883" height="632" alt="SemanticTagsRegister" src="https://github.com/user-attachments/assets/dcf2aff4-d182-4c13-87e3-f6c66d675e65" />
 <img width="785" height="357" alt="NavbarHeaderSemantic" src="https://github.com/user-attachments/assets/fd9915cb-c923-4089-88f2-c38ce41bc6c3" />

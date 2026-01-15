@@ -31,7 +31,7 @@
             <?php foreach($viewModel as $user){ ?>
                 <tr>
                     <th scope="row"><?php echo $user->getUserId(); ?></th>
-                    <td><?php echo htmlspecialchars($user->getUsername(), ENT_QUOTES, 'UTF-8'); ?></td>
+                    <td><?php echo StringFormatter::getStringWithoutHtmlElements($user->getUsername()); ?></td>
                     <td><?php echo StringFormatter::getDottedNumberStringFromNumber($user->getImageTokens()); ?></td>
                     <td><?php echo $user->getRole()->value; ?></td>
                     <td>

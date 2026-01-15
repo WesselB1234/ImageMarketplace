@@ -1,4 +1,6 @@
 <?php 
+    use App\Models\Helpers\StringFormatter;
+    
     $title = "Sell image";
     $partialsDir = __DIR__."../../Partials";
     
@@ -7,7 +9,7 @@
 
 <main class="container">
 
-    <h1>Sell image: <?php echo htmlspecialchars($viewModel->getImage()->getName(), ENT_QUOTES, "UTF-8")?> (Image ID: <?php echo $viewModel->getImage()->getImageId(); ?>)</h1>
+    <h1>Sell image: <?php echo StringFormatter::getStringWithoutHtmlElements($viewModel->getImage()->getName())?> (Image ID: <?php echo $viewModel->getImage()->getImageId(); ?>)</h1>
 
     <?php 
         include $partialsDir."/errorAlert.php";
@@ -19,7 +21,7 @@
         <div class="mb-3">
             <label for="price" class="form-label">Price</label>
             <input type="number" class="form-control" id="price" name="price" placeholder="Enter selling price" required value="<?php 
-                echo ($viewModel !== null ? htmlspecialchars($viewModel->getPrice(), ENT_QUOTES, "UTF-8") : "")
+                echo ($viewModel !== null ? $viewModel->getPrice() : "0")
             ?>">
         </div>
 

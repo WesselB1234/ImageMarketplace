@@ -92,14 +92,13 @@
 
     <h2 class="h4 mt-4">7. Your right to delete your account</h2>
     <p>
-        You have the right to delete your account. You can send an account deletion request by contacting us.
+        You have the right to request deletion of your account.
+        You can submit an account deletion request by emailing us at 
+        <a href="mailto:[729848@student.inholland.nl]">729848@student.inholland.nl</a>.
+        Upon request, your account and associated personal data will be deleted without undue delay.
     </p>
-
-    <hr class="my-4">
-
-    <h2 id="contact" class="h4 mt-4">8. Contact us</h2>
-    <p class="mb-4">
-        Email: <a href="mailto:[729848@student.inholland.nl]">729848@student.inholland.nl</a><br>
+    <p>
+        We may ask you to confirm your identity before processing the request.
     </p>
 </main>
 

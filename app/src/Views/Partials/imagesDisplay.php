@@ -9,7 +9,8 @@
     foreach ($viewModel as $image) { ?>
         <div class="col mb-4">
             <div class="card h-100 image-card">
-                <img class="card-img-top card-image-top" src="/assets/img/UserUploadedImages/<?php echo $image->getImageId() ?>.png" alt="<?php echo htmlspecialchars($image->getAltText(), ENT_QUOTES, 'UTF-8'); ?>">
+                <img class="card-img-top card-image-top" src="/assets/img/UserUploadedImages/<?php echo $image->getImageId() ?>.png" 
+                    alt="<?php echo htmlspecialchars($image->getAltText(), ENT_QUOTES, 'UTF-8'); ?>">
                 <div class="card-body d-flex flex-column">
                     <h5 class="card-title"><?php echo htmlspecialchars($image->getName(), ENT_QUOTES, 'UTF-8');?></h5>
                     <p>
@@ -18,7 +19,8 @@
                         <?php }
                         else if ($image->getIsOnSale() && $image->getPrice() !== null) { ?> 
                             <span class="font-weight-bold">Price:</span> <?php echo StringFormatter::getDottedNumberStringFromNumber($image->getPrice()); ?> image tokens
-                        <?php } else{ ?>
+                        <?php } 
+                        else{ ?>
                             <span class="text-danger">This image is not for sale</span>
                         <?php } ?>
                     </p>

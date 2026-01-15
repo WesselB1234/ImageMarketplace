@@ -6,7 +6,7 @@
 ?>
 
 <main class="container" >
-    <div class="container d-flex justify-content-center align-items-center vh-100">
+    <section class="container d-flex justify-content-center align-items-center vh-100">
         <div class="card shadow-sm authentication-box">
             <div class="card-body">
                 <h3 class="card-title text-center mb-4">Login</h3>
@@ -39,5 +39,5 @@
                 </form>
             </div>
         </div>
-    </div>
+    </section>
 </main>

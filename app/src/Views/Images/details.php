@@ -34,10 +34,14 @@
                             <span class="font-weight-bold">Image ID:</span> <?php echo $viewModel->getImage()->getImageId(); ?>
                         </li>
                         <li class="list-group-item">
-                            <span class="font-weight-bold">Owned by:</span> <?php echo ($viewModel->getOwnerUser() !== null ? $viewModel->getOwnerUser()->getUsername() : "Unknown") ?> <?php echo ($viewModel->getImage()->getOwnerId() !== null ? "(User ID: ".$viewModel->getImage()->getOwnerId().")" : ""); ?>
+                            <span class="font-weight-bold">Owned by:</span> <?php echo ($viewModel->getOwnerUser() !== null ? 
+                                htmlspecialchars($viewModel->getOwnerUser()->getUsername(), ENT_QUOTES, "UTF-8") 
+                                : "Unknown") ?> <?php echo ($viewModel->getImage()->getOwnerId() !== null ? "(User ID: ".$viewModel->getImage()->getOwnerId().")" : ""); ?>
                         </li>
                         <li class="list-group-item">
-                            <span class="font-weight-bold">Created by:</span> <?php echo ($viewModel->getCreatorUser() !== null ? $viewModel->getCreatorUser()->getUsername() : "Unknown") ?> <?php echo ($viewModel->getImage()->getCreatorId() !== null ? "(User ID: ".$viewModel->getImage()->getCreatorId().")" : ""); ?>
+                            <span class="font-weight-bold">Created by:</span> <?php echo ($viewModel->getOwnerUser() !== null ? 
+                            htmlspecialchars($viewModel->getCreatorUser()->getUsername(), ENT_QUOTES, "UTF-8") 
+                            : "Unknown") ?> <?php echo ($viewModel->getImage()->getCreatorId() !== null ? "(User ID: ".$viewModel->getImage()->getCreatorId().")" : ""); ?>
                         </li>
                         <li class="list-group-item">
                             <span class="font-weight-bold">Time created:</span> <?php echo $viewModel->getImage()->getTimeCreated()->format('Y-m-d H:i:s'); ?>

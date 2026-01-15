@@ -7,7 +7,7 @@
 
 <main class="container">
 
-    <h1>Sell image: <?php echo $viewModel->getImage()->getName(); ?> (Image ID: <?php echo $viewModel->getImage()->getImageId(); ?>)</h1>
+    <h1>Sell image: <?php echo htmlspecialchars($viewModel->getImage()->getName(), ENT_QUOTES, "UTF-8")?> (Image ID: <?php echo $viewModel->getImage()->getImageId(); ?>)</h1>
 
     <?php 
         include $partialsDir."/errorAlert.php";

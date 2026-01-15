@@ -1,4 +1,4 @@
-# Image Market place
+# Image Marketplace
 Within this application it is possible for accounts to upload images and share them to users by selling them to each other.
 This application has been made by Wessel B for Inholland University of Applied Sciences as an assignment. Different aspects of the application such as a custom-made router will be described below.
 

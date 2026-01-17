@@ -93,7 +93,7 @@ It is no longer necessary to create objects such as services and repositories in
 If a controller requires an IImagesService then all the controller needs to do is inject the object into the constructor like this: public function __construct(IImagesService $imagesService). Be aware that all dependencies that include interfaces need to be wired. All dependency definitions can be found in the main dependencies file.
 
 <img width="964" height="569" alt="DependencyWirings" src="https://github.com/user-attachments/assets/77404d57-c297-4344-9e40-06f53d1f03e5" />
-<img width="866" height="54" alt="DIDefinitionsAssign" src="https://github.com/user-attachments/assets/927fbfb2-3514-4020-af59-8368e6308811" />
+<img width="860" height="88" alt="InitDefinitions" src="https://github.com/user-attachments/assets/5e132bb4-aaa6-4546-9d03-e879c6bef5fe" />
 <img width="630" height="42" alt="CreateControllerWithDepencies" src="https://github.com/user-attachments/assets/7e9c9ce4-3f81-4318-9152-52529349e719" />
 
 #### Files
@@ -109,7 +109,7 @@ This application follows the WCAG 2.2 guidelines. Below you can find a list of r
 #### Semantic tags
 One reason why the application follows the WCAG 2.2 guidelines, is due to the use of semantic HTML tags. For example, the register page uses the following semantic HTML tags: nav, form, main, header, footer, section and h3.
 
-<img width="883" height="632" alt="SemanticTagsRegister" src="https://github.com/user-attachments/assets/dcf2aff4-d182-4c13-87e3-f6c66d675e65" />
+<img width="1265" height="494" alt="RegisterSemantic" src="https://github.com/user-attachments/assets/bdcd7782-149e-4f39-8497-2095254c419f" />
 <img width="785" height="357" alt="NavbarHeaderSemantic" src="https://github.com/user-attachments/assets/fd9915cb-c923-4089-88f2-c38ce41bc6c3" />
 <img width="849" height="195" alt="FooterSemanticTags" src="https://github.com/user-attachments/assets/e713bbf8-562b-48c9-af08-8f0b7719d7f4" />
 
@@ -124,7 +124,7 @@ All links also have a destination which prevents the empty link problem.
 #### Descriptive alt texts for images
 All images have descriptive in alt text. This is an example of how it has been implemented in the image’s displayer partial: \<img src="/assets/img/UserUploadedImages/1.png" alt="Alt image text example">. This makes it possible to see the content of the image even if they fail to load. It also allows screen readers to read images for people with eyesight issues.
 
-<img width="1143" height="54" alt="ImgExample" src="https://github.com/user-attachments/assets/e2a4dd1f-1e3d-4b15-96bf-07010f6908d7" />
+<img width="1145" height="54" alt="ImgExample" src="https://github.com/user-attachments/assets/1419ae65-faff-4c74-8cbe-8e2628cf96aa" />
 
 #### Text resizing
 If the user decides to zoom in at 200%, then the layout of the application will adapt. One example of adaptation is that the navbar will turn into a hamburger menu if the screen width becomes too small.

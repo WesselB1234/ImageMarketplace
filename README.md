@@ -176,7 +176,7 @@ Finally, the application also includes a privacy statement page. This privacy st
 <img width="1875" height="895" alt="PrivacyStatement" src="https://github.com/user-attachments/assets/2edccb63-3a9a-4ee8-bda6-cece4117e9c8" />
 
 #### Account deletion
-One example of why it follows GDPR guidelines, is due to the implementation of account deletion. When a user wants to delete their account, then they can contact an admin and then the admin will make sure to delete their account. The email of the admin can be found on the privacy statement. An example of how the application deletes a user is by calling the deleteUser() method from the UsersService: $this->usersService->deleteUserByUserId($userId);. This code can be found in the UsersApiController file.
+One example of why this application follows GDPR guidelines is the implementation of account deletion. When a user wants to delete their account, they can go to the settings page and press the "Delete account" button. After the account has been successfully deleted, the application will redirect the user to the login page. The source code showing how the application deletes a user account can be found in the SettingsController in the method deleteAccount.
 
 <img width="911" height="383" alt="AccountDeletionInterface" src="https://github.com/user-attachments/assets/333863e8-ddb5-41f4-983a-e57def0bfcf7" />
 <img width="1470" height="275" alt="AccountDeletionStatement" src="https://github.com/user-attachments/assets/286e2fac-4348-441f-9154-09b00d204891" />
@@ -188,7 +188,7 @@ One example of why it follows GDPR guidelines, is due to the implementation of a
       app\src\Views\Authentication\register.php (An example of a form element using a POST method and minimizing personal information)
   </li>
   <li>
-      app\src\Controllers\ApiControllers\UsersApiController.php (The controller containing the user deletion method)
+      app\src\Controllers\SettingsController (The controller containing the user deletion method)
   </li>
   <li>
       app\src\Services\UsersService.php (The users service which contains the password hashing algorithm)

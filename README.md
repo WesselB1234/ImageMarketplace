@@ -178,9 +178,9 @@ Finally, the application also includes a privacy statement page. This privacy st
 #### Account deletion
 One example of why it follows GDPR guidelines, is due to the implementation of account deletion. When a user wants to delete their account, then they can contact an admin and then the admin will make sure to delete their account. The email of the admin can be found on the privacy statement. An example of how the application deletes a user is by calling the deleteUser() method from the UsersService: $this->usersService->deleteUserByUserId($userId);. This code can be found in the UsersApiController file.
 
-<img width="1895" height="475" alt="DeleteUser" src="https://github.com/user-attachments/assets/9247f57c-2138-4ed1-8c22-86754cee12e3" />
-<img width="1079" height="721" alt="UserDeletionCode" src="https://github.com/user-attachments/assets/965d7208-383e-4088-a0f1-9e4fab4d20a1" />
-<img width="1474" height="368" alt="AccountDeletionStatement" src="https://github.com/user-attachments/assets/3ad89f40-8455-4065-82ed-2259630a0a6f" />
+<img width="911" height="383" alt="AccountDeletionInterface" src="https://github.com/user-attachments/assets/333863e8-ddb5-41f4-983a-e57def0bfcf7" />
+<img width="1470" height="275" alt="AccountDeletionStatement" src="https://github.com/user-attachments/assets/286e2fac-4348-441f-9154-09b00d204891" />
+<img width="947" height="492" alt="DeleteAccountCode" src="https://github.com/user-attachments/assets/0bfb9e04-8f21-4b0a-b744-1cbea9da81b6" />
 
 #### Files
 <ul>

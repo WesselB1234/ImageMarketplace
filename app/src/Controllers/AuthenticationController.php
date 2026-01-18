@@ -83,7 +83,8 @@ class AuthenticationController extends Controller
         $this->loggedInAuthorization();
         
         unset($_SESSION["user"]);
+        $_SESSION["success_message"] = "Successfully logged out of your account.";
         
-        $this->displayView(null, "Authentication/login.php");
+        header("location: /login");
     }
 }

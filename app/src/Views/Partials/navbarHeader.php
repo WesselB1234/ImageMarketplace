@@ -24,6 +24,9 @@
                 <li class="nav-link">
                     <a class="nav-btn <?php echo ($enabledNavLink === "Privacy" ? "nav-enabled" : "") ?>" href="/privacy">Privacy</a>
                 </li>
+                <li class="nav-link">
+                    <a class="nav-btn <?php echo ($enabledNavLink === "Settings" ? "nav-enabled" : "") ?>" href="/settings">Settings</a>
+                </li>
                 <?php if ($_SESSION["user"]->getRole() === UserRole::Admin){?>
                     <li class="nav-link">
                         <a class="nav-btn <?php echo ($enabledNavLink === "Users" ? "nav-enabled" : "") ?>" href="/users">Users</a>

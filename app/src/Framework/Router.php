@@ -8,7 +8,7 @@ use App\Models\Exceptions\NotFoundException;
 use App\Models\RouterDispatchData;
 use Exception;
 use ReflectionClass;
-use DI\Container ;
+use DI\Container;
 
 class Router
 {
@@ -157,13 +157,24 @@ class Router
 
     public function dispatch(string $httpMethod, string $uri)
     {
-        $dispatchData = $this->getDispatchDataRecursivelyThroughControllersFolder(__DIR__."/../Controllers", $httpMethod, $uri);
+        $dir = "../cache";
 
-        if ($dispatchData !== null){
-            $this->callRouteMethod($dispatchData);
+        if (!is_dir($dir)) {
+            mkdir($dir, 0755, true);
         }
-        else{
-            throw new NotFoundException("Cannot find specified route.");
-        }
+
+        $filePath = $dir . "/routes.php";
+
+        file_put_contents($filePath, "<?php echo 'Hello, this is a test.';");
+        require_once $filePath;
+
+        // $dispatchData = $this->getDispatchDataRecursivelyThroughControllersFolder(__DIR__."/../Controllers", $httpMethod, $uri);
+
+        // if ($dispatchData !== null){
+        //     $this->callRouteMethod($dispatchData);
+        // }
+        // else{
+        //     throw new NotFoundException("Cannot find specified route.");
+        // }
     }
 }

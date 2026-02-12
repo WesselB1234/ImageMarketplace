@@ -9,13 +9,13 @@ class Route
 {
     private string $httpMethod;
     private string $route;
-    private ?array $params;
+    private ?array $requestParams;
 
-    public function __construct(string $httpMethod, string $route, ?array $params = null) 
+    public function __construct(string $httpMethod, string $route, ?array $requestParams = null) 
     {
         $this->httpMethod = $httpMethod;
         $this->route = $route;
-        $this->params = $params;
+        $this->requestParams = $requestParams;
     }
 
     public function getHttpMethod(): string 
@@ -28,8 +28,8 @@ class Route
         return $this->route;
     }
 
-    public function getParams(): ?array 
+    public function getRequestParams(): ?array 
     {
-        return $this->params;
+        return $this->requestParams;
     }
 }

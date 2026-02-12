@@ -19,6 +19,132 @@ class Router
         $this->container = $container;
     }
 
+    // private function getControllerClassPathOfDir($dir): ?string
+    // {
+    //     $classPathPosition = strpos($dir, "/Controllers"); 
+        
+    //     if ($classPathPosition !== false) { 
+    //         $classPathWithExtension = substr($dir, $classPathPosition + 1); 
+    //         $classPathWithForwardSlashes = "App\\".pathinfo($classPathWithExtension, PATHINFO_DIRNAME) . "\\" . pathinfo($classPathWithExtension, PATHINFO_FILENAME);
+
+    //         return str_replace("/", "\\", $classPathWithForwardSlashes);
+    //     }
+
+    //     return null;
+    // }
+
+    // private function getIsRouteMatch(array $routeSegments, ?array $routeParams, array $uriSegments): bool
+    // { 
+    //     $paramsCount = ($routeParams === null ? 0 : count($routeParams)); 
+    //     $totalRouteSegmentCount = count($routeSegments) + $paramsCount;
+    //     $totalUriSegmentCount = count($uriSegments);
+
+    //     if ($totalRouteSegmentCount !== $totalUriSegmentCount){
+    //         return false;
+    //     }
+
+    //     foreach ($routeSegments as $i => $routeSegment){
+    //         if ($uriSegments[$i] !== $routeSegment){
+    //             return false;
+    //         }
+    //     }
+
+    //     return true;
+    // }
+
+    // private function getDispatchDataFromRefController(ReflectionClass $refController, string $httpMethod, string $uri): ?RouterDispatchData
+    // {
+    //     $foundRouteWithIncapableMethod = null;
+    //     $uriSegments = explode("/", trim($uri, "/"));
+        
+    //     foreach ($refController->getMethods() as $refMethod) { 
+    //         foreach ($refMethod->getAttributes() as $attribute) { 
+                
+    //             $route = $attribute->newInstance();
+
+    //             if (!$route instanceof Route){
+    //                 continue;
+    //             }
+
+    //             $routeSegments = explode("/", trim($route->getRoute(), "/"));
+    //             $routeParams = $route->getParams();
+
+    //             if ($this->getIsRouteMatch($routeSegments, $routeParams, $uriSegments)){
+
+    //                 $allowedMethod = $route->getHttpMethod();
+
+    //                 if ($allowedMethod === $httpMethod){
+
+    //                     $requestParams = $this->getRequestParamsFromSegments($routeSegments, $routeParams, $uriSegments);
+ 
+    //                     return new RouterDispatchData($refMethod->getName(), $refController->getName(), $requestParams);
+    //                 }
+    //                 else{
+    //                     $foundRouteWithIncapableMethod = $route;
+    //                 }
+    //             }
+    //         }  
+    //     }
+
+    //     if ($foundRouteWithIncapableMethod !== null){
+    //         throw new NotAllowedException("This route can only be accessed by a ".$foundRouteWithIncapableMethod->getHttpMethod()." request.");
+    //     }
+        
+    //     return null;
+    // }
+
+    // private function getRequestParamsFromSegments(array $routeSegments, ?array $routeParams, array $uriSegments): ?array
+    // {
+    //     if ($routeParams === null){
+    //         return null;
+    //     }
+
+    //     $routeSegmentCount = count($routeSegments);
+    //     $params = [];
+
+    //     foreach($routeParams as $i => $param){
+    //         $params[$param] = $uriSegments[$i + $routeSegmentCount];
+    //     }
+
+    //     return $params;
+    // }
+
+    // private function getDispatchDataFromDir(string $dir, string $httpMethod, string $uri): ?RouterDispatchData
+    // {
+    //     $controllerClassPath = $this->getControllerClassPathOfDir($dir);
+
+    //     if ($controllerClassPath === null || !class_exists($controllerClassPath)){
+    //         throw new Exception("$controllerClassPath does not exist as a class.");
+    //     }
+
+    //     $refController = new ReflectionClass($controllerClassPath); 
+    //     return $this->getDispatchDataFromRefController($refController, $httpMethod, $uri); 
+    // }
+
+    // private function getDispatchDataRecursivelyThroughControllersFolder(string $dir, string $httpMethod, string $uri): ?RouterDispatchData
+    // {
+    //     $files = array_diff(scandir($dir), [".", ".."]);
+
+    //     foreach ($files as $fileName){
+
+    //         $fileExtension = pathinfo($fileName, PATHINFO_EXTENSION);
+    //         $dispatchData = null;
+
+    //         if ($fileExtension === "php"){
+    //             $dispatchData = $this->getDispatchDataFromDir("$dir/$fileName", $httpMethod, $uri);
+    //         }
+    //         else if (empty($fileExtension)) {
+    //             $dispatchData = $this->getDispatchDataRecursivelyThroughControllersFolder("$dir/$fileName", $httpMethod, $uri);   
+    //         }
+            
+    //         if ($dispatchData !== null){
+    //             return $dispatchData;
+    //         }
+    //     }
+
+    //     return null;
+    // }
+
     private function getControllerClassPathOfDir($dir): ?string
     {
         $classPathPosition = strpos($dir, "/Controllers"); 
@@ -33,29 +159,15 @@ class Router
         return null;
     }
 
-    private function getIsRouteMatch(array $routeSegments, ?array $routeParams, array $uriSegments): bool
-    { 
-        $paramsCount = ($routeParams === null ? 0 : count($routeParams)); 
-        $totalRouteSegmentCount = count($routeSegments) + $paramsCount;
-        $totalUriSegmentCount = count($uriSegments);
-
-        if ($totalRouteSegmentCount !== $totalUriSegmentCount){
-            return false;
-        }
-
-        foreach ($routeSegments as $i => $routeSegment){
-            if ($uriSegments[$i] !== $routeSegment){
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    private function getDispatchDataFromRefController(ReflectionClass $refController, string $httpMethod, string $uri): ?RouterDispatchData
+    private function setCacheRoutesOfDir(string $dir, array $cacheRoutes)
     {
-        $foundRouteWithIncapableMethod = null;
-        $uriSegments = explode("/", trim($uri, "/"));
+        $controllerClassPath = $this->getControllerClassPathOfDir($dir);
+
+        if ($controllerClassPath === null || !class_exists($controllerClassPath)){
+            throw new Exception("$controllerClassPath does not exist as a class.");
+        }
+
+        $refController = new ReflectionClass($controllerClassPath); 
         
         foreach ($refController->getMethods() as $refMethod) { 
             foreach ($refMethod->getAttributes() as $attribute) { 
@@ -66,83 +178,42 @@ class Router
                     continue;
                 }
 
-                $routeSegments = explode("/", trim($route->getRoute(), "/"));
-                $routeParams = $route->getParams();
+                $httpMethod = $route->getHttpMethod();
 
-                if ($this->getIsRouteMatch($routeSegments, $routeParams, $uriSegments)){
-
-                    $allowedMethod = $route->getHttpMethod();
-
-                    if ($allowedMethod === $httpMethod){
-
-                        $requestParams = $this->getRequestParamsFromSegments($routeSegments, $routeParams, $uriSegments);
- 
-                        return new RouterDispatchData($refMethod->getName(), $refController->getName(), $requestParams);
-                    }
-                    else{
-                        $foundRouteWithIncapableMethod = $route;
-                    }
+                if (isset($cacheRoutes[$httpMethod])){
+                    $cacheRoutes[$httpMethod] = [];
                 }
+
+                $cacheRoute = [
+                    "controller_path" => $controllerClassPath,
+                ];
+
+                $routeRequestParams = $route->getRequestParams();
+
+                if ($routeRequestParams !== null){
+                    $cacheRoute["request_params"] = $routeRequestParams;
+                }
+
+                $cacheRoutes[$httpMethod][$route->getRoute()] = $cacheRoute;
             }  
         }
-
-        if ($foundRouteWithIncapableMethod !== null){
-            throw new NotAllowedException("This route can only be accessed by a ".$foundRouteWithIncapableMethod->getHttpMethod()." request.");
-        }
-        
-        return null;
     }
 
-    private function getRequestParamsFromSegments(array $routeSegments, ?array $routeParams, array $uriSegments): ?array
+    private function setCacherecursivelyThroughControllersFolder(string $controllersDir, array $cacheRoutes)
     {
-        if ($routeParams === null){
-            return null;
-        }
-
-        $routeSegmentCount = count($routeSegments);
-        $params = [];
-
-        foreach($routeParams as $i => $param){
-            $params[$param] = $uriSegments[$i + $routeSegmentCount];
-        }
-
-        return $params;
-    }
-
-    private function getDispatchDataFromDir(string $dir, string $httpMethod, string $uri): ?RouterDispatchData
-    {
-        $controllerClassPath = $this->getControllerClassPathOfDir($dir);
-
-        if ($controllerClassPath === null || !class_exists($controllerClassPath)){
-            throw new Exception("$controllerClassPath does not exist as a class.");
-        }
-
-        $refController = new ReflectionClass($controllerClassPath); 
-        return $this->getDispatchDataFromRefController($refController, $httpMethod, $uri); 
-    }
-
-    private function getDispatchDataRecursivelyThroughControllersFolder(string $dir, string $httpMethod, string $uri): ?RouterDispatchData
-    {
-        $files = array_diff(scandir($dir), [".", ".."]);
+        $files = array_diff(scandir($controllersDir), [".", ".."]);
 
         foreach ($files as $fileName){
 
             $fileExtension = pathinfo($fileName, PATHINFO_EXTENSION);
-            $dispatchData = null;
 
             if ($fileExtension === "php"){
-                $dispatchData = $this->getDispatchDataFromDir("$dir/$fileName", $httpMethod, $uri);
+                $this->setCacheRoutesOfDir("$controllersDir/$fileName", $cacheRoutes);
             }
-            else if (empty($fileExtension)) {
-                $dispatchData = $this->getDispatchDataRecursivelyThroughControllersFolder("$dir/$fileName", $httpMethod, $uri);   
-            }
-            
-            if ($dispatchData !== null){
-                return $dispatchData;
+            else if (empty($fileExtension)){
+                $this->setCacherecursivelyThroughControllersFolder("$controllersDir/$fileName", $cacheRoutes);   
             }
         }
-
-        return null;
     }
 
     private function callRouteMethod(RouterDispatchData $dispatchData)
@@ -157,16 +228,14 @@ class Router
 
     public function dispatch(string $httpMethod, string $uri)
     {
-        $dir = "../cache";
+        $cacheRoutes = [];
+        $this->setCacherecursivelyThroughControllersFolder(__DIR__."/../Controllers", $cacheRoutes);
+    
+        var_dump($cacheRoutes);
 
-        if (!is_dir($dir)) {
-            mkdir($dir, 0755, true);
-        }
+        //require_once $filePath;
 
-        $filePath = $dir . "/routes.php";
-
-        file_put_contents($filePath, "<?php echo 'Hello, this is a test.';");
-        require_once $filePath;
+        
 
         // $dispatchData = $this->getDispatchDataRecursivelyThroughControllersFolder(__DIR__."/../Controllers", $httpMethod, $uri);
 

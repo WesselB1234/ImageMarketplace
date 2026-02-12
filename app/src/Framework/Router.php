@@ -227,12 +227,28 @@ class Router
         $controller->$methodName($requestParams);
     }
 
-    private function getDispatchDataFromRequest(string $httpMethod, string $uri)
+    private function getRequestParamsFromSegments(array $routeSegments, ?array $routeParams, array $uriSegments): ?array
+    {
+        if ($routeParams === null){
+            return null;
+        }
+
+        $routeSegmentCount = count($routeSegments);
+        $params = [];
+
+        foreach($routeParams as $i => $param){
+            $params[$param] = $uriSegments[$i + $routeSegmentCount];
+        }
+
+        return $params;
+    }
+
+    private function getDispatchDataFromRequest(string $httpMethod, string $uri): RouterDispatchData
     { 
         $cacheRoutes = require __DIR__."/../../Cache/routes.php";
 
         if (!isset($cacheRoutes[$httpMethod])){
-            return null;
+            throw new Exception("bruh");
         }
         
         $cachedRoutesInHttpMethod = $cacheRoutes[$httpMethod];
@@ -247,8 +263,9 @@ class Router
                 
                 $routeValues = $cachedRoutesInHttpMethod[$uriMatcher];
                 $routeSegments = explode("/", trim($uriMatcher, "/"));
+                $routeParams = (!isset($routeValues["request_params"]) ? null : $routeValues["request_params"]);
 
-                $paramsCount = (!isset($routeValues["request_params"]) ? 0 : count($routeValues["request_params"])); 
+                $paramsCount = ($routeParams === null ? 0 : count($routeValues["request_params"])); 
                 $totalRouteSegmentCount = count($routeSegments) + $paramsCount;
                 $totalUriSegmentCount = count($uriSegments);
 
@@ -256,10 +273,13 @@ class Router
                     continue;
                 }
 
-                var_dump($uriMatcher);
-                return;
+                $requestParams = $this->getRequestParamsFromSegments($routeSegments, $routeParams, $uriSegments);
+
+                return new RouterDispatchData($routeValues["method_name"], $routeValues["controller_path"], $requestParams);
             }
         }
+
+        throw new Exception("bruh");
     }
 
     public function dispatch(string $httpMethod, string $uri)
@@ -272,8 +292,9 @@ class Router
             "<?php\n\n//THESE ROUTES ARE DYNAMICALLY GENERATED FROM ROUTER.PHP\n\nreturn " . var_export($cacheRoutes, true) . ";\n"
         );
 
-        $this->getDispatchDataFromRequest($httpMethod, $uri);
+        $dispatchData = $this->getDispatchDataFromRequest($httpMethod, $uri);
 
+        $this->callRouteMethod($dispatchData);
 
         //require_once $filePath;
 

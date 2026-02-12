@@ -4,7 +4,6 @@ $loader = require __DIR__ . "/../vendor/autoload.php";
 
 use Dotenv\Dotenv;
 use App\Framework\Router;
-use App\Models\Exceptions\NotAllowedException;
 use App\Models\Exceptions\NotFoundException;
 use DI\ContainerBuilder;
 

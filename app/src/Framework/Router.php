@@ -4,7 +4,6 @@ namespace App\Framework;
 
 use App\Models\Attributes\Route;
 use App\Models\Exceptions\NotFoundException;
-use App\Models\RouterDispatchData;
 use Exception;
 use ReflectionClass;
 use DI\Container;
@@ -12,11 +11,12 @@ use DI\Container;
 class Router
 {
     private Container $container;
-    private const ROUTES_CACHE_DIR = __DIR__."/../../Cache/routes.php";
+    private const CACHE_FOLDER_DIR = __DIR__."/../../cache";
+    private const ROUTES_CACHE_DIR = self::CACHE_FOLDER_DIR."/routes.php";
     private const CONTROLLERS_DIR = __DIR__."/../Controllers";
 
-    public function __construct(Container $container){
-        
+    public function __construct(Container $container)
+    {
         $this->container = $container;
     }
 
@@ -92,16 +92,6 @@ class Router
         }
     }
 
-    private function callRouteMethod(RouterDispatchData $dispatchData)
-    {
-        $methodName = $dispatchData->getMethodName();
-        $controllerClassPath = $dispatchData->getControllerClassPath();
-        $requestParams = $dispatchData->getRequestParams();
-                    
-        $controller = $this->container->get($controllerClassPath);
-        $controller->$methodName($requestParams);
-    }
-
     private function getRequestParamsFromSegments(array $routeSegments, ?array $routeParams, array $uriSegments): ?array
     {
         if ($routeParams === null){
@@ -117,9 +107,19 @@ class Router
 
         return $params;
     }
+    
+    private function callRouteMethodOfController($methodName, $controllerClassPath, $requestParams)
+    {                    
+        $controller = $this->container->get($controllerClassPath);
+        $controller->$methodName($requestParams);
+    }
 
-    private function getDispatchDataFromRequest(string $httpMethod, string $uri): RouterDispatchData
+    private function callRouteOfHttpRequest(string $httpMethod, string $uri)
     { 
+        if (!file_exists($this::ROUTES_CACHE_DIR)) {
+            throw new NotFoundException("Route caching file does not exist.");
+        }
+
         $cacheRoutes = require $this::ROUTES_CACHE_DIR;
 
         if (!isset($cacheRoutes[$httpMethod])){
@@ -150,7 +150,7 @@ class Router
 
                 $requestParams = $this->getRequestParamsFromSegments($routeSegments, $routeParams, $uriSegments);
 
-                return new RouterDispatchData($routeValues["method_name"], $routeValues["controller_path"], $requestParams);
+                $this->callRouteMethodOfController($routeValues["method_name"], $routeValues["controller_path"], $requestParams);
             }
         }
 
@@ -163,6 +163,10 @@ class Router
         
         $this->setCacheRoutesRecursivelyThroughControllersFolder($this::CONTROLLERS_DIR, $cacheRoutes);
     
+        if (!is_dir($this::CACHE_FOLDER_DIR)){
+            mkdir($this::CACHE_FOLDER_DIR);
+        }
+
         file_put_contents(
             $this::ROUTES_CACHE_DIR,
             "<?php\n\n//THESE ROUTES ARE DYNAMICALLY GENERATED FROM ROUTER.PHP\n\nreturn " . var_export($cacheRoutes, true) . ";\n"
@@ -172,13 +176,11 @@ class Router
     public function dispatch(string $httpMethod, string $uri)
     {
         try{
-            $dispatchData = $this->getDispatchDataFromRequest($httpMethod, $uri);
-            $this->callRouteMethod($dispatchData);
+            $this->callRouteOfHttpRequest($httpMethod, $uri);
         }
         catch(Exception $e){
             $this->refreshRoutesCacheFile();
-            $dispatchData = $this->getDispatchDataFromRequest($httpMethod, $uri);
-            $this->callRouteMethod($dispatchData);
+            $this->callRouteOfHttpRequest($httpMethod, $uri);
         }
     }
 }

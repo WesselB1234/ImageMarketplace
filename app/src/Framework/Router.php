@@ -159,7 +159,7 @@ class Router
         return null;
     }
 
-    private function setCacheRoutesOfDir(string $dir, array $cacheRoutes)
+    private function setCacheRoutesOfDir(string $dir, array &$cacheRoutes)
     {
         $controllerClassPath = $this->getControllerClassPathOfDir($dir);
 
@@ -180,7 +180,7 @@ class Router
 
                 $httpMethod = $route->getHttpMethod();
 
-                if (isset($cacheRoutes[$httpMethod])){
+                if (!isset($cacheRoutes[$httpMethod])){
                     $cacheRoutes[$httpMethod] = [];
                 }
 
@@ -199,7 +199,7 @@ class Router
         }
     }
 
-    private function setCacherecursivelyThroughControllersFolder(string $controllersDir, array $cacheRoutes)
+    private function setCacheRecursivelyThroughControllersFolder(string $controllersDir, array &$cacheRoutes)
     {
         $files = array_diff(scandir($controllersDir), [".", ".."]);
 
@@ -229,9 +229,13 @@ class Router
     public function dispatch(string $httpMethod, string $uri)
     {
         $cacheRoutes = [];
-        $this->setCacherecursivelyThroughControllersFolder(__DIR__."/../Controllers", $cacheRoutes);
+        $this->setCacheRecursivelyThroughControllersFolder(__DIR__."/../Controllers", $cacheRoutes);
     
-        var_dump($cacheRoutes);
+        file_put_contents(
+            __DIR__."/../../Cache/routes.php",
+            "<?php\n\n//THESE ROUTES ARE DYNAMICALLY GENERATED FROM ROUTER.PHP\n\nreturn " . var_export($cacheRoutes, true) . ";\n"
+        );
+
 
         //require_once $filePath;
 

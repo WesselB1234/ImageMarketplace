@@ -149,8 +149,9 @@ class Router
                 }
 
                 $requestParams = $this->getRequestParamsFromSegments($routeSegments, $routeParams, $uriSegments);
-
                 $this->callRouteMethodOfController($routeValues["method_name"], $routeValues["controller_path"], $requestParams);
+                
+                return;
             }
         }
 

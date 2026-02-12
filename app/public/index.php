@@ -27,10 +27,6 @@ function start()
     try{
         $router->dispatch($httpMethod, $uri);
     }
-    catch(NotAllowedException $e){
-        http_response_code(405);
-        echo $e->getMessage(); 
-    }
     catch(NotFoundException $e){
         http_response_code(404);
         echo $e->getMessage(); 

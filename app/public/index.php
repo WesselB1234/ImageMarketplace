@@ -6,7 +6,7 @@ use Dotenv\Dotenv;
 use App\Framework\Router;
 use App\Models\Exceptions\NotFoundException;
 use DI\ContainerBuilder;
-//brh
+
 function start()
 {
     session_start();

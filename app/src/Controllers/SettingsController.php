@@ -28,9 +28,9 @@ class SettingsController extends Controller
     public function deleteAccount()
     {
         try{
-            $this->usersService->deleteUserByUserId($_SESSION["user"]->getUserId());
+            $this->usersService->deleteUserByUserId($this->loggedInUser->getUserId());
             
-            unset($_SESSION["user"]);
+            unset($_SESSION["logged_in_user_id"]);
             $_SESSION["success_message"] = "Successfully deleted your account.";
 
             header("location: /login");

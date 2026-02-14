@@ -46,7 +46,7 @@ class ImagesController extends Controller
 
             $image = $this->imagesService->getImageByImageIdOrThrow($imageId);
             
-            if ($image->getIsOnSale() === false && $_SESSION["user"]->getRole() !== UserRole::Admin && $image->getOwnerId() !== $_SESSION["user"]->getUserId()){
+            if ($image->getIsOnSale() === false && $this->loggedInUser->getRole() !== UserRole::Admin && $image->getOwnerId() !== $this->loggedInUser->getUserId()){
                 throw new NotAuthorizedException("You cannot view private off sale images.");
             }
 
@@ -178,7 +178,7 @@ class ImagesController extends Controller
             $imageId = null;
             
             try{ 
-                $image = Image::constructUnknownImage($_SESSION["user"]->getUserId(), $_SESSION["user"]->getUserId(), $_POST["name"], $_POST["description"], $_POST["alt_text"]);
+                $image = Image::constructUnknownImage($this->loggedInUser->getUserId(), $this->loggedInUser->getUserId(), $_POST["name"], $_POST["description"], $_POST["alt_text"]);
                 
                 if (!isset($_FILES["image"])){
                     throw new NotFoundException("No image file has been sent to the server.");

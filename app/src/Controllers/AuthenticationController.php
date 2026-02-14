@@ -34,8 +34,7 @@ class AuthenticationController extends Controller
                 throw new Exception("Password or username is not correct.");
             }
             
-            $user->setPassword(null);
-            $_SESSION["user"] = $user;
+            $_SESSION["logged_in_user_id"] = $user->getUserId();
 
             header("Location: /");
         }
@@ -82,7 +81,7 @@ class AuthenticationController extends Controller
     {
         $this->loggedInAuthorization();
         
-        unset($_SESSION["user"]);
+        unset($_SESSION["logged_in_user_id"]);
         $_SESSION["success_message"] = "Successfully logged out of your account.";
         
         header("location: /login");

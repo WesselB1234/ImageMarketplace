@@ -93,11 +93,6 @@ class UsersController extends Controller
             
             $this->usersService->updateUser($user);
             
-            if ($user->getUserId() === $_SESSION["user"]->getUserId()){
-                $user->setPassword(null);
-                $_SESSION["user"] = $user;
-            }
-            
             $_SESSION["success_message"] = "Successfully updated user.";
             header("Location: /users");
         } 

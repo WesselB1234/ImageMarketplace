@@ -9,6 +9,7 @@ use App\Models\Attributes\Route;
 class PortfolioController extends Controller
 {
     private IImagesService $imagesService;
+    //piy
 
     public function __construct(IImagesService $imagesService)
     {
@@ -21,7 +22,7 @@ class PortfolioController extends Controller
     #[Route("GET", "/portfolio")]
     public function index()
     {
-        $images = $this->imagesService->getAllImagesFromUserId($_SESSION["user"]->getUserId());
+        $images = $this->imagesService->getAllImagesFromUserId($this->loggedInUser->getUserId());
 
         $this->displayView(["viewModel" => $images]);
     }

@@ -13,6 +13,7 @@ class SettingsController extends Controller
 
     public function __construct(IUsersService $usersService)
     {
+        parent::__construct($usersService);
         $this->loggedInAuthorization();
 
         $this->usersService = $usersService;

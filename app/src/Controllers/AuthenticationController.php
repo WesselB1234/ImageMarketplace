@@ -15,6 +15,9 @@ class AuthenticationController extends Controller
     private IUsersService $usersService;
 
     public function __construct(IUsersService $usersService){
+
+        parent::__construct($usersService);
+
         $this->usersService = $usersService;
     }
 

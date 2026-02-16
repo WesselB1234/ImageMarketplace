@@ -22,6 +22,7 @@ class ImagesController extends Controller
 
     public function __construct(IImagesService $imagesService, IUsersService $usersService)
     {
+        parent::__construct($usersService);
         $this->loggedInAuthorization();
 
         $this->imagesService = $imagesService;

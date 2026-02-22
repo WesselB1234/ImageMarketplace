@@ -12,7 +12,7 @@ Icon?
 # Composer
 composer.phar
 /vendor/
-/app/vendor/
+backend/app/vendor/
 /vendor-bin/**/vendor/
 
 # Environment files (keep example files tracked)
@@ -29,9 +29,9 @@ temp/
 cache/
 storage/
 var/
-app/storage/
-app/cache/
-app/var/
+backend/app/storage/
+backend/app/cache/
+backend/app/var/
 .phpunit.result.cache
 coverage/
 
@@ -40,4 +40,4 @@ node_modules/
 
 # Docker overrides (optional local overrides)
 docker-compose.override.yml
-app/public/assets/img/UserUploadedImages
+backend/app/public/assets/img/UserUploadedImages

@@ -1,4 +1,3 @@
 <template>
-    I am nani
-    <br>
+    <input type="text" class="form-control" id="username" name="username" placeholder="Enter username">          
 </template>

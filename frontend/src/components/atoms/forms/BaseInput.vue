@@ -1,3 +1,20 @@
+<script setup>
+    defineProps({
+        type: {
+            type: String,
+        },
+        id: {
+            type: String,
+        },
+        name: {
+            type: String,
+        },
+        placeholder: {
+            type: String,
+        }
+    })
+</script>
+
 <template>
-    <input type="text" class="form-control" id="username" name="username" placeholder="Enter username">          
+    <input class="form-control" :type="type" :id="id" :name="name" :placeholder="placeholder">          
 </template>

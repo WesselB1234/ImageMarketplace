@@ -5,8 +5,8 @@
 
 <template>
     <form action="/auth/login" method="POST">
-        <BaseFormField />
-        <BaseFormField />
+        <BaseFormField labelName="Username" type="text" id="username" name="username" placeholder="Enter your username" />
+        <BaseFormField labelName="Password" type="password" id="password" name="password" placeholder="Enter your password" />
         <AuthsubmitBtn buttonText="Login" />
         <router-link to="/auth/register">Register a new account</router-link>
     </form>

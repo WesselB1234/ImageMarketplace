@@ -1,6 +1,6 @@
 # Image Marketplace
 Within this application, accounts can upload images and sell them to other users.
-This application was made by Wessel B for Inholland University of Applied Sciences as an assignment. Different aspects of the application such as a custom-made router will be described below.
+This application was made by Wessel B. for Inholland University of Applied Sciences as an assignment. Different aspects of the application such as a custom-made router will be described below.
 
 ## Login credentials for test accounts
 <ul>
@@ -76,9 +76,8 @@ Upon making a request, the router will make sure that the right controller metho
 
 For example, if the PortfolioController wants the index method to be bound to the /portfolio route, then it needs to add the attribute #[Route("GET", "/portfolio")] on top of the method. If the route also needs request parameters, then they can be added like this: #[Route("GET", "/portfolio", ["id"])]. In the parameters section of the index method, there should also be an array $requestParams parameter like this: index(array $requestParams). Route /portfolio/5 will now call the index method of the PortfolioController and will pass the value of 5 to $requestParams["id"]. Below you can find the file containing the source code of the custom-made router.
 
-<img width="1012" height="235" alt="RouterRouteBinding" src="https://github.com/user-attachments/assets/40389958-e73f-49e3-a5e1-64fbd436901f" />
-<img width="633" height="505" alt="RouterInitIndex" src="https://github.com/user-attachments/assets/00717ddf-44e4-4e74-901b-8d72faa9441a" />
-<img width="1255" height="308" alt="DispatchMethodRouter" src="https://github.com/user-attachments/assets/a5d8670b-222a-4eb8-8d42-4a670706f49c" />
+<img width="780" height="255" alt="RefreshRouter" src="https://github.com/user-attachments/assets/8ce41c50-5305-4994-b6a0-42696912ce19" />
+<img width="624" height="174" alt="IndexRouter" src="https://github.com/user-attachments/assets/e6a1b94b-4a7e-4eb9-abc8-ac461d8a5f37" />
 
 #### Files
 <ul>

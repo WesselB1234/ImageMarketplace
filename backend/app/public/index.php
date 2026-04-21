@@ -1,22 +1,31 @@
 <?php
 
-$loader = require __DIR__ . "/../vendor/autoload.php";
+$loader = require __DIR__."/../vendor/autoload.php";
 
-use Dotenv\Dotenv;
 use App\Framework\Router;
 use App\Models\Exceptions\NotFoundException;
 use DI\ContainerBuilder;
+use DI\CompiledContainer;
 
 function start()
 {
     session_start();
 
-    $dotenv = Dotenv::createImmutable(__DIR__."/../");
-    $dotenv->load();
+    $_ENV = parse_ini_file(__DIR__."/../.env");
 
-    $builder = new ContainerBuilder(); 
-    $builder->addDefinitions(__DIR__ . "/../src/framework/Dependencies.php"); 
-    $container = $builder->build();
+    $containerCacheFile = __DIR__."/../cache/CompiledContainer.php";
+
+    if (file_exists($containerCacheFile)) {
+        require_once $containerCacheFile;
+        $container = new \CompiledContainer();
+    } 
+    else {
+        $builder = new ContainerBuilder();
+        $builder->useAutowiring(true);
+        $builder->addDefinitions(__DIR__."/../src/framework/Dependencies.php");
+        $builder->enableCompilation(__DIR__."/../cache", "CompiledContainer");
+        $container = $builder->build();
+    }
 
     $httpMethod = $_SERVER["REQUEST_METHOD"];
     $uri = strtok($_SERVER["REQUEST_URI"], "?");

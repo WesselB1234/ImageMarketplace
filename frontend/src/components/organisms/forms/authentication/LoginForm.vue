@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import SubmitBtn from '@/components/atoms/buttons/forms/submitBtn.vue';
+    import AuthsubmitBtn from '@/components/atoms/buttons/forms/AuthsubmitBtn.vue';
     import BaseFormField from '@/components/molecules/forms/BaseFormField.vue';
 </script>
 
@@ -7,7 +7,7 @@
     <form action="/auth/login" method="POST">
         <BaseFormField />
         <BaseFormField />
-        <SubmitBtn />
+        <AuthsubmitBtn buttonText="Login" />
         <router-link to="/auth/register">Register a new account</router-link>
     </form>
 </template>

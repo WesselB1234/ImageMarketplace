@@ -21,7 +21,7 @@
                         </div>
 
                         <div class="d-grid">
-                            <router-link to="/register">Register a new account</router-link>
+                            <router-link to="/auth/register">Register a new account</router-link>
                         </div>
                     </form>
                 </div>

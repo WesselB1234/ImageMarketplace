@@ -1,5 +1,5 @@
 <script setup>
-    import Nani from '../../components/Nani.vue'
+    import Nani from '../../components/atoms/Nani.vue'
 </script>
 
 <template>
@@ -29,7 +29,7 @@
                         </div>
 
                         <div class="d-grid">
-                            <router-link to="/login">Login into an existing account</router-link>
+                            <router-link to="/auth/login">Login into an existing account</router-link>
                         </div>
                     </form>
                 </div>

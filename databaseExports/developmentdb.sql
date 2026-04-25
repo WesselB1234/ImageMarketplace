@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql
--- Gegenereerd op: 11 jan 2026 om 18:14
+-- Gegenereerd op: 25 apr 2026 om 16:28
 -- Serverversie: 12.0.2-MariaDB-ubu2404
 -- PHP-versie: 8.3.27
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `ImageMarketplace`
+-- Database: `developmentdb`
 --
 
 -- --------------------------------------------------------
@@ -39,6 +39,13 @@ CREATE TABLE `Images` (
   `time_created` datetime NOT NULL DEFAULT current_timestamp(),
   `alt_text` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Gegevens worden geëxporteerd voor tabel `Images`
+--
+
+INSERT INTO `Images` (`id`, `owner_id`, `creator_id`, `name`, `description`, `price`, `is_moderated`, `is_onsale`, `time_created`, `alt_text`) VALUES
+(1, 54, 54, 'TestImage', 'TestImage', NULL, 0, 0, '2026-04-25 16:10:11', 'TestImage alt text');
 
 -- --------------------------------------------------------
 
@@ -88,7 +95,7 @@ ALTER TABLE `Users`
 -- AUTO_INCREMENT voor een tabel `Images`
 --
 ALTER TABLE `Images`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT voor een tabel `Users`

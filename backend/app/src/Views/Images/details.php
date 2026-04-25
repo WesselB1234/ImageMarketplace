@@ -59,10 +59,10 @@
                         </li>
                     </ul>
                     
-                    <?php if ($viewModel->getImage()->getIsModerated() === false && $viewModel->getImage()->getIsOnSale() && $viewModel->getImage()->getOwnerId() !== $_SESSION["user"]->getUserId()){ ?>
+                    <?php if ($viewModel->getImage()->getIsModerated() === false && $viewModel->getImage()->getIsOnSale() && $viewModel->getImage()->getOwnerId() !== $this->loggedInUser->getUserId()){ ?>
                         <a href="/images/buy/<?php echo $viewModel->getImage()->getImageId(); ?>" class="btn btn-success w-100 mb-2">Buy</a>
                     <?php }
-                    if ($viewModel->getImage()->getIsModerated() === false && ($_SESSION["user"]->getRole() === UserRole::Admin || $viewModel->getImage()->getOwnerId() === $_SESSION["user"]->getUserId())){
+                    if ($viewModel->getImage()->getIsModerated() === false && ($this->loggedInUser->getRole() === UserRole::Admin || $viewModel->getImage()->getOwnerId() === $this->loggedInUser->getUserId())){
                         if ($viewModel->getImage()->getIsOnSale() === false){?>
                             <a href="/images/sell/<?php echo $viewModel->getImage()->getImageId(); ?>" class="btn btn-danger w-100 mb-2">Sell</a>
                         <?php }
@@ -70,10 +70,10 @@
                             <a href="/images/takeoffsale/<?php echo $viewModel->getImage()->getImageId(); ?>" class="btn btn-danger w-100 mb-2">Take off sale</a>
                         <?php }
                     }
-                    if ($_SESSION["user"]->getRole() === UserRole::Admin || $viewModel->getImage()->getOwnerId() === $_SESSION["user"]->getUserId()){?>
+                    if ($this->loggedInUser->getRole() === UserRole::Admin || $viewModel->getImage()->getOwnerId() === $this->loggedInUser->getUserId()){?>
                         <a href="/images/delete/<?php echo $viewModel->getImage()->getImageId(); ?>" class="btn btn-danger w-100 mb-2">Delete</a>
                     <?php } 
-                    if ($_SESSION["user"]->getRole() === UserRole::Admin) {
+                    if ($this->loggedInUser->getRole() === UserRole::Admin) {
                         if ($viewModel->getImage()->getIsModerated() === false){ ?>
                             <a href="/images/moderate/<?php echo $viewModel->getImage()->getImageId(); ?>/true" class="btn btn-warning w-100 mb-2">Moderate</a>
                         <?php } 

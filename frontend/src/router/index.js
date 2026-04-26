@@ -13,12 +13,12 @@ const routes = [
             { 
                 path: 'login', 
                 component: Login, 
-                name: 'Login' 
+                meta: { title: "Login" }
             },
             { 
                 path: 'register', 
                 component: Register,
-                name: 'Register' 
+                meta: { title: "Register" }
             }
         ]
     }
@@ -27,6 +27,12 @@ const routes = [
 const router = createRouter({
     history: createWebHistory(),
     routes
+})
+
+router.afterEach((to) => {
+    if (to.meta.title) {
+        document.title = to.meta.title
+    }
 })
 
 export default router

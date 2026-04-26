@@ -1,18 +1,22 @@
-<script setup lang="ts">
-import { ref } from 'vue';
-import AuthsubmitBtn from '@/components/atoms/buttons/forms/AuthsubmitBtn.vue';
-import BaseFormField from '@/components/molecules/forms/BaseFormField.vue';
+<script setup>
+    import { ref } from 'vue'
+    import axios from '../../../utils/axios.js'
+    import AuthsubmitBtn from '@/components/atoms/buttons/forms/AuthsubmitBtn.vue'
+    import BaseFormField from '@/components/molecules/forms/BaseFormField.vue'
 
-const username = ref('');
-const password = ref('');
+    const username = ref('')
+    const password = ref('')
 
-function handleLoginClick(event: Event) {
-    event.preventDefault();
-    console.log('Form data:', {
-        username: username.value,
-        password: password.value
-    });
-}
+    async function handleLoginClick(e) {
+        e.preventDefault()
+        console.log('Form data:', {
+            username: username.value,
+            password: password.value
+        })
+
+        const response = await axios.post("/login", null)
+        console.log(response)
+    }
 </script>
 
 <template>

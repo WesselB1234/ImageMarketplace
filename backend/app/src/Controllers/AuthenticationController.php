@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-use App\Controllers\Controller;
+use App\Controllers\ApiControllers\ApiController;
 use App\Services\Interfaces\IUsersService;
 use App\Models\User;
 use App\Models\Enums\UserRole;
@@ -10,7 +10,7 @@ use App\Models\ViewModels\AuthenticationVM;
 use App\Models\Attributes\Route;
 use Exception;
 
-class AuthenticationController extends Controller 
+class AuthenticationController extends ApiController 
 {
     private IUsersService $usersService;
 
@@ -21,40 +21,33 @@ class AuthenticationController extends Controller
         $this->usersService = $usersService;
     }
 
-    #[Route("GET", "/login")]
-    public function login()
-    {
-        $this->displayView();
-    }
-
     #[Route("POST", "/login")]
     public function processLogin()
     {       
-        try{ 
-            $user = $this->usersService->getUserByUsernameAndPassword($_POST["username"], $_POST["password"]);
+        http_response_code(200); 
+        echo json_encode(["hello" => "test"], JSON_PRETTY_PRINT);
 
-            if ($user == null){
-                throw new Exception("Password or username is not correct.");
-            }
+        // try{ 
+        //     $user = $this->usersService->getUserByUsernameAndPassword($_POST["username"], $_POST["password"]);
+
+        //     if ($user == null){
+        //         throw new Exception("Password or username is not correct.");
+        //     }
             
-            $_SESSION["logged_in_user_id"] = $user->getUserId();
+        //     $_SESSION["logged_in_user_id"] = $user->getUserId();
 
-            header("Location: /");
-        }
-        catch(Exception $e){
-            $this->displayView([
-                    "viewModel" => new AuthenticationVM($_POST["username"], $_POST["password"]),  
-                    "errorMessage" => $e->getMessage()
-                ],
-                "Authentication/Login.php"
-            );
-        }
-    }
+        //     header("Location: /");
+        // }
+        // catch(Exception $e){
+        //     $this->displayView([
+        //             "viewModel" => new AuthenticationVM($_POST["username"], $_POST["password"]),  
+        //             "errorMessage" => $e->getMessage()
+        //         ],
+        //         "Authentication/Login.php"
+        //     );
+        // }
 
-    #[Route("GET", "/register")]
-    public function register()
-    {
-        $this->displayView();
+        
     }
 
     #[Route("POST", "/register")]

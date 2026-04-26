@@ -14,7 +14,7 @@
             password: password.value
         })
 
-        const response = await axios.post("http://localhost:80/login", null)
+        const response = await axios.post("/login", null)
         console.log(response.data)
     }
 </script>

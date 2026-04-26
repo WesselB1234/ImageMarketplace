@@ -3,13 +3,12 @@
     import axios from 'axios'
     import AuthsubmitBtn from '@/components/atoms/buttons/forms/AuthsubmitBtn.vue'
     import BaseFormField from '@/components/molecules/forms/BaseFormField.vue'
-    import ErrorAlert from '@/components/atoms/errorHandling/ErrorAlert.vue'
-    import SuccessAlert from '@/components/atoms/errorHandling/SuccessAlert.vue'
-
+    import Alert from '@/components/atoms/errorHandling/Alert.vue'
+    
     const username = ref('')
     const password = ref('')
-    const successMessage = ref('')
-    const errorMessage = ref('')
+    const successAlert = ref(null)
+    const errorAlert = ref(null)
 
     async function handleLoginClick(e) {
         try {
@@ -19,19 +18,19 @@
                 password: password.value
             })
 
-            const response = await axios.post("/login", null)
-            successMessage.value = response.data.message
+            const response = await axios.post('/login', null)
+            successAlert.value.displayAlertMessage(response.data.message)
         }
         catch (ex){
-            errorMessage.value = ex.response.data.message
+            errorAlert.value.displayAlertMessage(ex.response.data.message)
         }
     }
 </script>
 
 <template>
     <form action="/auth/login" method="POST">
-        <ErrorAlert :message="errorMessage" />
-        <SuccessAlert :message="successMessage" />
+        <Alert ref="errorAlert" classType="danger" :message="errorMessage" />
+        <Alert ref="successAlert" classType="success" :message="successMessage" />
         <BaseFormField labelName="Username" type="text" id="username" name="username" placeholder="Enter your username" v-model="username"/>
         <BaseFormField labelName="Password" type="password" id="password" name="password" placeholder="Enter your password" v-model="password"/>
         <AuthsubmitBtn @click="handleLoginClick" buttonText="Login" />

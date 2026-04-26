@@ -30,7 +30,7 @@ class AuthenticationController extends ApiController
     #[Route("POST", "/login")]
     public function processLogin()
     {       
-        http_response_code(201); 
+        http_response_code(404); 
         echo json_encode(["message" => "test"], JSON_PRETTY_PRINT);
 
         // try{ 

@@ -21,5 +21,5 @@ const emit = defineEmits(['update:modelValue'])
 </script>
 
 <template>
-    <input class="form-control" :type="type" :id="id" :name="name" :placeholder="placeholder" :value="props.modelValue" @input="emit('update:modelValue', $event.target.value)"/>
+    <input class="form-control" :type="type" :id="id" :name="name" :placeholder="placeholder" :value="modelValue" @input="emit('update:modelValue', $event.target.value)"/>
 </template>

@@ -16,7 +16,7 @@ class UsersApiController extends ApiController
 
     public function __construct(IUsersService $usersService)
     {
-        parent::__construct();
+        parent::__construct($usersService);
         $this->loggedInAuthorization();
 
         $this->usersService = $usersService;
@@ -32,7 +32,7 @@ class UsersApiController extends ApiController
             $data = json_decode($input, true); 
             $userId = $data["id"];
 
-            if (intval($userId) === $_SESSION["user"]->getUserId()){
+            if (intval($userId) === $this->getLoggedInUser()->getUserId()){
                 throw new ForbiddenException("You cannot delete yourself.");
             }
             
@@ -56,7 +56,7 @@ class UsersApiController extends ApiController
     public function getLoggedInUser()
     {
         try{    
-            $user = $this->usersService->getUserByUserIdOrThrow($_SESSION["user"]->getUserId());
+            $user = $this->usersService->getUserByUserIdOrThrow($this->loggedInUser->getUserId());
 
             http_response_code(200); 
             echo json_encode($user, JSON_PRETTY_PRINT);

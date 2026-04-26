@@ -4,6 +4,7 @@ namespace App\Controllers\ApiControllers;
 
 use App\Controllers\ApiControllers\ApiController;
 use App\Services\Interfaces\IImagesService;
+use App\Services\Interfaces\IUsersService;
 use Exception;
 use App\Models\Attributes\Route;
 
@@ -11,9 +12,9 @@ class ImagesApiController extends ApiController
 {
     private IImagesService $imagesService;
 
-    public function __construct(IImagesService $imagesService)
+    public function __construct(IUsersService $usersService, IImagesService $imagesService)
     {
-        parent::__construct();
+        parent::__construct($usersService);
         $this->loggedInAuthorization();
 
         $this->imagesService = $imagesService;

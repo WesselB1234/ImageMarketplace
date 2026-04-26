@@ -2,7 +2,7 @@
 
 namespace App\Controllers\ApiControllers;
 
-use App\Controllers\ApiControllers\ApiController;
+use App\Controllers\ApiController;
 use App\Services\Interfaces\IImagesService;
 use Exception;
 use App\Models\Attributes\Route;

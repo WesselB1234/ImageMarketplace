@@ -1,6 +1,6 @@
 <script setup>
     import { ref } from 'vue'
-    import axios from '../../../utils/axios.js'
+    import axios from 'axios';
     import AuthsubmitBtn from '@/components/atoms/buttons/forms/AuthsubmitBtn.vue'
     import BaseFormField from '@/components/molecules/forms/BaseFormField.vue'
 
@@ -14,8 +14,8 @@
             password: password.value
         })
 
-        const response = await axios.post("/login", null)
-        console.log(response)
+        const response = await axios.post("http://localhost:80/login", null)
+        console.log(response.data)
     }
 </script>
 

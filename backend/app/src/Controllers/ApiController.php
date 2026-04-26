@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controllers\ApiControllers;
+namespace App\Controllers;
 
 use App\Models\ApiResponses\ErrorResponse;
 use App\Models\Exceptions\NotFoundException;
@@ -27,7 +27,7 @@ class ApiController
     private function setLoggedInUser()
     {
         try {  
-            $loggedInUser = $this->usersService->getUserByUserId(1);
+            $loggedInUser = $this->usersService->getUserByUserId(54);
 
             if ($loggedInUser === null)
             {

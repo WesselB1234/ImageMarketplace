@@ -2,7 +2,7 @@
 
 namespace App\Controllers\ApiControllers;
 
-use App\Controllers\ApiControllers\ApiController;
+use App\Controllers\ApiController;
 use App\Services\Interfaces\IUsersService;
 use Exception;
 use App\Models\Exceptions\NotFoundException;

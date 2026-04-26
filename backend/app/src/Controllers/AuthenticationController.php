@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-use App\Controllers\ApiControllers\ApiController;
+use App\Controllers\ApiController;
 use App\Services\Interfaces\IUsersService;
 use App\Models\User;
 use App\Models\Enums\UserRole;
@@ -19,6 +19,12 @@ class AuthenticationController extends ApiController
         parent::__construct($usersService);
 
         $this->usersService = $usersService;
+    }
+
+    #[Route("GET", "/login")]
+    public function login()
+    {
+        echo "hi";
     }
 
     #[Route("POST", "/login")]

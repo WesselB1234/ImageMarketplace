@@ -1,5 +1,5 @@
 <script setup>
-    defineProps({
+    const props = defineProps({
         buttonText: {
             type: String,
         }
@@ -9,7 +9,7 @@
 <template>
     <div class="mb-3">
         <button type="submit" class="btn btn-primary w-100">
-            {{ buttonText }}
+            {{ props.buttonText }}
         </button>
     </div>
 </template>

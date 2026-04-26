@@ -29,8 +29,8 @@
 
 <template>
     <form action="/auth/login" method="POST">
-        <Alert ref="errorAlert" classType="danger" :message="errorMessage" />
-        <Alert ref="successAlert" classType="success" :message="successMessage" />
+        <Alert ref="errorAlert" classType="danger" />
+        <Alert ref="successAlert" classType="success" />
         <BaseFormField labelName="Username" type="text" id="username" name="username" placeholder="Enter your username" v-model="username"/>
         <BaseFormField labelName="Password" type="password" id="password" name="password" placeholder="Enter your password" v-model="password"/>
         <AuthsubmitBtn @click="handleLoginClick" buttonText="Login" />

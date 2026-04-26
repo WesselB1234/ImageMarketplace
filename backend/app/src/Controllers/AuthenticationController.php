@@ -30,8 +30,8 @@ class AuthenticationController extends ApiController
     #[Route("POST", "/login")]
     public function processLogin()
     {       
-        http_response_code(200); 
-        echo json_encode(["hello" => "test"], JSON_PRETTY_PRINT);
+        http_response_code(201); 
+        echo json_encode(["message" => "test"], JSON_PRETTY_PRINT);
 
         // try{ 
         //     $user = $this->usersService->getUserByUsernameAndPassword($_POST["username"], $_POST["password"]);
@@ -51,9 +51,7 @@ class AuthenticationController extends ApiController
         //         ],
         //         "Authentication/Login.php"
         //     );
-        // }
-
-        
+        // }        
     }
 
     #[Route("POST", "/register")]

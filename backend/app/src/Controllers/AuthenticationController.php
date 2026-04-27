@@ -86,4 +86,34 @@ class AuthenticationController extends ApiController
         
         header("location: /login");
     }
+
+    public function currentUser()
+    {
+        try {
+            // Note: generally authentication/authorization code should normally be centralized somewhere (e.g. middleware, base controller, etc.). This is handled inline here for simplicity and demonstration purposes.
+            // Get token from Authorization header
+            if(!isset($_SERVER['HTTP_AUTHORIZATION'])) {
+                return $this->sendErrorResponse('Authorization header is required', 401);
+            }
+
+            $authHeader = $_SERVER['HTTP_AUTHORIZATION'];
+            $headerParts = explode(' ', $authHeader);
+            if (count($headerParts) !== 2 || strtolower($headerParts[0]) !== 'bearer') {
+                return $this->sendErrorResponse('Invalid authorization header format', 401);
+            }
+            $token = $headerParts[1];
+
+            $user = $this->authService->getUserFromToken($token);
+
+            if (!$user) {
+                return $this->sendErrorResponse('Invalid or expired token', 401);
+            }
+
+            // Return user DTO
+            $userDTO = new UserDTO($user);
+            return $this->sendSuccessResponse($userDTO);
+        } catch (\Exception $e) {
+            return $this->sendErrorResponse('Internal server error', 500);
+        }
+    }
 }

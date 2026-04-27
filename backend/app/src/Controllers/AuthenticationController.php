@@ -25,7 +25,7 @@ class AuthenticationController extends ApiController
         $this->authenticationService = $authenticationService;
     }
 
-    #[Route("PUT", "/login")]
+    #[Route("POST", "/login")]
     public function processLogin()
     {            
         try{ 
@@ -37,9 +37,7 @@ class AuthenticationController extends ApiController
 
             $input = file_get_contents("php://input"); 
             $data = json_decode($input, true); 
-            error_log(print_r($data,true));
-
-            //error_log(print_r($_POST, true));
+            error_log(print_r($data, true));
             
             http_response_code(201); 
             echo json_encode(["message" => "success"], JSON_PRETTY_PRINT);

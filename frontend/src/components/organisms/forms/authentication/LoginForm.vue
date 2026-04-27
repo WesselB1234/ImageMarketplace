@@ -18,10 +18,10 @@
                 'password': password.value
             })
 
-            const response = await axios.put('/login', new URLSearchParams({
+            const response = await axios.post('/login', {
                 username: username.value,
                 password: password.value
-            }))
+            });
             successAlert.value.displayAlertMessage(response.data.message)
         }
         catch (ex){

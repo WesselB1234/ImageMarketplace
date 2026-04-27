@@ -9,6 +9,16 @@ use DI\CompiledContainer;
 
 function start()
 {
+    header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
+    header("Access-Control-Allow-Headers: Content-Type, Authorization");
+    header("Access-Control-Allow-Origin: *"); 
+    header("Content-Type: application/json");
+
+    if ($_SERVER["REQUEST_METHOD"] === "OPTIONS") {
+        http_response_code(204);
+        exit();
+    }
+
     session_start();
 
     $_ENV = parse_ini_file(__DIR__."/../.env");

@@ -3,12 +3,9 @@
 namespace App\Controllers;
 
 use App\Controllers\ApiController;
-//use App\Services\Interfaces\IAuthenticationService;
+use App\Models\Dtos\LoginDto;
 use App\Services\Interfaces\IAuthenticationService;
 use App\Services\Interfaces\IUsersService;
-use App\Models\User;
-use App\Models\Enums\UserRole;
-use App\Models\ViewModels\AuthenticationVM;
 use App\Models\Attributes\Route;
 use Exception;
 
@@ -30,14 +27,21 @@ class AuthenticationController extends ApiController
     {            
         try{
             $data = $this->getDataFromInput();
+
+            if (empty($data["username"]) || empty($data["password"])){
+                throw new Exception("All input fields must be filled.");
+            }
+
             $user = $this->authenticationService->getUserByUsernameAndPassword($data["username"], $data["password"]);
             
             if ($user == null){
                 throw new Exception("Password or username is not correct.");
             }
+
+            $dto = new LoginDto($this->authenticationService->generateJwtFromUser($user));
             
             http_response_code(201); 
-            echo json_encode(["message" => "success"], JSON_PRETTY_PRINT);
+            echo json_encode($dto, JSON_PRETTY_PRINT);
         }
         catch(Exception $e){
             $this->displayErrorJson(401, $e->getMessage());

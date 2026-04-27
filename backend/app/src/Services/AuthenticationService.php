@@ -5,10 +5,12 @@ namespace App\Services;
 use App\Repositories\Interfaces\IUsersRepository;
 use App\Models\User;
 use App\Services\Interfaces\IAuthenticationService;
+use Firebase\JWT\JWT;
 
 class AuthenticationService implements IAuthenticationService
 {
     private IUsersRepository $usersRepository; 
+    private const JWT_ALGORITHM = 'HS256';
 
     public function __construct(IUsersRepository $usersRepository){
         $this->usersRepository = $usersRepository;
@@ -25,27 +27,26 @@ class AuthenticationService implements IAuthenticationService
         return null;
     }
 
-    // public function generateJwtFromUser(User $user): string
-    // {
-    //     $now = time();
-    //     $expiration = $now + (Config::$tokenExpirationHours * 3600); // Convert hours to seconds
+    public function generateJwtFromUser(User $user): string
+    {
+        $now = time();
+        $expiration = $now + ($_ENV["JWT_EXPIRATION_IN_HOURS"] * 3600);
         
-    //     // This payload still needs an iss (issuer) and aud (audience set)
-    //     // The payload also need a data property containing the user id, username and email
-    //     $payload = [
-    //         'iss' => Config::$domain, // TODO: Issuer (available in the Config class as the domain property)
-    //         'iat' => $now, // Issued at time
-    //         'exp' => $expiration, // Expiration time (24 hours from now)
-    //         'data' => [
-    //             'id' => $user->id,
-    //             'username' => $user->username,
-    //             'email' => $user->email,
-    //         ]
-    //     ];
+        $payload = [
+            'iss' => $_ENV["DOMAIN"],
+            'iat' => $now,
+            'exp' => $expiration,
+            'data' => [
+                'id' => $user->getUserId(),
+                'username' => $user->getUsername(),
+                'role' => $user->getRole()->value,
+            ]
+        ];
+
+        error_log($_ENV["JWT_SECRET_KEY"]);
         
-    //     // TODO: Encode and return the token using the secret key and the HS256 algorithm `self::JWT_ALGORITHM`
-    //     return JWT::encode($payload, Config::$secretKey, self::JWT_ALGORITHM);
-    // }
+        return JWT::encode($payload, $_ENV["JWT_SECRET_KEY"], self::JWT_ALGORITHM);
+    }
 
     // public function getUserFromJwt(string $jwt): ?User
     // {

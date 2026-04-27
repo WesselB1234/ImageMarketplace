@@ -1,6 +1,6 @@
 <script setup>
     import { ref } from 'vue'
-    import axios from 'axios'
+    import axios, { setAuthToken } from "@/utils/axios.js";
     import AuthsubmitBtn from '@/components/atoms/buttons/forms/AuthsubmitBtn.vue'
     import BaseFormField from '@/components/molecules/forms/BaseFormField.vue'
     import Alert from '@/components/atoms/errorHandling/Alert.vue'
@@ -18,8 +18,11 @@
                 username: username.value,
                 password: password.value
             })
+            
+            const jwt = response.data.jwt
 
-            successAlert.value.displayAlertMessage(response.data.message)
+            setAuthToken(jwt)
+            successAlert.value.displayAlertMessage("Successfully logged in.")
         }
         catch (ex){
             errorAlert.value.displayAlertMessage(ex.response.data.message)

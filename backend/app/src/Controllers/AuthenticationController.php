@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Controllers\ApiController;
+use App\Models\Dtos\AuthorizationTestDto;
 use App\Models\Dtos\LoginDto;
 use App\Models\Dtos\RegisterDto;
 use App\Models\Enums\UserRole;
@@ -19,7 +20,7 @@ class AuthenticationController extends ApiController
 
     public function __construct(IUsersService $usersService, IAuthenticationService $authenticationService){
 
-        parent::__construct($usersService);
+        parent::__construct($usersService, $authenticationService);
 
         $this->usersService = $usersService;
         $this->authenticationService = $authenticationService;
@@ -78,13 +79,22 @@ class AuthenticationController extends ApiController
     #[Route("GET", "/auth/admin-test")]
     public function adminTest()
     {
-        $this->displayErrorJson(404, "test admin");
+        $this->loggedInAuthorization();
+        $this->adminAuthorization();
+
+        $dto = new AuthorizationTestDto($this->loggedInUser);
+        http_response_code(200); 
+        echo json_encode($dto, JSON_PRETTY_PRINT);
     }
 
     #[Route("GET", "/auth/user-test")]
     public function userTest()
     {
-        $this->displayErrorJson(404, "test user");
+        $this->loggedInAuthorization();
+
+        $dto = new AuthorizationTestDto($this->loggedInUser);
+        http_response_code(200); 
+        echo json_encode($dto, JSON_PRETTY_PRINT);
     }
     
 //     #[Route("GET", "/logout")]

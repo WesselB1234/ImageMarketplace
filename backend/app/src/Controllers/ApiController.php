@@ -3,38 +3,51 @@
 namespace App\Controllers;
 
 use App\Models\Dtos\ErrorDto;
+use App\Models\Exceptions\NotAuthorizedException;
 use App\Models\Exceptions\NotFoundException;
 use App\Models\User;
+use App\Services\Interfaces\IAuthenticationService;
 use App\Services\Interfaces\IUsersService;
+use Exception;
 
 class ApiController
 {
     private ?IUsersService $usersService = null;
+    private ?IAuthenticationService $authenticationService = null;
     protected ?User $loggedInUser = null;
 
-    public function __construct(?IUsersService $usersService = null)
+    public function __construct(?IUsersService $usersService = null, ?IAuthenticationService $authenticationService = null)
     {
-        // $this->usersService = $usersService;
-
-        // if ($this->usersService !== null) {
-        //     $this->setLoggedInUser();
-        // }
+        $this->usersService = $usersService;
+        $this->authenticationService = $authenticationService;
     }
 
     private function setLoggedInUser()
     {
         try {  
-            $loggedInUser = $this->usersService->getUserByUserId(54);
-
-            if ($loggedInUser === null)
-            {
-                throw new NotFoundException("Logged in user does not exist.");
+            if(!isset($_SERVER["HTTP_AUTHORIZATION"])) {
+                throw new NotAuthorizedException("Authorization header is required");
             }
 
-            $this->loggedInUser = $loggedInUser;
+            $authHeader = $_SERVER["HTTP_AUTHORIZATION"];
+            $headerParts = explode(" ", $authHeader);
+            
+            if (count($headerParts) !== 2 || strtolower($headerParts[0]) !== "bearer") {
+                throw new NotAuthorizedException("Invalid authorization header format");
+            }
+
+            $jwt = $headerParts[1];
+            $this->loggedInUser = $this->authenticationService->getUserFromJwt($jwt);
+
+            if ($this->loggedInUser === null) {
+                throw new NotAuthorizedException("Invalid or expired token");
+            }
         }
-        catch(NotFoundException $ex) {
-            $this->displayErrorJson(404, $ex->getMessage());
+        catch(NotAuthorizedException $ex) {
+            $this->displayErrorJson(401, $ex->getMessage());
+        }
+        catch(Exception $ex) {
+            $this->displayErrorJson(400, $ex->getMessage());
         }
     }
 
@@ -47,6 +60,8 @@ class ApiController
      
     public function loggedInAuthorization()
     {
+        $this->setLoggedInUser();
+
         // if (!isset($_SESSION["user"])){
         //     $this->displayErrorJson(401, "You need to be logged in to perform this action.");
         //     exit;

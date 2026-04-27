@@ -5,7 +5,9 @@ namespace App\Services;
 use App\Repositories\Interfaces\IUsersRepository;
 use App\Models\User;
 use App\Services\Interfaces\IAuthenticationService;
+use Exception;
 use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 
 class AuthenticationService implements IAuthenticationService
 {
@@ -33,34 +35,32 @@ class AuthenticationService implements IAuthenticationService
         $expiration = $now + ($_ENV["JWT_EXPIRATION_IN_HOURS"] * 3600);
         
         $payload = [
-            'iss' => $_ENV["DOMAIN"],
-            'iat' => $now,
-            'exp' => $expiration,
-            'data' => [
-                'id' => $user->getUserId(),
-                'username' => $user->getUsername(),
-                'role' => $user->getRole()->value,
+            "iss" => $_ENV["DOMAIN"],
+            "iat" => $now,
+            "exp" => $expiration,
+            "data" => [
+                "id" => $user->getUserId(),
+                "username" => $user->getUsername(),
+                "role" => $user->getRole()->value,
             ]
         ];
-
-        error_log($_ENV["JWT_SECRET_KEY"]);
         
         return JWT::encode($payload, $_ENV["JWT_SECRET_KEY"], self::JWT_ALGORITHM);
     }
 
-    // public function getUserFromJwt(string $jwt): ?User
-    // {
-    //     try {
-    //         $decoded = JWT::decode($token, new Key(Config::$secretKey, self::JWT_ALGORITHM));
-    //     } catch (\Exception $e) {
-    //         return null; // Invalid token
-    //     }
+    public function getUserFromJwt(string $jwt): ?User
+    {
+        try {
+            $decoded = JWT::decode($jwt, new Key($_ENV["JWT_SECRET_KEY"], self::JWT_ALGORITHM));
+        } 
+        catch (Exception $ex) {
+            return null;
+        }
 
-    //     // Get user by ID from the decoded token
-    //     if (isset($decoded->data->id)) {
-    //         return $this->userRepository->getById($decoded->data->id);
-    //     }      
-    // }
+        if (isset($decoded->data->id)) {
+            return $this->usersRepository->getUserByUserId($decoded->data->id);
+        }      
+    }
 
     // public function validateToken(string $token): bool
     // {

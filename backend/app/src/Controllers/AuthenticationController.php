@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Controllers\ApiController;
 use App\Models\Dtos\LoginDto;
+use App\Models\Dtos\RegisterDto;
 use App\Models\Enums\UserRole;
 use App\Models\User;
 use App\Services\Interfaces\IAuthenticationService;
@@ -54,20 +55,23 @@ class AuthenticationController extends ApiController
     public function processRegister()
     {
         try{
-            $user = User::constructUnknownUser($_POST["username"], $_POST["password"], 100, UserRole::User); 
-            $this->usersService->createUser($user);
+            $data = $this->getDataFromInput();
 
-            $_SESSION["success_message"] = "Successfully created a new account.";
+            if (empty($data["username"]) || empty($data["password"])){
+                throw new Exception("All input fields must be filled.");
+            }
+
+            $user = User::constructUnknownUser($data["username"], $data["password"], 100, UserRole::User); 
+            $userId = $this->usersService->createUser($user);
+            $user->setUserId($userId);
             
-            $this->processLogin();
+            $dto = new RegisterDto($user, $this->authenticationService->generateJwtFromUser($user));
+
+            http_response_code(201); 
+            echo json_encode($dto, JSON_PRETTY_PRINT);
         }
         catch(Exception $e){
-            $this->displayView([
-                    "viewModel" => new AuthenticationVM($_POST["username"], $_POST["password"]), 
-                    "errorMessage" => $e->getMessage()
-                ],
-                "Authentication/Register.php"
-            );
+            $this->displayErrorJson(400, $e->getMessage());
         }
     }
     

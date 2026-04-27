@@ -18,10 +18,8 @@
                 username: username.value,
                 password: password.value
             })
-            
-            const jwt = response.data.jwt
 
-            setAuthToken(jwt)
+            setAuthToken(response.data.jwt)
             successAlert.value.displayAlertMessage("Successfully logged in.")
         }
         catch (ex){

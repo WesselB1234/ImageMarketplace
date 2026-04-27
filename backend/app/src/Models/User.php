@@ -60,6 +60,11 @@ class User implements JsonSerializable
         return $this->userId;
     }
 
+     public function setUserId(int $userId): void
+    {
+        $this->userId = $userId;
+    }
+
     public function getUsername(): string
     {
         return $this->username;

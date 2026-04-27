@@ -4,12 +4,12 @@ import { jwtDecode } from "jwt-decode"
 export const useAuthStore = defineStore('auth', () => {
 
     let authToken = localStorage.getItem('auth_token') || null
-    let decodedAuthToken = setDecodedAuthToken()
+    let decodedAuthToken = getDecodedAuthToken()
     
     function setAuthToken(token) {
 
         authToken = token;
-        decodedAuthToken = setDecodedAuthToken()
+        decodedAuthToken = getDecodedAuthToken()
 
         if (token) {
             localStorage.setItem('auth_token', token)
@@ -18,14 +18,13 @@ export const useAuthStore = defineStore('auth', () => {
             localStorage.removeItem('auth_token')
         }
     }
-    function setDecodedAuthToken() {
+    function getDecodedAuthToken() {
 
         if (authToken !== null) {
-            decodedAuthToken = jwtDecode(authToken)
+            return jwtDecode(authToken)
         }
-        else{
-            decodedAuthToken = null
-        }
+        
+        return null
     }
 
     return {authToken, decodedAuthToken, setAuthToken}

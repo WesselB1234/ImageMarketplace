@@ -1,6 +1,7 @@
 <script setup>
     import { ref } from 'vue'
-    import axios, { setAuthToken } from "@/utils/axios.js";
+    import axios from "@/utils/axios.js"
+    import { useAuthStore } from "@/stores/auth.js"
     import AuthsubmitBtn from '@/components/atoms/buttons/forms/AuthsubmitBtn.vue'
     import BaseFormField from '@/components/molecules/forms/BaseFormField.vue'
     import Alert from '@/components/atoms/errorHandling/Alert.vue'
@@ -9,6 +10,7 @@
     const password = ref('')
     const successAlert = ref(null)
     const errorAlert = ref(null)
+    const authStore = useAuthStore();
 
     async function handleRegister(e){
         try {
@@ -19,7 +21,7 @@
                 password: password.value
             })
 
-            setAuthToken(response.data.jwt)
+            authStore.setAuthToken(response.data.jwt)
             successAlert.value.displayAlertMessage("Successfully registered a new account.")
         }
         catch (ex){

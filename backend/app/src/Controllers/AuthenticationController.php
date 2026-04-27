@@ -4,6 +4,8 @@ namespace App\Controllers;
 
 use App\Controllers\ApiController;
 use App\Models\Dtos\LoginDto;
+use App\Models\Enums\UserRole;
+use App\Models\User;
 use App\Services\Interfaces\IAuthenticationService;
 use App\Services\Interfaces\IUsersService;
 use App\Models\Attributes\Route;
@@ -48,27 +50,26 @@ class AuthenticationController extends ApiController
         }        
     }
 
-//     #[Route("POST", "/register")]
-//     public function processRegister()
-//     {
-//         $user = User::constructUnknownUser($_POST["username"], $_POST["password"], 100, UserRole::User);
-        
-//         try{ 
-//             $this->usersService->createUser($user);
+    #[Route("POST", "/register")]
+    public function processRegister()
+    {
+        try{
+            $user = User::constructUnknownUser($_POST["username"], $_POST["password"], 100, UserRole::User); 
+            $this->usersService->createUser($user);
 
-//             $_SESSION["success_message"] = "Successfully created a new account.";
+            $_SESSION["success_message"] = "Successfully created a new account.";
             
-//             $this->processLogin();
-//         }
-//         catch(Exception $e){
-//             $this->displayView([
-//                     "viewModel" => new AuthenticationVM($_POST["username"], $_POST["password"]), 
-//                     "errorMessage" => $e->getMessage()
-//                 ],
-//                 "Authentication/Register.php"
-//             );
-//         }
-//     }
+            $this->processLogin();
+        }
+        catch(Exception $e){
+            $this->displayView([
+                    "viewModel" => new AuthenticationVM($_POST["username"], $_POST["password"]), 
+                    "errorMessage" => $e->getMessage()
+                ],
+                "Authentication/Register.php"
+            );
+        }
+    }
     
 //     #[Route("GET", "/logout")]
 //     public function logout()

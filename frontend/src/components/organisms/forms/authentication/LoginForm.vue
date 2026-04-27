@@ -10,7 +10,7 @@
     const successAlert = ref(null)
     const errorAlert = ref(null)
 
-    async function handleLoginClick(e) {
+    async function handleLogin(e) {
         try {
             e.preventDefault()
 
@@ -31,12 +31,12 @@
 </script>
 
 <template>
-    <form>
+    <form @submit="handleLogin">
         <Alert ref="errorAlert" classType="danger" />
         <Alert ref="successAlert" classType="success" />
-        <BaseFormField labelName="Username" type="text" id="username" name="username" placeholder="Enter your username" v-model="username"/>
+        <BaseFormField labelName="Username" id="username" name="username" placeholder="Enter your username" v-model="username"/>
         <BaseFormField labelName="Password" type="password" id="password" name="password" placeholder="Enter your password" v-model="password"/>
-        <AuthsubmitBtn @click="handleLoginClick" buttonText="Login" />
+        <AuthsubmitBtn buttonText="Login" />
         <router-link to="/auth/register">Register a new account</router-link>
   </form>
 </template>

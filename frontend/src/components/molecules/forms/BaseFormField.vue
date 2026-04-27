@@ -21,6 +21,10 @@
         },
         modelValue: {
             type: String,
+        },
+        isRequired: {
+            type: Boolean,
+            default: true
         }
     })
 
@@ -35,6 +39,6 @@
 <template>
     <div class="mb-3">
         <label :for="id" class="form-label">{{ labelName }}</label>
-        <BaseInput v-model="value" :type="props.type" :id="props.id" :name="props.name" :placeholder="props.placeholder" />
+        <BaseInput v-model="value" :type="props.type" :id="props.id" :name="props.name" :placeholder="props.placeholder" :isRequired="isRequired" />
     </div>
 </template>

@@ -28,23 +28,18 @@ class AuthenticationController extends ApiController
     #[Route("POST", "/login")]
     public function processLogin()
     {            
-        try{ 
-            // $user = $this->authenticationService->getUserByUsernameAndPassword($_POST["username"], $_POST["password"]);
+        try{
+            $data = $this->getDataFromInput();
+            $user = $this->authenticationService->getUserByUsernameAndPassword($data["username"], $data["password"]);
             
-            // if ($user == null){
-            //     throw new Exception("Password or username is not correct.");
-            // }
-
-            $input = file_get_contents("php://input"); 
-            $data = json_decode($input, true); 
-            error_log(print_r($data, true));
+            if ($user == null){
+                throw new Exception("Password or username is not correct.");
+            }
             
             http_response_code(201); 
             echo json_encode(["message" => "success"], JSON_PRETTY_PRINT);
-           
         }
         catch(Exception $e){
-            error_log($e->getMessage());
             $this->displayErrorJson(401, $e->getMessage());
         }        
     }

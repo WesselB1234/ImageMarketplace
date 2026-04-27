@@ -13,15 +13,12 @@
     async function handleLoginClick(e) {
         try {
             e.preventDefault()
-            console.log('Form data:', {
-                'username': username.value,
-                'password': password.value
-            })
 
             const response = await axios.post('/login', {
                 username: username.value,
                 password: password.value
-            });
+            })
+
             successAlert.value.displayAlertMessage(response.data.message)
         }
         catch (ex){

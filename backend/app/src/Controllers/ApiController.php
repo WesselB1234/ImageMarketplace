@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-use App\Models\ApiResponses\ErrorDto;
+use App\Models\Dtos\ErrorDto;
 use App\Models\Exceptions\NotFoundException;
 use App\Models\User;
 use App\Services\Interfaces\IUsersService;
@@ -14,9 +14,6 @@ class ApiController
 
     public function __construct(?IUsersService $usersService = null)
     {
-        header("Access-Control-Allow-Origin: *"); 
-        header("Content-Type: application/json");
-
         // $this->usersService = $usersService;
 
         // if ($this->usersService !== null) {
@@ -62,5 +59,11 @@ class ApiController
         //     $this->displayErrorJson(401, "Your account doesn't have the right role to perform this action.");
         //     exit;
         // }
+    }
+
+    public function getDataFromInput(): array
+    {
+        $input = file_get_contents("php://input"); 
+        return json_decode($input, true); 
     }
 }

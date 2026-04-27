@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\ApiResponses;
+namespace App\Models\Dtos;
 
 use JsonSerializable;
 

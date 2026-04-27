@@ -9,6 +9,9 @@ use DI\CompiledContainer;
 
 function start()
 {
+    $httpMethod = $_SERVER["REQUEST_METHOD"];
+    $uri = strtok($_SERVER["REQUEST_URI"], "?");
+
     header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
     header("Access-Control-Allow-Headers: Content-Type, Authorization");
     header("Access-Control-Allow-Origin: *"); 
@@ -36,11 +39,6 @@ function start()
         $builder->enableCompilation(__DIR__."/../cache", "CompiledContainer");
         $container = $builder->build();
     }
-
-    $httpMethod = $_SERVER["REQUEST_METHOD"];
-    $uri = strtok($_SERVER["REQUEST_URI"], "?");
-
-    error_log($httpMethod);
 
     $router = new Router($container);
 

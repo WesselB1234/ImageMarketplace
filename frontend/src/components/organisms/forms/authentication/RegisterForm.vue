@@ -14,7 +14,7 @@
         try {
             e.preventDefault()
 
-            const response = await axios.post('/register', {
+            const response = await axios.post('/auth/register', {
                 username: username.value,
                 password: password.value
             })

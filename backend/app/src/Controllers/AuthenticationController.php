@@ -25,7 +25,7 @@ class AuthenticationController extends ApiController
         $this->authenticationService = $authenticationService;
     }
 
-    #[Route("POST", "/login")]
+    #[Route("POST", "/auth/login")]
     public function processLogin()
     {            
         try{
@@ -51,7 +51,7 @@ class AuthenticationController extends ApiController
         }        
     }
 
-    #[Route("POST", "/register")]
+    #[Route("POST", "/auth/register")]
     public function processRegister()
     {
         try{
@@ -73,6 +73,18 @@ class AuthenticationController extends ApiController
         catch(Exception $e){
             $this->displayErrorJson(400, $e->getMessage());
         }
+    }
+
+    #[Route("GET", "/auth/admin-test")]
+    public function adminTest()
+    {
+        $this->displayErrorJson(404, "test admin");
+    }
+
+    #[Route("GET", "/auth/user-test")]
+    public function userTest()
+    {
+        $this->displayErrorJson(404, "test user");
     }
     
 //     #[Route("GET", "/logout")]

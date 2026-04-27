@@ -4,6 +4,8 @@ import AuthLayout from '../components/layout/AuthLayout.vue'
 
 import Login from '../views/authentication/Login.vue'
 import Register from '../views/authentication/Register.vue'
+import AdminAuthorizationTest from '@/views/authentication/AdminAuthorizationTest.vue'
+import UserAuthorizationTest from '@/views/authentication/UserAuthorizationTest.vue'
 
 const routes = [
     {
@@ -19,6 +21,16 @@ const routes = [
                 path: 'register', 
                 component: Register,
                 meta: { title: "Register" }
+            },
+            { 
+                path: 'admin-test', 
+                component: AdminAuthorizationTest,
+                meta: { title: "AdminTest" }
+            },
+            { 
+                path: 'user-test', 
+                component: UserAuthorizationTest,
+                meta: { title: "UserTest" }
             }
         ]
     }

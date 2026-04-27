@@ -14,11 +14,14 @@
         try {
             e.preventDefault()
             console.log('Form data:', {
-                username: username.value,
-                password: password.value
+                'username': username.value,
+                'password': password.value
             })
 
-            const response = await axios.post('/login', null)
+            const response = await axios.put('/login', new URLSearchParams({
+                username: username.value,
+                password: password.value
+            }))
             successAlert.value.displayAlertMessage(response.data.message)
         }
         catch (ex){
@@ -28,7 +31,7 @@
 </script>
 
 <template>
-    <form action="/auth/login" method="POST">
+    <form>
         <Alert ref="errorAlert" classType="danger" />
         <Alert ref="successAlert" classType="success" />
         <BaseFormField labelName="Username" type="text" id="username" name="username" placeholder="Enter your username" v-model="username"/>

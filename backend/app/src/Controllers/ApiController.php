@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-use App\Models\ApiResponses\ErrorResponse;
+use App\Models\ApiResponses\ErrorDto;
 use App\Models\Exceptions\NotFoundException;
 use App\Models\User;
 use App\Services\Interfaces\IUsersService;
@@ -17,11 +17,11 @@ class ApiController
         header("Access-Control-Allow-Origin: *"); 
         header("Content-Type: application/json");
 
-        $this->usersService = $usersService;
+        // $this->usersService = $usersService;
 
-        if ($this->usersService !== null) {
-            $this->setLoggedInUser();
-        }
+        // if ($this->usersService !== null) {
+        //     $this->setLoggedInUser();
+        // }
     }
 
     private function setLoggedInUser()
@@ -44,7 +44,7 @@ class ApiController
     public function displayErrorJson(int $errorCode, string $message)
     {
         http_response_code($errorCode);
-        echo json_encode(new ErrorResponse($message), JSON_PRETTY_PRINT);
+        echo json_encode(new ErrorDto($message), JSON_PRETTY_PRINT);
         exit;
     }
      

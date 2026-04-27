@@ -30,16 +30,20 @@ function start()
     $httpMethod = $_SERVER["REQUEST_METHOD"];
     $uri = strtok($_SERVER["REQUEST_URI"], "?");
 
+    error_log($httpMethod);
+
     $router = new Router($container);
 
     try{
         $router->dispatch($httpMethod, $uri);
     }
     catch(NotFoundException $e){
+        error_log($e->getMessage());
         http_response_code(404);
         echo $e->getMessage(); 
     }
     catch(Exception $e){ 
+        error_log($e->getMessage());
         http_response_code(400);
         echo $e->getMessage(); 
     }

@@ -4,7 +4,7 @@ namespace App\Models\ApiResponses;
 
 use JsonSerializable;
 
-class ErrorResponse implements JsonSerializable
+class ErrorDto implements JsonSerializable
 {
     private string $message;
 

@@ -24,6 +24,17 @@ apiClient.interceptors.request.use(
     }
 );
 
+apiClient.interceptors.response.use(
+    response => response,
+    error => {
+        // if (error.response?.status === 401) {
+        //     setAuthToken(null);
+        //     window.location.href = "/login";
+        // }
+        // return Promise.reject(error);
+    }
+);
+
 /**
  * Set the authentication token
  * This will be automatically added to all subsequent requests

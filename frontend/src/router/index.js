@@ -15,22 +15,32 @@ const routes = [
             { 
                 path: 'login', 
                 component: Login, 
-                meta: { title: "Login" }
+                meta: { 
+                    title: 'Login'
+                }
             },
             { 
                 path: 'register', 
                 component: Register,
-                meta: { title: "Register" }
+                meta: { 
+                    title: 'Register'
+                }
             },
             { 
                 path: 'admin-test', 
                 component: AdminAuthorizationTest,
-                meta: { title: "AdminTest" }
+                meta: { 
+                    title: 'AdminTest',
+                    isAuthorized: true
+                }
             },
             { 
                 path: 'user-test', 
                 component: UserAuthorizationTest,
-                meta: { title: "UserTest" }
+                meta: { 
+                    title: 'UserTest',
+                    isAuthorized: true
+                }
             }
         ]
     }
@@ -42,8 +52,13 @@ const router = createRouter({
 })
 
 router.afterEach((to) => {
+
     if (to.meta.title) {
         document.title = to.meta.title
+    }
+
+    if (to.meta.isAuthorized) {
+        console.log("needs to be logged in")
     }
 })
 

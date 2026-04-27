@@ -1,8 +1,9 @@
 <script setup>  
     import { onMounted, ref } from 'vue'
-    import axios, { getAuthToken } from "@/utils/axios.js"
-    import { jwtDecode } from "jwt-decode"
+    import axios from "@/utils/axios.js"
+    import { useAuthStore } from "@/stores/auth.js"
 
+    const authStore = useAuthStore();
     const user = ref('')
 
     onMounted(async () => {
@@ -26,5 +27,5 @@
     <br>
     jwt 
     <br>
-    {{ JSON.stringify(jwtDecode(getAuthToken(), null, 2)) }}
+    {{ JSON.stringify(authStore.decodedAuthToken, null, 2) }}
 </template>

@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\Dtos\ErrorDto;
+use App\Models\Enums\UserRole;
 use App\Models\Exceptions\NotAuthorizedException;
 use App\Models\Exceptions\NotFoundException;
 use App\Models\User;
@@ -62,18 +63,18 @@ class ApiController
     {
         $this->setLoggedInUser();
 
-        // if (!isset($_SESSION["user"])){
-        //     $this->displayErrorJson(401, "You need to be logged in to perform this action.");
-        //     exit;
-        // }
+        if ($this->loggedInUser === null){
+            $this->displayErrorJson(403, "You need to be logged in to perform this action.");
+            exit;
+        }
     }
 
     public function adminAuthorization()
     {
-        // if ($_SESSION["user"]->getRole() != UserRole::Admin){
-        //     $this->displayErrorJson(401, "Your account doesn't have the right role to perform this action.");
-        //     exit;
-        // }
+        if ($this->loggedInUser->getRole() != UserRole::Admin){
+            $this->displayErrorJson(403, "Your account doesn't have the right role to perform this action.");
+            exit;
+        }
     }
 
     public function getDataFromInput(): array

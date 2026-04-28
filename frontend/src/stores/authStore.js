@@ -6,7 +6,6 @@ export const useAuthStore = defineStore('auth', () => {
 
     let authToken = ref(getAuthTokenFromLocalStorage())
     let decodedAuthToken = ref(getDecodedAuthToken())
-    let role = ref(getCurrentRole())
 
     function getAuthTokenFromLocalStorage(){
 
@@ -23,7 +22,6 @@ export const useAuthStore = defineStore('auth', () => {
 
         authToken.value = token;
         decodedAuthToken.value = getDecodedAuthToken()
-        role.value = getCurrentRole()
 
         if (token) {
             localStorage.setItem('auth_token', token)
@@ -42,14 +40,5 @@ export const useAuthStore = defineStore('auth', () => {
         return null
     }
 
-    function getCurrentRole() {
-
-        if (decodedAuthToken.value !== null){
-            return decodedAuthToken.value.data.role
-        }
-
-        return null
-    }
-
-    return {authToken, decodedAuthToken, role, setAuthToken}
+    return {authToken, decodedAuthToken, setAuthToken}
 })

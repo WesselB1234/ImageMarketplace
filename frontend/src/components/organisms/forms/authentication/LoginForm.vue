@@ -4,13 +4,15 @@
     import { useAuthStore } from "@/stores/auth.js"
     import AuthsubmitBtn from '@/components/atoms/buttons/forms/AuthsubmitBtn.vue'
     import BaseFormField from '@/components/molecules/forms/BaseFormField.vue'
-    import Alert from '@/components/atoms/errorHandling/Alert.vue'
+    import SuccessAlert from '@/components/atoms/errorHandling/SuccessAlert.vue'
+    import ErrorAlert from '@/components/atoms/errorHandling/ErrorAlert.vue'
     
+    const authStore = useAuthStore();
+
     const username = ref('')
     const password = ref('')
-    const successAlert = ref(null)
-    const errorAlert = ref(null)
-    const authStore = useAuthStore();
+    const currentErrorAlert = ref(null)
+    const currentSuccessAlert = ref(null)
 
     async function handleLogin(e) {
         try {
@@ -22,18 +24,21 @@
             })
 
             authStore.setAuthToken(response.data.jwt)
-            successAlert.value.displayAlertMessage('Successfully logged in.')
+            currentSuccessAlert.value.displaySuccessMessage('Successfully logged in.')
         }
         catch (ex){
-            errorAlert.value.displayAlertMessage(ex.response.data.message)
+
+            if (ex.response){
+                currentErrorAlert.value.displayErrorMessage(ex.response.data.message)
+            }
         }
     }
 </script>
 
 <template>
     <form @submit="handleLogin">
-        <Alert ref="errorAlert" classType="danger" />
-        <Alert ref="successAlert" classType="success" />
+        <ErrorAlert ref="currentErrorAlert" />
+        <SuccessAlert ref="currentSuccessAlert" />
         <BaseFormField labelName="Username" id="username" name="username" placeholder="Enter your username" v-model="username"/>
         <BaseFormField labelName="Password" type="password" id="password" name="password" placeholder="Enter your password" v-model="password"/>
         <AuthsubmitBtn buttonText="Login" />

@@ -4,13 +4,15 @@
     import { useAuthStore } from "@/stores/auth.js"
     import AuthsubmitBtn from '@/components/atoms/buttons/forms/AuthsubmitBtn.vue'
     import BaseFormField from '@/components/molecules/forms/BaseFormField.vue'
-    import Alert from '@/components/atoms/errorHandling/Alert.vue'
+    import SuccessAlert from '@/components/atoms/errorHandling/SuccessAlert.vue'
+    import ErrorAlert from '@/components/atoms/errorHandling/ErrorAlert.vue'
+
+    const authStore = useAuthStore();
 
     const username = ref('')
     const password = ref('')
-    const successAlert = ref(null)
-    const errorAlert = ref(null)
-    const authStore = useAuthStore();
+    const currentSuccessAlert = ref(null)
+    const currentErrorAlert = ref(null)
 
     async function handleRegister(e){
         try {
@@ -22,18 +24,18 @@
             })
 
             authStore.setAuthToken(response.data.jwt)
-            successAlert.value.displayAlertMessage("Successfully registered a new account.")
+            currentSuccessAlert.value.displaySuccessMessage("Successfully registered a new account.")
         }
         catch (ex){
-            errorAlert.value.displayAlertMessage(ex.response.data.message)
+            currentErrorAlert.value.displayErrorMessage(ex.response.data.message)
         }
     }
 </script>
 
 <template>
     <form @submit="handleRegister">
-        <Alert ref="errorAlert" classType="danger" />
-        <Alert ref="successAlert" classType="success" />
+        <ErrorAlert ref="currentSuccessAlert" />
+        <SuccessAlert ref="currentErrorAlert" />
         <BaseFormField labelName="Username" id="username" name="username" placeholder="Enter your username" v-model="username"/>
         <BaseFormField labelName="Password" type="password" id="password" name="password" placeholder="Enter your password" v-model="password"/>
         <BaseFormField labelName="Repeat password" type="password" id="repeat_password" placeholder="Repeat your password"/>

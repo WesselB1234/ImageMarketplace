@@ -31,7 +31,7 @@ apiClient.interceptors.response.use(
         //     setAuthToken(null);
         //     window.location.href = "/login";
         // }
-        // return Promise.reject(error);
+        return Promise.reject(error);
     }
 );
 

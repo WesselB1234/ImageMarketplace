@@ -5,7 +5,6 @@ namespace App\Controllers;
 use App\Models\Dtos\ErrorDto;
 use App\Models\Enums\UserRole;
 use App\Models\Exceptions\NotAuthorizedException;
-use App\Models\Exceptions\NotFoundException;
 use App\Models\User;
 use App\Services\Interfaces\IAuthenticationService;
 use App\Services\Interfaces\IUsersService;
@@ -45,11 +44,11 @@ class ApiController
             $this->loggedInUser = $this->usersService->getUserByUserId($decoded->data->id);
 
             if ($this->loggedInUser === null) {
-                throw new NotAuthorizedException("User is invalid in your token.");
+                throw new NotAuthorizedException("User in your token does not exist.");
             }
 
             if ($this->authenticationService->compareUserInDecodedToken($this->loggedInUser, $decoded) === false) {
-                header("Authorization: Bearer ". $this->authenticationService->generateJwtFromUser($this->loggedInUser));
+                header("Authorization: Bearer ". $this->authenticationService->generateTokenFromUser($this->loggedInUser));
             }
         }
         catch(ExpiredException $ex) {

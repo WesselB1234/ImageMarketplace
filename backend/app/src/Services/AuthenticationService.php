@@ -30,10 +30,10 @@ class AuthenticationService implements IAuthenticationService
         return null;
     }
 
-    public function generateJwtFromUser(User $user): string
+    public function generateTokenFromUser(User $user): string
     {
         $now = time();
-        $expiration = $now + ($_ENV["JWT_EXPIRATION_IN_HOURS"] * 3600);
+        $expiration = $now + ($_ENV["TOKEN_EXPIRATION_IN_HOURS"] * 3600);
         
         $payload = [
             "iss" => $_ENV["DOMAIN"],
@@ -41,17 +41,16 @@ class AuthenticationService implements IAuthenticationService
             "exp" => $expiration,
             "data" => [
                 "id" => $user->getUserId(),
-                "username" => $user->getUsername(),
                 "role" => $user->getRole()->value,
             ]
         ];
         
-        return JWT::encode($payload, $_ENV["JWT_SECRET_KEY"], self::JWT_ALGORITHM);
+        return JWT::encode($payload, $_ENV["TOKEN_SECRET_KEY"], self::JWT_ALGORITHM);
     }
 
     public function getDecodedToken(string $token): stdClass
     {
-        $decoded = JWT::decode($token, new Key($_ENV["JWT_SECRET_KEY"], self::JWT_ALGORITHM));
+        $decoded = JWT::decode($token, new Key($_ENV["TOKEN_SECRET_KEY"], self::JWT_ALGORITHM));
         
         if (!isset($decoded->iss) || !isset($decoded->exp) || !isset($decoded->data) || !isset($decoded->data->id)) {
             throw new NotAuthorizedException("Token is not valid.");
@@ -68,7 +67,7 @@ class AuthenticationService implements IAuthenticationService
     {
         $data = $decoded->data;
 
-        if ($data->username !== $user->getUsername() || $data->role !== $user->getRole()->value) {
+        if ($data->role !== $user->getRole()->value) {
             return false;
         }
 

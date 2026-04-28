@@ -6,6 +6,7 @@ import Login from '../views/authentication/Login.vue'
 import Register from '../views/authentication/Register.vue'
 import AdminAuthorizationTest from '@/views/authentication/AdminAuthorizationTest.vue'
 import UserAuthorizationTest from '@/views/authentication/UserAuthorizationTest.vue'
+import { useAuthStore } from "@/stores/auth.js"
 
 const routes = [
     {
@@ -31,7 +32,8 @@ const routes = [
                 component: AdminAuthorizationTest,
                 meta: { 
                     title: 'AdminTest',
-                    isAuthorized: true
+                    isAuthenticated: true,
+                    roles: ['admin']
                 }
             },
             { 
@@ -39,7 +41,7 @@ const routes = [
                 component: UserAuthorizationTest,
                 meta: { 
                     title: 'UserTest',
-                    isAuthorized: true
+                    isAuthenticated: true
                 }
             }
         ]
@@ -51,14 +53,37 @@ const router = createRouter({
     routes
 })
 
-router.afterEach((to) => {
+router.beforeEach((to) => {
+
+    const authStore = useAuthStore()
 
     if (to.meta.title) {
         document.title = to.meta.title
     }
 
-    if (to.meta.isAuthorized) {
-        console.log("needs to be logged in")
+    if (to.meta.isAuthenticated) {
+
+        const decodedAuthToken = authStore.decodedAuthToken
+
+        if (decodedAuthToken === null) {
+            return '/auth/login'
+        }
+
+        if (to.meta.roles) {
+
+            let isAuthorized = false
+
+            for (const role of to.meta.roles) {
+                if (decodedAuthToken.role === role){
+                    isAuthorized = true
+                    break
+                }
+            }
+
+            if (isAuthorized === false) {
+                return '/auth/login'
+            }
+        }   
     }
 })
 

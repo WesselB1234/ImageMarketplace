@@ -25,15 +25,21 @@ apiClient.interceptors.request.use(
     }
 );
 
+function setAuthTokenIfPresentInHeader(authStore, response){
+
+    const authHeader = response.headers['authorization']
+
+    if (authHeader){
+        const token = authHeader.split(" ")[1]
+        authStore.setAuthToken(token)
+    }
+}
+
 apiClient.interceptors.response.use(
     response => {
         const authStore = useAuthStore()
-        const authHeader = response.headers['authorization']
 
-        if (authHeader){
-            const token = authHeader.split(" ")[1]
-            authStore.setAuthToken(token)
-        }
+        setAuthTokenIfPresentInHeader(authStore, response)
 
         return response
     },
@@ -47,6 +53,8 @@ apiClient.interceptors.response.use(
                 errorHandlingStore.setErrorMessage("Your token has been deleted due it being invalid. Please log in again.")
                 router.push('/auth/login')
             }
+
+            setAuthTokenIfPresentInHeader(authStore, error.response)
         }
 
         return Promise.reject(error);

@@ -6,7 +6,6 @@ use App\Models\Exceptions\NotAuthorizedException;
 use App\Repositories\Interfaces\IUsersRepository;
 use App\Models\User;
 use App\Services\Interfaces\IAuthenticationService;
-use Exception;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use stdClass;

@@ -48,9 +48,9 @@ apiClient.interceptors.response.use(
         const errorHandlingStore = useErrorHandlingStore()
 
         if (error.response) {
-            if (error.response.status === 401 && error.response.headers['x-auth-error']) {
+            if (error.response.status === 401 && error.response.headers['x-auth-error'] && error.response.headers['x-auth-error'] === 'invalid_token') {
                 authStore.setAuthToken(null)
-                errorHandlingStore.setErrorMessage("Your token has been deleted due it being invalid. Please log in again.")
+                errorHandlingStore.setErrorMessage("You must login again for the following reason: " + error.response.data.message)
                 router.push('/auth/login')
             }
 

@@ -4,13 +4,26 @@ import { ref } from 'vue'
 
 export const useAuthStore = defineStore('auth', () => {
 
-    let authToken = ref(localStorage.getItem('auth_token') || null)
+    let authToken = ref(getAuthTokenFromLocalStorage())
     let decodedAuthToken = ref(getDecodedAuthToken())
+    let role = ref(getCurrentRole())
+
+    function getAuthTokenFromLocalStorage(){
+
+        const localStorageAuthToken = localStorage.getItem('auth_token')
+
+        if (localStorageAuthToken){
+            return localStorageAuthToken
+        }
+
+        return null
+    }
     
     function setAuthToken(token) {
 
         authToken.value = token;
         decodedAuthToken.value = getDecodedAuthToken()
+        role.value = getCurrentRole()
 
         if (token) {
             localStorage.setItem('auth_token', token)
@@ -19,6 +32,7 @@ export const useAuthStore = defineStore('auth', () => {
             localStorage.removeItem('auth_token')
         }
     }
+
     function getDecodedAuthToken() {
 
         if (authToken.value !== null) {
@@ -28,5 +42,14 @@ export const useAuthStore = defineStore('auth', () => {
         return null
     }
 
-    return {authToken, decodedAuthToken, setAuthToken}
+    function getCurrentRole() {
+
+        if (decodedAuthToken.value !== null){
+            return decodedAuthToken.value.data.role
+        }
+
+        return null
+    }
+
+    return {authToken, decodedAuthToken, role, setAuthToken}
 })

@@ -5,8 +5,10 @@
 
     const authStore = useAuthStore()
 
-    watch(() => authStore.decodedAuthToken.data.role, () => {
-        router.go(0)
+    watch(() => authStore.role, (newRole, oldRole) => {
+        if (oldRole !== null){
+            router.go(0)
+        }
     })
 </script>
 

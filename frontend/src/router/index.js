@@ -43,7 +43,7 @@ const routes = [
                 meta: { 
                     title: 'AdminTest',
                     isAuthenticated: true,
-                    roles: ['admin']
+                    roles: ['Admin']
                 }
             },
             { 
@@ -82,7 +82,7 @@ router.beforeEach((to) => {
             let isAuthorized = false
 
             for (const role of to.meta.roles) {
-                if (decodedAuthToken.role === role){
+                if (decodedAuthToken.data.role === role){
                     isAuthorized = true
                     break
                 }

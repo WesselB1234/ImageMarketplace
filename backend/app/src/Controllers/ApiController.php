@@ -10,6 +10,8 @@ use App\Models\User;
 use App\Services\Interfaces\IAuthenticationService;
 use App\Services\Interfaces\IUsersService;
 use Exception;
+use Firebase\JWT\ExpiredException;
+use Firebase\JWT\SignatureInvalidException;
 
 class ApiController
 {
@@ -37,16 +39,30 @@ class ApiController
                 throw new NotAuthorizedException("Invalid authorization header format.");
             }
 
-            $jwt = $headerParts[1];
-            $this->loggedInUser = $this->authenticationService->getUserFromJwt($jwt);
+            $token = $headerParts[1];
+
+            $decoded = $this->authenticationService->getDecodedToken($token);
+            $this->loggedInUser = $this->usersService->getUserByUserId($decoded->data->id);
 
             if ($this->loggedInUser === null) {
-                throw new NotAuthorizedException("User is invalid in the authentication token.");
+                throw new NotAuthorizedException("User is invalid in your token.");
+            }
+
+            if ($this->authenticationService->compareUserInDecodedToken($this->loggedInUser, $decoded) === false) {
+                header("Authorization: Bearer " + $this->authenticationService->generateJwtFromUser($this->loggedInUser));
             }
         }
+        catch(ExpiredException $ex) {
+            header("X-Auth-Error: invalid_token");
+            $this->displayErrorJson(401, "Your token has expired.");
+        }
+        catch(SignatureInvalidException $ex) {
+            header("X-Auth-Error: invalid_token");
+            $this->displayErrorJson(401, "Token signature is not valid.");
+        }
         catch(NotAuthorizedException $ex) {
+            header("X-Auth-Error: invalid_token");
             $this->displayErrorJson(401, $ex->getMessage());
-            header("X-Auth-Error: bad_token");
         }
         catch(Exception $ex) {
             $this->displayErrorJson(400, $ex->getMessage());

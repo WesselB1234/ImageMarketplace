@@ -6,6 +6,8 @@ import Login from '../views/authentication/Login.vue'
 import Register from '../views/authentication/Register.vue'
 import AdminAuthorizationTest from '@/views/authentication/AdminAuthorizationTest.vue'
 import UserAuthorizationTest from '@/views/authentication/UserAuthorizationTest.vue'
+import Logout from '@/views/authentication/logout.vue'
+
 import { useAuthStore } from "@/stores/auth.js"
 import { useErrorHandlingStore } from "@/stores/errorHandlingStore"
 
@@ -26,6 +28,13 @@ const routes = [
                 component: Register,
                 meta: { 
                     title: 'Register'
+                }
+            },
+            { 
+                path: 'logout', 
+                component: Logout,
+                meta: { 
+                    isAuthenticated: true,
                 }
             },
             { 
@@ -59,10 +68,6 @@ router.beforeEach((to) => {
     const authStore = useAuthStore()
     const errorHandlingStore = useErrorHandlingStore()
 
-    if (to.meta.title) {
-        document.title = to.meta.title
-    }
-
     if (to.meta.isAuthenticated) {
 
         const decodedAuthToken = authStore.decodedAuthToken
@@ -87,7 +92,11 @@ router.beforeEach((to) => {
                 errorHandlingStore.setErrorMessage(`Your account doesn't have the right role to perform this action.`)
                 return '/auth/login'
             }
-        }   
+        }
+    }
+    
+    if (to.meta.title) {
+        document.title = to.meta.title
     }
 })
 

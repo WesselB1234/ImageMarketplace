@@ -1,6 +1,6 @@
 <script setup>
     import router from '@/router'
-    import { useAuthStore } from "@/stores/auth.js"
+    import { useAuthStore } from "@/stores/authStore.js"
     import { useErrorHandlingStore } from "@/stores/errorHandlingStore"
 
     const authStore = useAuthStore()

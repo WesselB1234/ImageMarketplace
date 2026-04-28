@@ -1,7 +1,7 @@
 <script setup>
     import { ref } from 'vue'
     import axios from "@/utils/axios.js"
-    import { useAuthStore } from "@/stores/auth.js"
+    import { useAuthStore } from "@/stores/authStore.js"
     import AuthsubmitBtn from '@/components/atoms/buttons/forms/AuthsubmitBtn.vue'
     import BaseFormField from '@/components/molecules/forms/BaseFormField.vue'
     import SuccessAlert from '@/components/atoms/errorHandling/SuccessAlert.vue'

@@ -27,21 +27,21 @@ class ApiController
     {
         try {  
             if(!isset($_SERVER["HTTP_AUTHORIZATION"])) {
-                throw new NotAuthorizedException("Authorization header is required");
+                throw new NotAuthorizedException("Authorization header is required.");
             }
 
             $authHeader = $_SERVER["HTTP_AUTHORIZATION"];
             $headerParts = explode(" ", $authHeader);
             
             if (count($headerParts) !== 2 || strtolower($headerParts[0]) !== "bearer") {
-                throw new NotAuthorizedException("Invalid authorization header format");
+                throw new NotAuthorizedException("Invalid authorization header format.");
             }
 
             $jwt = $headerParts[1];
             $this->loggedInUser = $this->authenticationService->getUserFromJwt($jwt);
 
             if ($this->loggedInUser === null) {
-                throw new NotAuthorizedException("Invalid or expired token");
+                throw new NotAuthorizedException("User is invalid in the authentication token.");
             }
         }
         catch(NotAuthorizedException $ex) {

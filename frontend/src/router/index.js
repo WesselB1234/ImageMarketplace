@@ -8,7 +8,7 @@ import AdminAuthorizationTest from '@/views/authentication/AdminAuthorizationTes
 import UserAuthorizationTest from '@/views/authentication/UserAuthorizationTest.vue'
 import Logout from '@/views/authentication/logout.vue'
 
-import { useAuthStore } from "@/stores/auth.js"
+import { useAuthStore } from "@/stores/authStore.js"
 import { useErrorHandlingStore } from "@/stores/errorHandlingStore"
 
 const routes = [

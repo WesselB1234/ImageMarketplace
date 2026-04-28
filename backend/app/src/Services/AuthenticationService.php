@@ -63,7 +63,7 @@ class AuthenticationService implements IAuthenticationService
         return $decoded;
     }
 
-    public function compareUserInDecodedToken(User $user, stdClass $decoded): bool
+    public function isUserEqualToDecodedToken(User $user, stdClass $decoded): bool
     {
         $data = $decoded->data;
 

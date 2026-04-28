@@ -49,7 +49,7 @@ class ApiController
             }
 
             if ($this->authenticationService->compareUserInDecodedToken($this->loggedInUser, $decoded) === false) {
-                header("Authorization: Bearer " + $this->authenticationService->generateJwtFromUser($this->loggedInUser));
+                header("Authorization: Bearer ". $this->authenticationService->generateJwtFromUser($this->loggedInUser));
             }
         }
         catch(ExpiredException $ex) {

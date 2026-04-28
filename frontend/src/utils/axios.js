@@ -26,7 +26,17 @@ apiClient.interceptors.request.use(
 );
 
 apiClient.interceptors.response.use(
-    response => response,
+    response => {
+        const authStore = useAuthStore()
+        const authHeader = response.headers['authorization']
+
+        if (authHeader){
+            const token = authHeader.split(" ")[1]
+            authStore.setAuthToken(token)
+        }
+
+        return response
+    },
     error => {
         const authStore = useAuthStore()
         const errorHandlingStore = useErrorHandlingStore()

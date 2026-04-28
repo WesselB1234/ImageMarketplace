@@ -48,6 +48,7 @@ class AuthenticationController extends ApiController
             echo json_encode($dto, JSON_PRETTY_PRINT);
         }
         catch(Exception $e){
+            header("X-Auth-Error: invalid_credentials");
             $this->displayErrorJson(401, $e->getMessage());
         }        
     }

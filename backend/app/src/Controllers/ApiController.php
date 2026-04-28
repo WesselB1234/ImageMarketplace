@@ -46,6 +46,7 @@ class ApiController
         }
         catch(NotAuthorizedException $ex) {
             $this->displayErrorJson(401, $ex->getMessage());
+            header("X-Auth-Error: bad_token");
         }
         catch(Exception $ex) {
             $this->displayErrorJson(400, $ex->getMessage());

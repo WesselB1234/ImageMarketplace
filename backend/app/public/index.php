@@ -14,6 +14,7 @@ function start()
 
     header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
     header("Access-Control-Allow-Headers: Content-Type, Authorization");
+    header("Access-Control-Expose-Headers: X-Auth-Error, Authorization");
     header("Access-Control-Allow-Origin: *"); 
     header("Content-Type: application/json");
 

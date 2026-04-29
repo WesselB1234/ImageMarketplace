@@ -25,11 +25,13 @@
             form.append('description', description.value)
             form.append('altText', altText.value)
 
-            await axios.post('/images/upload', form, {
+            const response = await axios.post('/images/upload', form, {
                 headers: {
                     'Content-Type': undefined
                 }
             })
+
+            console.log(response)
 
             currentSuccessAlert.value.displaySuccessMessage('Successfully uploaded image.')
         }

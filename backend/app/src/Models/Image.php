@@ -64,7 +64,7 @@ class Image implements JsonSerializable
         ); 
     }
 
-    public function getImageId(): int
+    public function getImageId(): ?int
     {
         return $this->imageId;
     }

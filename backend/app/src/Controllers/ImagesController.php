@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Controllers\Controller;
+use App\Models\Dtos\ImageDto;
 use App\Services\Interfaces\IAuthenticationService;
 use App\Services\Interfaces\IImagesService;
 use App\Services\Interfaces\IUsersService;
@@ -10,6 +11,7 @@ use App\Models\Image;
 use App\Models\Enums\UserRole;
 use App\Models\ViewModels\ImageDetailsVM;
 use App\Models\ViewModels\ImageSellingVM;
+use DateTime;
 use Exception;
 use App\Models\Exceptions\NotFoundException;
 use App\Models\Exceptions\NotAuthorizedException;
@@ -187,7 +189,10 @@ class ImagesController extends ApiController
                 $imageId = $this->imagesService->createImage($image);
                 $this->imagesService->uploadImageFile($imageFile, $imageId);
 
+                $dto = new ImageDto($imageId, $image->getOwnerId(), $image->getCreatorId(), $image->getName(), $image->getDescription(), $image->getPrice(), $image->getIsModerated(), $image->getIsOnSale(), New DateTime(), $image->getAltText());
+
                 http_response_code(201);
+                echo json_encode($dto);
             }
             catch(Exception $e){
 

@@ -23,8 +23,12 @@
     })
 
     const emit = defineEmits(['update:modelValue'])
+
+    function onBaseInputChange(e){
+        emit('update:modelValue', e.target.value)
+    }
 </script>
 
 <template>
-    <input class="form-control" :type="props.type" :id="props.id" :name="props.name" :placeholder="props.placeholder" :value="props.modelValue" @input="emit('update:modelValue', $event.target.value)" :required="props.isRequired"/>
+    <input class="form-control" :type="props.type" :id="props.id" :name="props.name" :placeholder="props.placeholder" :value="props.modelValue" @change="onBaseInputChange" :required="props.isRequired"/>
 </template>

@@ -18,10 +18,11 @@
         try {
             e.preventDefault()
 
-            const response = await axios.post('/auth/login', {
-                username: username.value,
-                password: password.value
-            })
+            const form = new FormData()
+            form.append("username", username.value)
+            form.append("password", password.value)
+
+            const response = await axios.post('/auth/login', form)
 
             authStore.setAuthToken(response.data.jwt)
             currentSuccessAlert.value.displaySuccessMessage('Successfully logged in.')

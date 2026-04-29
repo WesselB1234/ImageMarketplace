@@ -25,9 +25,6 @@
             form.append('description', description.value)
             form.append('altText', altText.value)
 
-            console.log(image.value)          // should be: File { name, size, type... }
-            console.log(typeof image.value)
-
             await axios.post('/images/upload', form, {
                 headers: {
                     'Content-Type': undefined

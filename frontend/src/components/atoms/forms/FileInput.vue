@@ -19,20 +19,13 @@
     })
 
     const emit = defineEmits(['update:modelValue'])
-function onChange(e) {
-  const file = e.target.files?.[0] || null
-  emit('update:modelValue', file)
-}
+    
+    function onFileInputChange(e) {
+        const file = e.target.files?.[0] || null
+        emit('update:modelValue', file)
+    }
 </script>
 
 <template>
-  <input
-    type="file"
-    :id="id"
-    class="form-control"
-    :name="name"
-    :accept="accept"
-    @change="onChange"
-    :required="isRequired"
-  />
+    <input type="file" :id="id" class="form-control" :name="name" :accept="accept" @change="onFileInputChange" :required="isRequired"/>
 </template>

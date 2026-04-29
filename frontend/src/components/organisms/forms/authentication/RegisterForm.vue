@@ -23,10 +23,11 @@
                 throw new Error("Repeated password is not equal to password");
             }
 
-            const response = await axios.post('/auth/register', {
-                username: username.value,
-                password: password.value
-            })
+            const form = new FormData()
+            form.append("username", username.value)
+            form.append("password", password.value)
+
+            const response = await axios.post('/auth/register', form)
 
             authStore.setAuthToken(response.data.jwt)
             currentSuccessAlert.value.displaySuccessMessage("Successfully registered a new account.")

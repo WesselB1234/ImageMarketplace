@@ -19,8 +19,12 @@
     })
 
     const emit = defineEmits(['update:modelValue'])
+
+    function onTextAreaInputChange(e){
+        emit('update:modelValue', e.target.value)
+    }
 </script>
 
 <template>
-    <textarea class="form-control" :id="props.id" :name="props.name" :placeholder="props.placeholder" :value="props.modelValue" @input="emit('update:modelValue', $event.target.value)" :required="props.isRequired"/>
+    <textarea class="form-control" :id="props.id" :name="props.name" :placeholder="props.placeholder" :value="props.modelValue" @change="onTextAreaInputChange" :required="props.isRequired"/>
 </template>

@@ -2,91 +2,99 @@
 
 namespace App\Controllers;
 
-use App\Controllers\Controller;
-use App\Services\Interfaces\IUsersService;
-use App\Models\User;
+use App\Controllers\ApiController;
+use App\Models\Dtos\AuthorizationTestDto;
+use App\Models\Dtos\LoginDto;
+use App\Models\Dtos\RegisterDto;
 use App\Models\Enums\UserRole;
-use App\Models\ViewModels\AuthenticationVM;
+use App\Models\User;
+use App\Services\Interfaces\IAuthenticationService;
+use App\Services\Interfaces\IUsersService;
 use App\Models\Attributes\Route;
 use Exception;
 
-class AuthenticationController extends Controller 
+class AuthenticationController extends ApiController 
 {
     private IUsersService $usersService;
+    private IAuthenticationService $authenticationService;
 
-    public function __construct(IUsersService $usersService){
+    public function __construct(IUsersService $usersService, IAuthenticationService $authenticationService){
 
-        parent::__construct($usersService);
+        parent::__construct($usersService, $authenticationService);
 
         $this->usersService = $usersService;
+        $this->authenticationService = $authenticationService;
     }
 
-    #[Route("GET", "/login")]
-    public function login()
-    {
-        $this->displayView();
-    }
-
-    #[Route("POST", "/login")]
+    #[Route("POST", "/auth/login")]
     public function processLogin()
-    {       
-        try{ 
-            $user = $this->usersService->getUserByUsernameAndPassword($_POST["username"], $_POST["password"]);
+    {            
+        try{
+            $data = $this->getDataFromInput();
 
+            if (empty($data["username"]) || empty($data["password"])){
+                throw new Exception("All input fields must be filled.");
+            }
+
+            $user = $this->authenticationService->getUserByUsernameAndPassword($data["username"], $data["password"]);
+            
             if ($user == null){
                 throw new Exception("Password or username is not correct.");
             }
-            
-            $_SESSION["logged_in_user_id"] = $user->getUserId();
 
-            header("Location: /");
+            $dto = new LoginDto($this->authenticationService->generateTokenFromUser($user));
+            
+            http_response_code(201); 
+            echo json_encode($dto, JSON_PRETTY_PRINT);
         }
         catch(Exception $e){
-            $this->displayView([
-                    "viewModel" => new AuthenticationVM($_POST["username"], $_POST["password"]),  
-                    "errorMessage" => $e->getMessage()
-                ],
-                "Authentication/Login.php"
-            );
-        }
+            header("X-Auth-Error: invalid_credentials");
+            $this->displayErrorJson(401, $e->getMessage());
+        }        
     }
 
-    #[Route("GET", "/register")]
-    public function register()
-    {
-        $this->displayView();
-    }
-
-    #[Route("POST", "/register")]
+    #[Route("POST", "/auth/register")]
     public function processRegister()
     {
-        $user = User::constructUnknownUser($_POST["username"], $_POST["password"], 100, UserRole::User);
-        
-        try{ 
-            $this->usersService->createUser($user);
+        try{
+            $data = $this->getDataFromInput();
 
-            $_SESSION["success_message"] = "Successfully created a new account.";
+            if (empty($data["username"]) || empty($data["password"])){
+                throw new Exception("All input fields must be filled.");
+            }
+
+            $user = User::constructUnknownUser($data["username"], $data["password"], 100, UserRole::User); 
+            $userId = $this->usersService->createUser($user);
+            $user->setUserId($userId);
             
-            $this->processLogin();
+            $dto = new RegisterDto($user, $this->authenticationService->generateTokenFromUser($user));
+
+            http_response_code(201); 
+            echo json_encode($dto, JSON_PRETTY_PRINT);
         }
         catch(Exception $e){
-            $this->displayView([
-                    "viewModel" => new AuthenticationVM($_POST["username"], $_POST["password"]), 
-                    "errorMessage" => $e->getMessage()
-                ],
-                "Authentication/Register.php"
-            );
+            $this->displayErrorJson(400, $e->getMessage());
         }
     }
-    
-    #[Route("GET", "/logout")]
-    public function logout()
+
+    #[Route("GET", "/auth/admin-test")]
+    public function adminTest()
     {
         $this->loggedInAuthorization();
-        
-        unset($_SESSION["logged_in_user_id"]);
-        $_SESSION["success_message"] = "Successfully logged out of your account.";
-        
-        header("location: /login");
+        $this->adminAuthorization();
+
+        $dto = new AuthorizationTestDto($this->loggedInUser);
+        http_response_code(200); 
+        echo json_encode($dto, JSON_PRETTY_PRINT);
+    }
+
+    #[Route("GET", "/auth/user-test")]
+    public function userTest()
+    {
+        $this->loggedInAuthorization();
+
+        $dto = new AuthorizationTestDto($this->loggedInUser);
+        http_response_code(200); 
+        echo json_encode($dto, JSON_PRETTY_PRINT);
     }
 }

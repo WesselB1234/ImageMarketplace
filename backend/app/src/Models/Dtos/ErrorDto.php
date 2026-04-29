@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Models\ApiResponses;
+namespace App\Models\Dtos;
 
 use JsonSerializable;
 
-class ErrorResponse implements JsonSerializable
+class ErrorDto implements JsonSerializable
 {
     private string $message;
 

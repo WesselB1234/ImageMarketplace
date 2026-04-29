@@ -4,7 +4,7 @@ namespace App\Models\ApiResponses;
 
 use JsonSerializable;
 
-class UserDeletionResponse implements JsonSerializable
+class UserDeletionDto implements JsonSerializable
 {
     private int $userId;
 

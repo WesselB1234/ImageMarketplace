@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Services\Interfaces\IAuthenticationService;
 use App\Services\Interfaces\IUsersService;
 use App\Repositories\Interfaces\IUsersRepository;
 use App\Models\User;
@@ -11,9 +12,11 @@ use App\Models\Exceptions\NotFoundException;
 class UsersService implements IUsersService
 {
     private IUsersRepository $usersRepository; 
+    private IAuthenticationService $authenticationService;
 
-    public function __construct(IUsersRepository $usersRepository){
+    public function __construct(IUsersRepository $usersRepository, IAuthenticationService $authenticationService){
         $this->usersRepository = $usersRepository;
+        $this->authenticationService = $authenticationService;
     }
 
     public function getAllUsers(): array
@@ -36,17 +39,6 @@ class UsersService implements IUsersService
 
         return $user;
     }
-    
-    public function getUserByUsernameAndPassword(string $username, string $password): ?User
-    {
-        $user = $this->usersRepository->getFullyKnownUserByUsername($username);
-
-        if ($user !== null && password_verify($password, $user->getPassword())) {
-            return $user;
-        }
-
-        return null;
-    }
 
     public function updateUser(User $user)
     {
@@ -55,7 +47,7 @@ class UsersService implements IUsersService
         $password = $user->getPassword();
 
         if ($password !== null){
-            $user->setPassword($this->getHashedPassword($password));
+            $user->setPassword($this->authenticationService->getHashedPassword($password));
         }
 
         $this->usersRepository->updateUser($user);
@@ -71,15 +63,10 @@ class UsersService implements IUsersService
         }
     }
 
-    private function getHashedPassword($rawPassword): string
-    {
-        return password_hash($rawPassword, PASSWORD_DEFAULT);   
-    }
-
     public function createUser(User $user): int
     {
         $this->throwIfUserIsNotValid($user);
-        $user->setPassword($this->getHashedPassword($user->getPassword()));
+        $user->setPassword($this->authenticationService->getHashedPassword($user->getPassword()));
         
         return $this->usersRepository->createUser($user);
     }

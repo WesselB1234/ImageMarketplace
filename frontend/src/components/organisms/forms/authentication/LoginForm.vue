@@ -41,6 +41,5 @@
         <BaseFormField labelName="Username" id="username" name="username" placeholder="Enter your username" v-model="username"/>
         <BaseFormField labelName="Password" type="password" id="password" name="password" placeholder="Enter your password" v-model="password"/>
         <AuthsubmitBtn buttonText="Login" />
-        <router-link to="/auth/register">Register a new account</router-link>
   </form>
 </template>

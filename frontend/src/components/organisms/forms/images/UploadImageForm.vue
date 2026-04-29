@@ -4,43 +4,56 @@
     import SuccessAlert from '@/components/atoms/errorHandling/SuccessAlert.vue'
     import ErrorAlert from '@/components/atoms/errorHandling/ErrorAlert.vue'
     import SubmitBtn from '@/components/atoms/buttons/forms/SubmitBtn.vue'
-import FileFormField from '@/components/molecules/forms/FileFormField.vue'
-import TextAreaField from '@/components/molecules/forms/TextAreaField.vue'
+    import FileFormField from '@/components/molecules/forms/FileFormField.vue'
+    import TextAreaField from '@/components/molecules/forms/TextAreaField.vue'
+    import axios from '@/utils/axios.js'
 
-    const username = ref('')
+    const imageName = ref('')
+    const imageFile = ref('')
+    const description = ref('')
+    const altText = ref('')
     const currentErrorAlert = ref(null)
     const currentSuccessAlert = ref(null)
+
+    async function handleUpload(e) {
+        try {
+            e.preventDefault()
+
+            console.log({
+                imageName: imageName.value,
+                imageFile: imageFile.value,
+                description: description.value,
+                altText: altText.value
+            })
+
+            // await axios.post('/auth/login', {
+            //     imageName: imageName.value,
+            //     imageFile: imageFile.value,
+            //     description: description.value,
+            //     altText: altText.value
+            // })
+
+            //enctype="multipart/form-data"
+
+            currentSuccessAlert.value.displaySuccessMessage('Successfully uploaded image.')
+        }
+        catch (ex){
+            if (ex.response){
+                currentErrorAlert.value.displayErrorMessage(ex.response.data.message)
+            }
+        }
+    }
 </script>
 
 <template>
-    <form @submit="handleLogin" enctype="multipart/form-data">
+    <form @submit="handleUpload">
         <ErrorAlert ref="currentErrorAlert" />
         <SuccessAlert ref="currentSuccessAlert" />
 
-        <BaseFormField labelName="Image name" id="name" name="name" placeholder="Enter image name" v-model="username"/>
-        <FileFormField labelName="Image file (extension must be .png)" id="image" name="image" accept="image/*" v-model="username"/>
-        <TextAreaField labelName="Description" id="description" name="description" placeholder="Enter description" v-model="username"/>
-        <TextAreaField labelName="Alt text (shows if image is not able to load on the screen)" id="alt_text" name="alt_text" placeholder="Enter alt text" v-model="username"/>
-            
-        <!-- <div class="mb-3">
-            <label for="name" class="form-label">Image name</label>
-            <input type="text" class="form-control" id="name" name="name" placeholder="Enter image name">
-        </div>
-
-        <div class="mb-3">
-            <label for="description" class="form-label">Description</label>
-            <input type="text" class="form-control" id="description" name="description" placeholder="Enter description">
-        </div>
-
-        <div class="mb-3">
-            <label for="image" class="form-label">Image file (extension must be .png)</label>
-            <input type="file" id="image" class="form-control" name="image" accept="image/*" required>
-        </div>
-
-        <div class="mb-3">
-            <label for="alt_text" class="form-label">Alt text (shows if image is not able to load on the screen)</label>
-            <textarea class="form-control" id="alt_text" name="alt_text" rows="2"></textarea>
-        </div> -->
+        <BaseFormField labelName="Image name" id="name" name="name" placeholder="Enter image name" v-model="imageName"/>
+        <FileFormField labelName="Image file (extension must be .png)" id="image" name="image" accept="image/*" v-model="imageFile"/>
+        <TextAreaField labelName="Description" id="description" name="description" placeholder="Enter description" v-model="description"/>
+        <TextAreaField labelName="Alt text (shows if image is not able to load on the screen)" id="alt_text" name="alt_text" placeholder="Enter alt text" v-model="altText"/>
 
         <SubmitBtn buttonText="Upload" />
   </form>

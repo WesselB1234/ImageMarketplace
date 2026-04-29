@@ -4,6 +4,8 @@
     import SuccessAlert from '@/components/atoms/errorHandling/SuccessAlert.vue'
     import ErrorAlert from '@/components/atoms/errorHandling/ErrorAlert.vue'
     import SubmitBtn from '@/components/atoms/buttons/forms/SubmitBtn.vue'
+import FileFormField from '@/components/molecules/forms/FileFormField.vue'
+import TextAreaField from '@/components/molecules/forms/TextAreaField.vue'
 
     const username = ref('')
     const currentErrorAlert = ref(null)
@@ -16,9 +18,9 @@
         <SuccessAlert ref="currentSuccessAlert" />
 
         <BaseFormField labelName="Image name" id="name" name="name" placeholder="Enter image name" v-model="username"/>
-        <BaseFormField labelName="Description" id="description" name="description" placeholder="Enter description" v-model="username"/>
-        <BaseFormField labelName="Image" id="username" name="username" placeholder="Enter your username" v-model="username"/>
-        <BaseFormField labelName="Alt text (shows if image is not able to load on the screen)" id="alt_text" name="alt_text" placeholder="Alt text" v-model="username"/>
+        <FileFormField labelName="Image file (extension must be .png)" id="image" name="image" accept="image/*" v-model="username"/>
+        <TextAreaField labelName="Description" id="description" name="description" placeholder="Enter description" v-model="username"/>
+        <TextAreaField labelName="Alt text (shows if image is not able to load on the screen)" id="alt_text" name="alt_text" placeholder="Enter alt text" v-model="username"/>
             
         <!-- <div class="mb-3">
             <label for="name" class="form-label">Image name</label>

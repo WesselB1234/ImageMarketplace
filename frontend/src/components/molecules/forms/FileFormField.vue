@@ -1,27 +1,23 @@
 <script setup>
     import { computed } from 'vue'
-    import BaseInput from '@/components/atoms/forms/BaseInput.vue'
     import FormLabel from '@/components/atoms/forms/FormLabel.vue'
+    import FileInput from '@/components/atoms/forms/FileInput.vue'
 
     const props = defineProps({
         labelName: {
             type: String
         },
-        type: {
-            type: String,
-            default: 'text'
-        },
         id: {
-            type: String,
+            type: String
         },
         name: {
-            type: String,
+            type: String
         },
-        placeholder: {
-            type: String,
+        accept: {
+            type: String
         },
         modelValue: {
-            type: String,
+            type: String
         },
         isRequired: {
             type: Boolean,
@@ -40,6 +36,6 @@
 <template>
     <div class="mb-3">
         <FormLabel :labelName="props.labelName" :id="props.id" />
-        <BaseInput v-model="value" :type="props.type" :id="props.id" :name="props.name" :placeholder="props.placeholder" :isRequired="isRequired" />
+        <FileInput v-model="value" :id="props.id" :name="props.name" :accept="props.accept" :isRequired="isRequired" />
     </div>
 </template>

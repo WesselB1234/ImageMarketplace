@@ -10,6 +10,8 @@ import Logout from '@/views/authentication/logout.vue'
 
 import { useAuthStore } from "@/stores/authStore.js"
 import { useErrorHandlingStore } from "@/stores/errorHandlingStore"
+import DefaultLayout from '@/components/layout/DefaultLayout.vue'
+import Upload from '@/views/images/upload.vue'
 
 const routes = [
     {
@@ -53,7 +55,21 @@ const routes = [
                     title: 'UserTest',
                     isAuthenticated: true
                 }
-            }
+            },
+        ],
+    },
+    {
+        path: '/',
+        component: DefaultLayout,
+        children: [
+            { 
+                path: '/images/upload', 
+                component: Upload, 
+                meta: { 
+                    title: 'Upload image',
+                    isAuthenticated: true
+                }
+            },
         ]
     }
 ]

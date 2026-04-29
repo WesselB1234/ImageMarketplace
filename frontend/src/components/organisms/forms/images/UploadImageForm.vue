@@ -8,8 +8,8 @@
     import TextAreaField from '@/components/molecules/forms/TextAreaField.vue'
     import axios from '@/utils/axios.js'
 
-    const imageName = ref('')
-    const imageFile = ref('')
+    const name = ref('')
+    const image = ref(null)
     const description = ref('')
     const altText = ref('')
     const currentErrorAlert = ref(null)
@@ -19,27 +19,29 @@
         try {
             e.preventDefault()
 
-            console.log({
-                imageName: imageName.value,
-                imageFile: imageFile.value,
-                description: description.value,
-                altText: altText.value
+            const form = new FormData()
+            form.append('name', name.value)
+            form.append('image', image.value)
+            form.append('description', description.value)
+            form.append('altText', altText.value)
+
+            console.log(image.value)          // should be: File { name, size, type... }
+            console.log(typeof image.value)
+
+            await axios.post('/images/upload', form, {
+                headers: {
+                    'Content-Type': undefined
+                }
             })
-
-            // await axios.post('/auth/login', {
-            //     imageName: imageName.value,
-            //     imageFile: imageFile.value,
-            //     description: description.value,
-            //     altText: altText.value
-            // })
-
-            //enctype="multipart/form-data"
 
             currentSuccessAlert.value.displaySuccessMessage('Successfully uploaded image.')
         }
         catch (ex){
             if (ex.response){
                 currentErrorAlert.value.displayErrorMessage(ex.response.data.message)
+            }
+            else {
+                currentErrorAlert.value.displayErrorMessage(ex.message)
             }
         }
     }
@@ -50,8 +52,8 @@
         <ErrorAlert ref="currentErrorAlert" />
         <SuccessAlert ref="currentSuccessAlert" />
 
-        <BaseFormField labelName="Image name" id="name" name="name" placeholder="Enter image name" v-model="imageName"/>
-        <FileFormField labelName="Image file (extension must be .png)" id="image" name="image" accept="image/*" v-model="imageFile"/>
+        <BaseFormField labelName="Image name" id="name" name="name" placeholder="Enter image name" v-model="name"/>
+        <FileFormField labelName="Image file (extension must be .png)" id="image" name="image" accept="image/*" v-model="image"/>
         <TextAreaField labelName="Description" id="description" name="description" placeholder="Enter description" v-model="description"/>
         <TextAreaField labelName="Alt text (shows if image is not able to load on the screen)" id="alt_text" name="alt_text" placeholder="Enter alt text" v-model="altText"/>
 

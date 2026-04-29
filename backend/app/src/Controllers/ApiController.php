@@ -95,6 +95,12 @@ class ApiController
 
     public function getDataFromInput(): array
     {
+        $contentType = $_SERVER['CONTENT_TYPE'];
+
+        if (str_contains($contentType, 'multipart/form-data')) {
+            return array_merge($_POST, $_FILES);
+        }
+
         $input = file_get_contents("php://input"); 
         return json_decode($input, true); 
     }

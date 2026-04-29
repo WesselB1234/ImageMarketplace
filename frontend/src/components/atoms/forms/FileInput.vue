@@ -10,7 +10,7 @@
             type: String
         },
         modelValue: {
-            type: String
+            type: File
         },
         isRequired: {
             type: Boolean,
@@ -19,8 +19,20 @@
     })
 
     const emit = defineEmits(['update:modelValue'])
+function onChange(e) {
+  const file = e.target.files?.[0] || null
+  emit('update:modelValue', file)
+}
 </script>
 
 <template>
-    <input type="file" :id="id" class="form-control" :name="name" :accept="accept" :value="props.modelValue" @input="emit('update:modelValue', $event.target.value)" :required="props.isRequired" />
+  <input
+    type="file"
+    :id="id"
+    class="form-control"
+    :name="name"
+    :accept="accept"
+    @change="onChange"
+    :required="isRequired"
+  />
 </template>

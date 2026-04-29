@@ -17,7 +17,7 @@
             type: String
         },
         modelValue: {
-            type: String
+            type: File
         },
         isRequired: {
             type: Boolean,

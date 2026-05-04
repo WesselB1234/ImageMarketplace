@@ -1,11 +1,13 @@
 import { defineStore } from 'pinia'
 import { jwtDecode } from 'jwt-decode'
 import { ref } from 'vue'
+import axios from '@/utils/axios.js'
 
 export const useAuthStore = defineStore('auth', () => {
 
     let authToken = ref(getAuthTokenFromLocalStorage())
     let decodedAuthToken = ref(getDecodedAuthToken())
+    let loggedInUser = ref(null)
 
     function getAuthTokenFromLocalStorage(){
 
@@ -40,5 +42,21 @@ export const useAuthStore = defineStore('auth', () => {
         return null
     }
 
-    return {authToken, decodedAuthToken, setAuthToken}
+    async function getLoggedInUser() {
+        try {
+            if (loggedInUser.value === null){
+                const response = await axios.get('/auth/get-logged-in-user')
+                loggedInUser.value = response.data                
+            }
+            
+            return loggedInUser.value;
+        }
+        catch (ex){
+            if (ex.response){
+                console.log('An error has occurred during fetching logged in user: ' + ex.response.data.message)
+            }
+        }
+    }
+
+    return {authToken, decodedAuthToken, setAuthToken, getLoggedInUser}
 })

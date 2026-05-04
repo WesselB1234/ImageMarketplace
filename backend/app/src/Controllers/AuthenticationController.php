@@ -6,6 +6,7 @@ use App\Controllers\ApiController;
 use App\Models\Dtos\AuthorizationTestDto;
 use App\Models\Dtos\LoginDto;
 use App\Models\Dtos\RegisterDto;
+use App\Models\Dtos\UserDto;
 use App\Models\Enums\UserRole;
 use App\Models\User;
 use App\Services\Interfaces\IAuthenticationService;
@@ -96,5 +97,14 @@ class AuthenticationController extends ApiController
         $dto = new AuthorizationTestDto($this->loggedInUser);
         http_response_code(200); 
         echo json_encode($dto, JSON_PRETTY_PRINT);
+    }
+
+    #[Route("GET", "/auth/get-logged-in-user")]
+    public function getLoggedInUser()
+    {
+        $this->loggedInAuthorization();
+
+        http_response_code(200); 
+        echo json_encode(new UserDto($this->loggedInUser->getUserId(), $this->loggedInUser->getUsername(), $this->loggedInUser->getImageTokens(), $this->loggedInUser->getRole()), JSON_PRETTY_PRINT);
     }
 }

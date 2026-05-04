@@ -1,5 +1,16 @@
 <script setup>
+    import { useAuthStore } from '@/stores/authStore.js'
+    import { onMounted, ref } from 'vue'
 
+    const authStore = useAuthStore()
+    let loggedInUser = ref(null)
+    let decodedAuthToken = ref(null)
+
+    onMounted(async () => {
+        const authStore = useAuthStore()
+        loggedInUser.value = await authStore.getLoggedInUser()
+        decodedAuthToken.value = authStore.decodedAuthToken
+    })
 </script>
 
 <template>
@@ -24,16 +35,14 @@
                 <li class="nav-link">
                     <a class="nav-btn" href="/settings">Settings</a>
                 </li>
-                <!-- <?php if ($this->loggedInUser->getRole() === UserRole::Admin){?> -->
-                    <li class="nav-link">
-                        <a class="nav-btn" href="/users">Users</a>
-                    </li>
-                <!-- <?php } ?> -->
+                <li v-if="decodedAuthToken?.data.role === 'Admin'" class="nav-link">
+                    <a class="nav-btn" href="/users">Users</a>
+                </li>
             </ul>
             <div class="form-inline my-2 my-lg-0">
                 <div class="nav-link">
-                    Image tokens balance:
-                    Logged in as: 
+                    Image tokens balance: {{ loggedInUser?.imageTokens }}
+                    Logged in as: {{ loggedInUser?.username }}
                 </div>
                 <a href="/logout" class="btn btn-danger text-light">Logout</a>
             </div>

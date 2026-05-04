@@ -1,51 +1,32 @@
 <script setup>
+    import { onMounted, ref, computed } from 'vue'
     import { useAuthStore } from '@/stores/authStore.js'
-    import { onMounted, ref } from 'vue'
+
+    import NavBrand from '@/components/atoms/nav/NavBrand.vue'
+    import NavToggler from '@/components/atoms/nav/NavToggler.vue'
+    import NavMenu from '@/components/molecules/nav/NavMenu.vue'
+    import UserInfo from '@/components/molecules/nav/UserInfo.vue'
 
     const authStore = useAuthStore()
-    let loggedInUser = ref(null)
-    let decodedAuthToken = ref(null)
+    const loggedInUser = ref(null)
+    const decodedAuthToken = ref(null)
 
     onMounted(async () => {
-        const authStore = useAuthStore()
         loggedInUser.value = await authStore.getLoggedInUser()
         decodedAuthToken.value = authStore.decodedAuthToken
     })
+
+    const isAdmin = computed(() => decodedAuthToken.value?.data.role === 'Admin')
 </script>
 
 <template>
-     <nav class="navbar navbar-expand-xl navbar-light bg-light shadow mb-4">
-
-        <div class="navbar-brand" href="#">Image Marketplace</div>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+    <nav class="navbar navbar-expand-xl navbar-light bg-light shadow mb-4">
+        <NavBrand />
+        <NavToggler />
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-link">
-                    <a class="nav-btn" href="/portfolio">Portfolio</a>
-                </li>
-                <li class="nav-link">
-                    <a class="nav-btn" href="/images">Images on sale</a>
-                </li>
-                <li class="nav-link">
-                    <a class="nav-btn" href="/privacy">Privacy</a>
-                </li>
-                <li class="nav-link">
-                    <a class="nav-btn" href="/settings">Settings</a>
-                </li>
-                <li v-if="decodedAuthToken?.data.role === 'Admin'" class="nav-link">
-                    <a class="nav-btn" href="/users">Users</a>
-                </li>
-            </ul>
-            <div class="form-inline my-2 my-lg-0">
-                <div class="nav-link">
-                    Image tokens balance: {{ loggedInUser?.imageTokens }}
-                    Logged in as: {{ loggedInUser?.username }}
-                </div>
-                <a href="/logout" class="btn btn-danger text-light">Logout</a>
-            </div>
+            <NavMenu :isAdmin="isAdmin" />
+            <UserInfo :imageTokens="loggedInUser?.imageTokens":username="loggedInUser?.username" />
         </div>
     </nav>
 </template>

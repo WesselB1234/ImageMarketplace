@@ -1,7 +1,3 @@
-<script setup>
-
-</script>
-
 <template>
     <footer class="mt-4 bg-dark d-flex justify-content-center align-items-center">
         <span class="text-light">

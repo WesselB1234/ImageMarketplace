@@ -1,5 +1,6 @@
 <script setup>
     import LogoutButton from '@/components/atoms/nav/LogoutBtn.vue'
+    import { getPriceFormatted } from '@/utils/stringFormatter'
 
     defineProps({
         imageTokens: { 
@@ -16,7 +17,7 @@
 <template>
     <div class="form-inline my-2 my-lg-0">
         <div class="nav-link">
-            Image tokens balance: {{ imageTokens }}
+            Image tokens balance: {{ imageTokens ? getPriceFormatted(imageTokens) : 'Loading...' }}
             Logged in as: {{ username }}
         </div>
         <LogoutButton />

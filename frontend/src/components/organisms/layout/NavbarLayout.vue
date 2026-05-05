@@ -8,11 +8,9 @@
     import UserInfo from '@/components/molecules/nav/UserInfo.vue'
 
     const authStore = useAuthStore()
-    const loggedInUser = ref(null)
     const decodedAuthToken = ref(null)
 
     onMounted(async () => {
-        loggedInUser.value = await authStore.getLoggedInUser()
         decodedAuthToken.value = authStore.decodedAuthToken
     })
 
@@ -26,7 +24,7 @@
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <NavMenu :isAdmin="isAdmin" />
-            <UserInfo :imageTokens="loggedInUser?.imageTokens":username="loggedInUser?.username" />
+            <UserInfo :imageTokens="decodedAuthToken?.data.imageTokens":username="decodedAuthToken?.data.username" />
         </div>
     </nav>
 </template>

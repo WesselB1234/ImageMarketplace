@@ -34,15 +34,12 @@ class AuthenticationService implements IAuthenticationService
     {
         $now = time();
         $expiration = $now + ($_ENV["TOKEN_EXPIRATION_IN_HOURS"] * 3600);
-        
+
         $payload = [
             "iss" => $_ENV["DOMAIN"],
             "iat" => $now,
             "exp" => $expiration,
-            "data" => [
-                "id" => $user->getUserId(),
-                "role" => $user->getRole()->value,
-            ]
+            "data" => $user
         ];
         
         return JWT::encode($payload, $_ENV["TOKEN_SECRET_KEY"], self::JWT_ALGORITHM);

@@ -98,13 +98,4 @@ class AuthenticationController extends ApiController
         http_response_code(200); 
         echo json_encode($dto, JSON_PRETTY_PRINT);
     }
-
-    #[Route("GET", "/auth/get-logged-in-user")]
-    public function getLoggedInUser()
-    {
-        $this->loggedInAuthorization();
-
-        http_response_code(200); 
-        echo json_encode(new UserDto($this->loggedInUser->getUserId(), $this->loggedInUser->getUsername(), $this->loggedInUser->getImageTokens(), $this->loggedInUser->getRole()), JSON_PRETTY_PRINT);
-    }
 }

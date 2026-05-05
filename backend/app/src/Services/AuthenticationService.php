@@ -49,7 +49,7 @@ class AuthenticationService implements IAuthenticationService
     {
         $decoded = JWT::decode($token, new Key($_ENV["TOKEN_SECRET_KEY"], self::JWT_ALGORITHM));
         
-        if (!isset($decoded->iss) || !isset($decoded->exp) || !isset($decoded->data) || !isset($decoded->data->id)) {
+        if (!isset($decoded->iss) || !isset($decoded->exp) || !isset($decoded->data) || !isset($decoded->data->userId)) {
             throw new NotAuthorizedException("Token is not valid.");
         }
         
@@ -64,7 +64,7 @@ class AuthenticationService implements IAuthenticationService
     {
         $data = $decoded->data;
 
-        if ($data->role !== $user->getRole()->value) {
+        if ($data->role !== $user->getRole()->value || $data->username !== $user->getUsername() || $data->imageTokens !== $user->getImageTokens()) {
             return false;
         }
 

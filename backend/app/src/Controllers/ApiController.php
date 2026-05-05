@@ -41,7 +41,7 @@ class ApiController
             $token = $headerParts[1];
             $decoded = $this->authenticationService->getDecodedToken($token);
             
-            $this->loggedInUser = $this->usersService->getUserByUserId($decoded->data->id);
+            $this->loggedInUser = $this->usersService->getUserByUserId($decoded->data->userId);
 
             if ($this->loggedInUser === null) {
                 throw new NotAuthorizedException("User in your token does not exist.");

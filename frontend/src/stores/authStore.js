@@ -1,7 +1,8 @@
 import { defineStore } from 'pinia'
 import { jwtDecode } from 'jwt-decode'
 import { ref } from 'vue'
-import axios from '@/utils/axios.js'
+
+const authTokenLocalStorageKey = 'image_marketplace_auth_token'
 
 export const useAuthStore = defineStore('auth', () => {
 
@@ -10,7 +11,7 @@ export const useAuthStore = defineStore('auth', () => {
 
     function getAuthTokenFromLocalStorage(){
 
-        const localStorageAuthToken = localStorage.getItem('auth_token')
+        const localStorageAuthToken = localStorage.getItem(authTokenLocalStorageKey)
 
         if (localStorageAuthToken){
             return localStorageAuthToken
@@ -25,10 +26,10 @@ export const useAuthStore = defineStore('auth', () => {
         decodedAuthToken.value = getDecodedAuthToken()
 
         if (token) {
-            localStorage.setItem('auth_token', token)
+            localStorage.setItem(authTokenLocalStorageKey, token)
         } 
         else {
-            localStorage.removeItem('auth_token')
+            localStorage.removeItem(authTokenLocalStorageKey)
         }
     }
 

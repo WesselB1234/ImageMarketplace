@@ -8,8 +8,9 @@ use stdClass;
 interface IAuthenticationService
 {
     public function getUserByUsernameAndPassword(string $username, string $password): ?User;
-    public function generateTokenFromUser(User $user): string;
-    public function getDecodedToken(string $token): stdClass;
-    public function isUserEqualToDecodedToken(User $user, stdClass $decoded): bool;
+    public function generateAuthTokenFromUser(User $user): string;
+    public function getDecodedAuthToken(string $authToken): stdClass;
+    public function isUserEqualToDecodedAuthToken(User $user, stdClass $decodedAuthToken): bool;
     public function getHashedPassword($rawPassword): string;
+    public function validateAuthToken(stdClass $decodedAuthToken);
 }

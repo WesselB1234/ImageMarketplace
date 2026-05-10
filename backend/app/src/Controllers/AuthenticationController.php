@@ -6,7 +6,6 @@ use App\Controllers\ApiController;
 use App\Models\Dtos\AuthorizationTestDto;
 use App\Models\Dtos\LoginDto;
 use App\Models\Dtos\RegisterDto;
-use App\Models\Dtos\UserDto;
 use App\Models\Enums\UserRole;
 use App\Models\User;
 use App\Services\Interfaces\IAuthenticationService;
@@ -43,7 +42,7 @@ class AuthenticationController extends ApiController
                 throw new Exception("Password or username is not correct.");
             }
 
-            $dto = new LoginDto($this->authenticationService->generateTokenFromUser($user));
+            $dto = new LoginDto($this->authenticationService->generateAuthTokenFromUser($user));
             
             http_response_code(201); 
             echo json_encode($dto, JSON_PRETTY_PRINT);
@@ -68,7 +67,7 @@ class AuthenticationController extends ApiController
             $userId = $this->usersService->createUser($user);
             $user->setUserId($userId);
             
-            $dto = new RegisterDto($user, $this->authenticationService->generateTokenFromUser($user));
+            $dto = new RegisterDto($user, $this->authenticationService->generateAuthTokenFromUser($user));
 
             http_response_code(201); 
             echo json_encode($dto, JSON_PRETTY_PRINT);

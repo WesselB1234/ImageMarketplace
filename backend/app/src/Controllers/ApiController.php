@@ -38,33 +38,31 @@ class ApiController
                 throw new NotAuthorizedException("Invalid authorization header format.");
             }
 
-            $token = $headerParts[1];
-            $decoded = $this->authenticationService->getDecodedToken($token);
+            $authToken = $headerParts[1];
+            $decodedAuthToken = $this->authenticationService->getDecodedAuthToken($authToken);
+            $this->authenticationService->validateAuthToken($decodedAuthToken);
             
-            $this->loggedInUser = $this->usersService->getUserByUserId($decoded->data->userId);
+            $this->loggedInUser = $this->usersService->getUserByUserId($decodedAuthToken->data->userId);
 
             if ($this->loggedInUser === null) {
-                throw new NotAuthorizedException("User in your token does not exist.");
+                throw new NotAuthorizedException("User in your auth token does not exist.");
             }
 
-            if ($this->authenticationService->isUserEqualToDecodedToken($this->loggedInUser, $decoded) === false) {
-                header("Authorization: Bearer ". $this->authenticationService->generateTokenFromUser($this->loggedInUser));
+            if ($this->authenticationService->isUserEqualToDecodedAuthToken($this->loggedInUser, $decodedAuthToken) === false) {
+                header("Authorization: Bearer ". $this->authenticationService->generateAuthTokenFromUser($this->loggedInUser));
             }
         }
         catch(ExpiredException $ex) {
             header("X-Auth-Error: invalid_token");
-            $this->displayErrorJson(401, "Your token has expired.");
+            $this->displayErrorJson(401, "Your auth token has expired.");
         }
         catch(SignatureInvalidException $ex) {
             header("X-Auth-Error: invalid_token");
-            $this->displayErrorJson(401, "Token signature is not valid.");
+            $this->displayErrorJson(401, "Auth token signature is not valid.");
         }
         catch(NotAuthorizedException $ex) {
             header("X-Auth-Error: invalid_token");
             $this->displayErrorJson(401, $ex->getMessage());
-        }
-        catch(Exception $ex) {
-            $this->displayErrorJson(400, $ex->getMessage());
         }
     }
 

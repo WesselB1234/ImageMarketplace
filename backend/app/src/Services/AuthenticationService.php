@@ -30,7 +30,7 @@ class AuthenticationService implements IAuthenticationService
         return null;
     }
 
-    public function generateTokenFromUser(User $user): string
+    public function generateAuthTokenFromUser(User $user): string
     {
         $now = time();
         $expiration = $now + ($_ENV["TOKEN_EXPIRATION_IN_HOURS"] * 3600);
@@ -45,24 +45,25 @@ class AuthenticationService implements IAuthenticationService
         return JWT::encode($payload, $_ENV["TOKEN_SECRET_KEY"], self::JWT_ALGORITHM);
     }
 
-    public function getDecodedToken(string $token): stdClass
+    public function getDecodedAuthToken(string $authToken): stdClass
     {
-        $decoded = JWT::decode($token, new Key($_ENV["TOKEN_SECRET_KEY"], self::JWT_ALGORITHM));
-        
-        if (!isset($decoded->iss) || !isset($decoded->exp) || !isset($decoded->data) || !isset($decoded->data->userId)) {
-            throw new NotAuthorizedException("Token is not valid.");
-        }
-        
-        if ($decoded->iss !== $_ENV["DOMAIN"]) {
-            throw new NotAuthorizedException("Token domain is not equal to actual domain.");
-        }
-
-        return $decoded;
+        return JWT::decode($authToken, new Key($_ENV["TOKEN_SECRET_KEY"], self::JWT_ALGORITHM));
     }
 
-    public function isUserEqualToDecodedToken(User $user, stdClass $decoded): bool
+    public function validateAuthToken(stdClass $decodedAuthToken)
     {
-        $data = $decoded->data;
+        if (!isset($decodedAuthToken->iss) || !isset($decodedAuthToken->exp) || !isset($decodedAuthToken->data) || !isset($decodedAuthToken->data->userId)) {
+            throw new NotAuthorizedException("Auth token is not valid.");
+        }
+        
+        if ($decodedAuthToken->iss !== $_ENV["DOMAIN"]) {
+            throw new NotAuthorizedException("Auth token domain is not equal to actual domain.");
+        }
+    }
+
+    public function isUserEqualToDecodedAuthToken(User $user, stdClass $decodedAuthToken): bool
+    {
+        $data = $decodedAuthToken->data;
 
         if ($data->role !== $user->getRole()->value || $data->username !== $user->getUsername() || $data->imageTokens !== $user->getImageTokens()) {
             return false;

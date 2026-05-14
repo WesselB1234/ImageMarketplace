@@ -7,6 +7,7 @@ use App\Models\Dtos\AuthorizationTestDto;
 use App\Models\Dtos\LoginDto;
 use App\Models\Dtos\RegisterDto;
 use App\Models\Enums\UserRole;
+use App\Models\Exceptions\NotAuthorizedException;
 use App\Models\User;
 use App\Services\Interfaces\IAuthenticationService;
 use App\Services\Interfaces\IUsersService;
@@ -26,55 +27,44 @@ class AuthenticationController extends ApiController
         $this->authenticationService = $authenticationService;
     }
 
-    #[Route("POST", "/auth/login")]
+    #[Route("POST", "/users/login")]
     public function processLogin()
     {            
-        try{
-            $data = $this->getDataFromInput();
+        $data = $this->getDataFromInput();
 
-            if (empty($data["username"]) || empty($data["password"])){
-                throw new Exception("All input fields must be filled.");
-            }
-
-            $user = $this->authenticationService->getUserByUsernameAndPassword($data["username"], $data["password"]);
-            
-            if ($user == null){
-                throw new Exception("Password or username is not correct.");
-            }
-
-            $dto = new LoginDto($this->authenticationService->generateAuthTokenFromUser($user));
-            
-            http_response_code(201); 
-            echo json_encode($dto, JSON_PRETTY_PRINT);
+        if (empty($data["username"]) || empty($data["password"])){
+            throw new NotAuthorizedException("All input fields must be filled.");
         }
-        catch(Exception $e){
-            header("X-Auth-Error: invalid_credentials");
-            $this->displayErrorJson(401, $e->getMessage());
-        }        
+
+        $user = $this->authenticationService->getUserByUsernameAndPassword($data["username"], $data["password"]);
+        
+        if ($user == null){
+            throw new NotAuthorizedException("Password or username is not correct.");
+        }
+
+        $dto = new LoginDto($this->authenticationService->generateAuthTokenFromUser($user));
+        
+        http_response_code(201); 
+        echo json_encode($dto, JSON_PRETTY_PRINT);     
     }
 
-    #[Route("POST", "/auth/register")]
+    #[Route("POST", "/users/register")]
     public function processRegister()
     {
-        try{
-            $data = $this->getDataFromInput();
+        $data = $this->getDataFromInput();
 
-            if (empty($data["username"]) || empty($data["password"])){
-                throw new Exception("All input fields must be filled.");
-            }
-
-            $user = User::constructUnknownUser($data["username"], $data["password"], 100, UserRole::User); 
-            $userId = $this->usersService->createUser($user);
-            $user->setUserId($userId);
-            
-            $dto = new RegisterDto($user, $this->authenticationService->generateAuthTokenFromUser($user));
-
-            http_response_code(201); 
-            echo json_encode($dto, JSON_PRETTY_PRINT);
+        if (empty($data["username"]) || empty($data["password"])){
+            throw new Exception("All input fields must be filled.");
         }
-        catch(Exception $e){
-            $this->displayErrorJson(400, $e->getMessage());
-        }
+
+        $user = User::constructUnknownUser($data["username"], $data["password"], 100, UserRole::User); 
+        $userId = $this->usersService->createUser($user);
+        $user->setUserId($userId);
+        
+        $dto = new RegisterDto($user, $this->authenticationService->generateAuthTokenFromUser($user));
+
+        http_response_code(201); 
+        echo json_encode($dto, JSON_PRETTY_PRINT);
     }
 
     #[Route("GET", "/auth/admin-test")]

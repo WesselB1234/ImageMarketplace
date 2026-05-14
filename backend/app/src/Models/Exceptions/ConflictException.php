@@ -4,7 +4,7 @@ namespace App\Models\Exceptions;
 
 use Exception;
 
-class ForbiddenException extends Exception
+class ConflictException extends Exception
 {
     
 }

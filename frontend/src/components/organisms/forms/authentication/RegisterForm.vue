@@ -27,7 +27,7 @@
             form.append("username", username.value)
             form.append("password", password.value)
 
-            const response = await axios.post('/auth/register', form)
+            const response = await axios.post('/users/register', form)
 
             authStore.setAuthToken(response.data.jwt)
             currentSuccessAlert.value.displaySuccessMessage("Successfully registered a new account.")

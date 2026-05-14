@@ -1,17 +1,17 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-import AuthLayout from '../components/layout/AuthLayout.vue'
+import AuthLayout from '@/components/layout/AuthLayout.vue'
 
-import Login from '../views/authentication/Login.vue'
-import Register from '../views/authentication/Register.vue'
-import AdminAuthorizationTest from '@/views/authentication/AdminAuthorizationTest.vue'
-import UserAuthorizationTest from '@/views/authentication/UserAuthorizationTest.vue'
-import Logout from '@/views/authentication/logout.vue'
+import Login from '@/components/views/authentication/Login.vue'
+import Register from '@/components/views/authentication/Register.vue'
+import AdminAuthorizationTest from '@/components/views/authentication/AdminAuthorizationTest.vue'
+import UserAuthorizationTest from '@/components/views/authentication/UserAuthorizationTest.vue'
+import Logout from '@/components/views/authentication/logout.vue'
 
 import { useAuthStore } from "@/stores/authStore.js"
 import { useErrorHandlingStore } from "@/stores/errorHandlingStore"
 import DefaultLayout from '@/components/layout/DefaultLayout.vue'
-import Upload from '@/views/images/upload.vue'
+import Upload from '@/components/views/images/upload.vue'
 
 const routes = [
     {

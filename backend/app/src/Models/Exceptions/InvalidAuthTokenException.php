@@ -4,7 +4,7 @@ namespace App\Models\Exceptions;
 
 use Exception;
 
-class NotAllowedException extends Exception
+class InvalidAuthTokenException extends Exception
 {
     
 }

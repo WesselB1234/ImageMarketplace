@@ -26,7 +26,7 @@ class ApiController
 
     private function setLoggedInUser()
     {
-        try {  
+        //try {  
             if(!isset($_SERVER["HTTP_AUTHORIZATION"])) {
                 throw new NotAuthorizedException("Authorization header is required.");
             }
@@ -51,19 +51,19 @@ class ApiController
             if ($this->authenticationService->isUserEqualToDecodedAuthToken($this->loggedInUser, $decodedAuthToken) === false) {
                 header("Authorization: Bearer ". $this->authenticationService->generateAuthTokenFromUser($this->loggedInUser));
             }
-        }
-        catch(ExpiredException $ex) {
-            header("X-Auth-Error: invalid_token");
-            $this->displayErrorJson(401, "Your auth token has expired.");
-        }
-        catch(SignatureInvalidException $ex) {
-            header("X-Auth-Error: invalid_token");
-            $this->displayErrorJson(401, "Auth token signature is not valid.");
-        }
-        catch(NotAuthorizedException $ex) {
-            header("X-Auth-Error: invalid_token");
-            $this->displayErrorJson(401, $ex->getMessage());
-        }
+        //}
+        // catch(ExpiredException $ex) {
+        //     header("X-Auth-Error: invalid_token");
+        //     $this->displayErrorJson(401, "Your auth token has expired.");
+        // }
+        // catch(SignatureInvalidException $ex) {
+        //     header("X-Auth-Error: invalid_token");
+        //     $this->displayErrorJson(401, "Auth token signature is not valid.");
+        // }
+        // catch(NotAuthorizedException $ex) {
+        //     header("X-Auth-Error: invalid_token");
+        //     $this->displayErrorJson(401, $ex->getMessage());
+        // }
     }
 
     public function displayErrorJson(int $errorCode, string $message)

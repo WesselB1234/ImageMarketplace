@@ -3,7 +3,6 @@
 $loader = require __DIR__."/../vendor/autoload.php";
 
 use App\Framework\Router;
-use App\Models\Exceptions\NotFoundException;
 use DI\ContainerBuilder;
 use DI\CompiledContainer;
 
@@ -11,6 +10,12 @@ function start()
 {
     $httpMethod = $_SERVER["REQUEST_METHOD"];
     $uri = strtok($_SERVER["REQUEST_URI"], "?");
+
+    require_once __DIR__ . "/../src/Exception/GlobalExceptionHandler.php";
+
+    $globalExceptionHandler = new GlobalExceptionHandler();
+
+    set_exception_handler([$globalExceptionHandler, "dispatch"]);
 
     header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
     header("Access-Control-Allow-Headers: Content-Type, Authorization");
@@ -42,20 +47,7 @@ function start()
     }
 
     $router = new Router($container);
-
-    try{
-        $router->dispatch($httpMethod, $uri);
-    }
-    catch(NotFoundException $e){
-        error_log($e->getMessage());
-        http_response_code(404);
-        echo $e->getMessage(); 
-    }
-    catch(Exception $e){ 
-        error_log($e->getMessage());
-        http_response_code(400);
-        echo $e->getMessage(); 
-    }
+    $router->dispatch($httpMethod, $uri);
 }
 
 start();

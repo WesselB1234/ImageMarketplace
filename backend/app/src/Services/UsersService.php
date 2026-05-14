@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Exceptions\ConflictException;
 use App\Services\Interfaces\IAuthenticationService;
 use App\Services\Interfaces\IUsersService;
 use App\Repositories\Interfaces\IUsersRepository;
@@ -59,7 +60,7 @@ class UsersService implements IUsersService
 
         if ($duplicateUser !== null && ($user->getUserId() !== null && $duplicateUser->getUserId() === $user->getUserId()) === false)
         {
-            throw new Exception("User with username ".$user->getUsername(). " already exists.");
+            throw new ConflictException("User with username ".$user->getUsername(). " already exists.");
         }
     }
 

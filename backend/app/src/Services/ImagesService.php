@@ -51,8 +51,6 @@ class ImagesService implements IImagesService
 
     public function validateImageFile(array $imageFile)
     {    
-        error_log(print_r($imageFile,true));
-
         if (!isset($imageFile) || $imageFile["error"] !== UPLOAD_ERR_OK) {
             throw new Exception("The uploading of the file to the server has failed.");
         }

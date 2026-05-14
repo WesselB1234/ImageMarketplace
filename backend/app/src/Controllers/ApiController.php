@@ -6,7 +6,6 @@ use App\Models\Exceptions\BadRequestException;
 
 class ApiController
 {
-
     private function throwIfInputDataIsInvalid(array $data, array $requiredParams) 
     {
         foreach($requiredParams as $requiredParam) {

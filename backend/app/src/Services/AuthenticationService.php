@@ -55,11 +55,11 @@ class AuthenticationService implements IAuthenticationService
     public function validateAuthToken(stdClass $decodedAuthToken)
     {
         if (!isset($decodedAuthToken->iss) || !isset($decodedAuthToken->exp) || !isset($decodedAuthToken->data) || !isset($decodedAuthToken->data->userId)) {
-            throw new NotAuthorizedException("Auth token is not valid.");
+            throw new InvalidAuthTokenException("Auth token is not valid.");
         }
         
         if ($decodedAuthToken->iss !== $_ENV["DOMAIN"]) {
-            throw new NotAuthorizedException("Auth token domain is not equal to actual domain.");
+            throw new InvalidAuthTokenException("Auth token domain is not equal to actual domain.");
         }
     }
 

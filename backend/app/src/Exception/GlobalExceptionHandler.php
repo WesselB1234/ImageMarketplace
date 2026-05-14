@@ -6,6 +6,8 @@ use App\Models\Exceptions\ConflictException;
 use App\Models\Exceptions\InvalidAuthTokenException;
 use App\Models\Exceptions\NotAuthorizedException;
 use App\Models\Exceptions\NotFoundException;
+use Firebase\JWT\ExpiredException;
+use Firebase\JWT\SignatureInvalidException;
 
 class GlobalExceptionHandler {
 
@@ -17,6 +19,8 @@ class GlobalExceptionHandler {
             $e instanceof NotFoundException => $this->handleNotFoundException($e),
             $e instanceof ConflictException => $this->handleConflictException($e),
             $e instanceof BadRequestException => $this->handleBadRequestException($e),
+            $e instanceof ExpiredException => $this->handleExpiredException($e),
+            $e instanceof SignatureInvalidException => $this->handleSignatureInvalidException($e),
             default => $this->handleGeneric($e),
         };
     }
@@ -56,5 +60,15 @@ class GlobalExceptionHandler {
     private function handleBadRequestException(BadRequestException $e)
     {
         $this->displayErrorJson(400, $e->getMessage());
+    }
+
+    private function handleExpiredException(ExpiredException $e) 
+    {
+        $this->displayErrorJson(440, "Your auth token has expired.");
+    }
+
+    private function handleSignatureInvalidException(SignatureInvalidException $e) 
+    {
+        $this->displayErrorJson(440, "Auth token signature is not valid.");
     }
 }

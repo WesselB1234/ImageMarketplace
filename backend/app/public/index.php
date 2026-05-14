@@ -28,6 +28,8 @@ function start()
         exit();
     }
 
+    error_log("huh");
+
     session_start();
 
     $_ENV = parse_ini_file(__DIR__."/../.env");

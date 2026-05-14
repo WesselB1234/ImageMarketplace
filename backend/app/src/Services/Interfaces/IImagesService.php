@@ -3,6 +3,7 @@
 namespace App\Services\Interfaces;
 
 use App\Models\Image;
+use App\Models\User;
 
 interface IImagesService
 {
@@ -18,6 +19,6 @@ interface IImagesService
     public function takeImageOffSaleByImageId(int $imageId);
     public function updateImageSellingPrice(int $imageId, ?int $price);
     public function updateImageModerationByImageId(int $imageId, bool $isModerated);
-    public function deleteImageByImageId(int $imageId);
-    public function isUserAuthorizedToImage(Image $image): bool;
+    public function deleteImageByImageId(int $imageId, User $loggedInUser);
+    public function isUserAuthorizedToImage(Image $image, User $loggedInUser): bool;
 }

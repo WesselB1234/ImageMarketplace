@@ -4,6 +4,7 @@ namespace App\Framework;
 
 use App\Models\Attributes\Route;
 use App\Models\Exceptions\NotFoundException;
+use App\Models\RouteControllerMethod;
 use Exception;
 use ReflectionClass;
 use DI\Container;
@@ -114,7 +115,7 @@ class Router
         $controller->$methodName($requestParams);
     }
 
-    private function callRouteOfHttpRequest(string $httpMethod, string $uri)
+    private function getRouteControllerMethodOfHttpRequest(string $httpMethod, string $uri): RouteControllerMethod
     { 
         if (!file_exists($this::ROUTES_CACHE_DIR)) {
             throw new NotFoundException("Route caching file does not exist.");
@@ -149,9 +150,8 @@ class Router
                 }
 
                 $requestParams = $this->getRequestParamsFromSegments($routeSegments, $routeParams, $uriSegments);
-                $this->callRouteMethodOfController($routeValues["method_name"], $routeValues["controller_path"], $requestParams);
-                
-                return;
+
+                return new RouteControllerMethod($routeValues["method_name"], $routeValues["controller_path"], $requestParams);
             }
         }
 
@@ -176,12 +176,16 @@ class Router
 
     public function dispatch(string $httpMethod, string $uri)
     {
+        $routeControllerMethod = null;
+
         try{
-            $this->callRouteOfHttpRequest($httpMethod, $uri);
+            $routeControllerMethod = $this->getRouteControllerMethodOfHttpRequest($httpMethod, $uri);
         }
         catch(Exception $e){
             $this->refreshRoutesCacheFile();
-            $this->callRouteOfHttpRequest($httpMethod, $uri);
+            $routeControllerMethod = $this->getRouteControllerMethodOfHttpRequest($httpMethod, $uri);
         }
+
+        $this->callRouteMethodOfController($routeControllerMethod->getMethodName(), $routeControllerMethod->getControllerPath(), $routeControllerMethod->getRequestParams());
     }
 }

@@ -32,7 +32,7 @@ class GlobalExceptionHandler {
         exit;
     }
 
-    private function handleGeneric(Exception $e)
+    private function handleGeneric(Throwable $e)
     {
         $this->displayErrorJson(500, $e->getMessage());
     } 

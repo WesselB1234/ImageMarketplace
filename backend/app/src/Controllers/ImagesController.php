@@ -2,7 +2,6 @@
 
 namespace App\Controllers;
 
-use App\Controllers\Controller;
 use App\Models\Dtos\ImageDto;
 use App\Services\Interfaces\IAuthenticationService;
 use App\Services\Interfaces\IImagesService;
@@ -22,14 +21,13 @@ class ImagesController extends ApiController
 {
     private IImagesService $imagesService;
     private IUsersService $usersService;
+    private IAuthenticationService $authenticationService;
 
     public function __construct(IImagesService $imagesService, IUsersService $usersService, IAuthenticationService $authenticationService)
     {
-        parent::__construct($usersService, $authenticationService);
-        $this->loggedInAuthorization();
-
         $this->imagesService = $imagesService;
         $this->usersService = $usersService;
+        $this->authenticationService = $authenticationService;
     }
 
     // #[Route("GET", "/images")]
@@ -172,40 +170,32 @@ class ImagesController extends ApiController
     #[Route("POST", "/images/upload")]
     public function processUpload()
     {
+        $imageId = null;
+        $loggedInUser = $this->authenticationService->getLoggedInUser();
+
+        $data = $this->getDataFromInput(["name", "description", "image", "altText"]);
+        $image = Image::constructUnknownImage($loggedInUser->getUserId(), $loggedInUser->getUserId(), $data["name"], $data["description"], $data["altText"]);
+        
+        $imageFile = $data["image"];
+
         try{
-            $imageId = null;
+            $this->imagesService->validateImageFile($imageFile);
+            $imageId = $this->imagesService->createImage($image);
+            $this->imagesService->uploadImageFile($imageFile, $imageId);
+
+            $dto = new ImageDto($imageId, $image->getOwnerId(), $image->getCreatorId(), $image->getName(), $image->getDescription(), $image->getPrice(), $image->getIsModerated(), $image->getIsOnSale(), New DateTime(), $image->getAltText());
             
-            try{
-                $data = $this->getDataFromInput();
-                $image = Image::constructUnknownImage($this->loggedInUser->getUserId(), $this->loggedInUser->getUserId(), $data["name"], $data["description"], $data["altText"]);
-                
-                if (!isset($data["image"])){
-                    throw new NotFoundException("No image file has been sent to the server.");
-                }
-                
-                $imageFile = $data["image"];
-
-                $this->imagesService->validateImageFile($imageFile);
-                $imageId = $this->imagesService->createImage($image);
-                $this->imagesService->uploadImageFile($imageFile, $imageId);
-
-                $dto = new ImageDto($imageId, $image->getOwnerId(), $image->getCreatorId(), $image->getName(), $image->getDescription(), $image->getPrice(), $image->getIsModerated(), $image->getIsOnSale(), New DateTime(), $image->getAltText());
-
-                http_response_code(201);
-                echo json_encode($dto);
-            }
-            catch(Exception $e){
-
-                if ($imageId !== null){
-                    $this->imagesService->deleteImageByImageId($imageId);       
-                }
-                
-                throw new Exception($e->getMessage());
-            }
+            http_response_code(201);
+            echo json_encode($dto);
         }
         catch(Exception $e){
-            $this->displayErrorJson(400, $e->getMessage());
-        }                
+
+            if ($imageId !== null){
+                $this->imagesService->deleteImageByImageId($imageId, $loggedInUser);       
+            }
+            
+            throw $e;
+        }               
     }
 
     // #[Route("GET", "/images/moderate", ["id", "isModerate"])]

@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\User;
 use App\Services\Interfaces\IImagesService;
 use App\Repositories\Interfaces\IImagesRepository;
 use App\Repositories\Interfaces\IUsersRepository;
@@ -50,6 +51,8 @@ class ImagesService implements IImagesService
 
     public function validateImageFile(array $imageFile)
     {    
+        error_log(print_r($imageFile,true));
+
         if (!isset($imageFile) || $imageFile["error"] !== UPLOAD_ERR_OK) {
             throw new Exception("The uploading of the file to the server has failed.");
         }
@@ -140,20 +143,20 @@ class ImagesService implements IImagesService
         $this->imagesRepository->updateImageModerationByImageId($imageId, $isModerated);
     }
 
-    public function deleteImageByImageId(int $imageId)
+    public function deleteImageByImageId(int $imageId, User $loggedInUser)
     {
         $image = $this->getImageByImageIdOrThrow($imageId);
 
-        if (!$this->isUserAuthorizedToImage($image)){
+        if (!$this->isUserAuthorizedToImage($image, $loggedInUser)){
             throw new NotAuthorizedException("You are not authorized to delete this image.");
         }
 
         return $this->imagesRepository->deleteImageByImageId($imageId);
     }
 
-    public function isUserAuthorizedToImage(Image $image): bool
+    public function isUserAuthorizedToImage(Image $image, User $loggedInUser): bool
     {
-        if ($image->getOwnerId() !== $_SESSION["user"]->getUserId() && $_SESSION["user"]->getRole() !== UserRole::Admin){
+        if ($image->getOwnerId() !== $loggedInUser->getUserId() && $loggedInUser->getRole() !== UserRole::Admin){
             return false;
         }
 

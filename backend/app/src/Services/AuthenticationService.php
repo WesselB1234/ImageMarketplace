@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Models\Enums\UserRole;
+use App\Models\Exceptions\InvalidAuthTokenException;
 use App\Models\Exceptions\NotAuthorizedException;
 use App\Repositories\Interfaces\IUsersRepository;
 use App\Models\User;
@@ -77,45 +79,46 @@ class AuthenticationService implements IAuthenticationService
         return password_hash($rawPassword, PASSWORD_DEFAULT);   
     }
 
-    private function getLoggedInUser()
+    public function getLoggedInUser(): User
+    { 
+        if(!isset($_SERVER["HTTP_AUTHORIZATION"])) {
+            throw new NotAuthorizedException("Authorization header is required.");
+        }
+
+        $authHeader = $_SERVER["HTTP_AUTHORIZATION"];
+        $headerParts = explode(" ", $authHeader);
+        
+        if (count($headerParts) !== 2 || strtolower($headerParts[0]) !== "bearer") {
+            throw new NotAuthorizedException("Invalid authorization header format.");
+        }
+
+        $authToken = $headerParts[1];
+        $decodedAuthToken = $this->getDecodedAuthToken($authToken);
+        $this->validateAuthToken($decodedAuthToken);
+        
+        $user = $this->usersRepository->getUserByUserId($decodedAuthToken->data->userId);
+
+        if ($user === null) {
+            throw new InvalidAuthTokenException("User in your auth token does not exist.");
+        }
+
+        if ($this->isUserEqualToDecodedAuthToken($user, $decodedAuthToken) === false) {
+            header("Authorization: Bearer ". $this->generateAuthTokenFromUser($user));
+        }
+
+        return $user;
+    }
+
+    public function getLoggedInUserByRoleAuthorization(array $roles): User
     {
-        try {  
-            if(!isset($_SERVER["HTTP_AUTHORIZATION"])) {
-                throw new NotAuthorizedException("Authorization header is required.");
-            }
+        $user = $this->getLoggedInUser();
 
-            $authHeader = $_SERVER["HTTP_AUTHORIZATION"];
-            $headerParts = explode(" ", $authHeader);
-            
-            if (count($headerParts) !== 2 || strtolower($headerParts[0]) !== "bearer") {
-                throw new NotAuthorizedException("Invalid authorization header format.");
-            }
-
-            $authToken = $headerParts[1];
-            $decodedAuthToken = $this->authenticationService->getDecodedAuthToken($authToken);
-            $this->authenticationService->validateAuthToken($decodedAuthToken);
-            
-            $this->loggedInUser = $this->usersService->getUserByUserId($decodedAuthToken->data->userId);
-
-            if ($this->loggedInUser === null) {
-                throw new NotAuthorizedException("User in your auth token does not exist.");
-            }
-
-            if ($this->authenticationService->isUserEqualToDecodedAuthToken($this->loggedInUser, $decodedAuthToken) === false) {
-                header("Authorization: Bearer ". $this->authenticationService->generateAuthTokenFromUser($this->loggedInUser));
+        foreach ($roles as $role) {
+            if ($user->getRole() === $role) {
+                return $user;
             }
         }
-        catch(ExpiredException $ex) {
-            header("X-Auth-Error: invalid_token");
-            $this->displayErrorJson(401, "Your auth token has expired.");
-        }
-        catch(SignatureInvalidException $ex) {
-            header("X-Auth-Error: invalid_token");
-            $this->displayErrorJson(401, "Auth token signature is not valid.");
-        }
-        catch(NotAuthorizedException $ex) {
-            header("X-Auth-Error: invalid_token");
-            $this->displayErrorJson(401, $ex->getMessage());
-        }
+
+        throw new NotAuthorizedException("User does not have the right role.");
     }
 }

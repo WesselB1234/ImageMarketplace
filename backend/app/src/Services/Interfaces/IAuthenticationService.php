@@ -2,6 +2,7 @@
 
 namespace App\Services\Interfaces;
 
+use App\Models\Enums\UserRole;
 use App\Models\User;
 use stdClass;
 
@@ -13,4 +14,6 @@ interface IAuthenticationService
     public function isUserEqualToDecodedAuthToken(User $user, stdClass $decodedAuthToken): bool;
     public function getHashedPassword($rawPassword): string;
     public function validateAuthToken(stdClass $decodedAuthToken);
+    public function getLoggedInUser(): User;
+    public function getLoggedInUserByRoleAuthorization(array $roles): User;
 }

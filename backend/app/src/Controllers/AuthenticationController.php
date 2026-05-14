@@ -12,7 +12,6 @@ use App\Models\User;
 use App\Services\Interfaces\IAuthenticationService;
 use App\Services\Interfaces\IUsersService;
 use App\Models\Attributes\Route;
-use Exception;
 
 class AuthenticationController extends ApiController 
 {
@@ -20,9 +19,6 @@ class AuthenticationController extends ApiController
     private IAuthenticationService $authenticationService;
 
     public function __construct(IUsersService $usersService, IAuthenticationService $authenticationService){
-
-        parent::__construct($usersService, $authenticationService);
-
         $this->usersService = $usersService;
         $this->authenticationService = $authenticationService;
     }
@@ -30,11 +26,7 @@ class AuthenticationController extends ApiController
     #[Route("POST", "/users/login")]
     public function processLogin()
     {            
-        $data = $this->getDataFromInput();
-
-        if (empty($data["username"]) || empty($data["password"])){
-            throw new NotAuthorizedException("All input fields must be filled.");
-        }
+        $data = $this->getDataFromInput(["username", "password"]);
 
         $user = $this->authenticationService->getUserByUsernameAndPassword($data["username"], $data["password"]);
         
@@ -51,11 +43,7 @@ class AuthenticationController extends ApiController
     #[Route("POST", "/users/register")]
     public function processRegister()
     {
-        $data = $this->getDataFromInput();
-
-        if (empty($data["username"]) || empty($data["password"])){
-            throw new Exception("All input fields must be filled.");
-        }
+        $data = $this->getDataFromInput(["username", "password"]);
 
         $user = User::constructUnknownUser($data["username"], $data["password"], 100, UserRole::User); 
         $userId = $this->usersService->createUser($user);
@@ -70,10 +58,9 @@ class AuthenticationController extends ApiController
     #[Route("GET", "/auth/admin-test")]
     public function adminTest()
     {
-        $this->loggedInAuthorization();
-        $this->adminAuthorization();
+        $loggedInUser = $this->authenticationService->getLoggedInUserByRoleAuthorization([UserRole::Admin]);
 
-        $dto = new AuthorizationTestDto($this->loggedInUser);
+        $dto = new AuthorizationTestDto($loggedInUser);
         http_response_code(200); 
         echo json_encode($dto, JSON_PRETTY_PRINT);
     }
@@ -81,9 +68,9 @@ class AuthenticationController extends ApiController
     #[Route("GET", "/auth/user-test")]
     public function userTest()
     {
-        $this->loggedInAuthorization();
+        $loggedInUser = $this->authenticationService->getLoggedInUser();
 
-        $dto = new AuthorizationTestDto($this->loggedInUser);
+        $dto = new AuthorizationTestDto($loggedInUser);
         http_response_code(200); 
         echo json_encode($dto, JSON_PRETTY_PRINT);
     }

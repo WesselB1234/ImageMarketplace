@@ -26,6 +26,10 @@ import ViewUsers from '@/components/pages/Users/ViewUsers.vue'
 
 const routes = [
     {
+        path: '/',
+        redirect: '/portfolio'
+    },
+    {
         path: '/auth',
         component: AuthLayout,
         children: [

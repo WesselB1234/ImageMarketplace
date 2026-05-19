@@ -8,8 +8,6 @@
 
 <template>
     <div class="mb-3">
-        <button type="submit" class="btn btn-success">
-            {{ text }}
-        </button>
+        <button type="submit" class="btn btn-success">{{ text }}</button>
     </div>
 </template>

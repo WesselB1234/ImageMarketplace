@@ -1,17 +1,17 @@
 import { createRouter, createWebHistory } from 'vue-router'
-
-import AuthLayout from '@/components/layout/AuthLayout.vue'
-
-import Login from '@/components/views/authentication/Login.vue'
-import Register from '@/components/views/authentication/Register.vue'
-import AdminAuthorizationTest from '@/components/views/authentication/AdminAuthorizationTest.vue'
-import UserAuthorizationTest from '@/components/views/authentication/UserAuthorizationTest.vue'
-import Logout from '@/components/views/authentication/logout.vue'
-
 import { useAuthStore } from "@/stores/authStore.js"
 import { useErrorHandlingStore } from "@/stores/errorHandlingStore"
+
+import AuthLayout from '@/components/layout/AuthLayout.vue'
 import DefaultLayout from '@/components/layout/DefaultLayout.vue'
-import Upload from '@/components/views/images/upload.vue'
+
+import Login from '@/components/pages/authentication/Login.vue'
+import Register from '@/components/pages/authentication/Register.vue'
+import Logout from '@/components/pages/authentication/Logout.vue'
+import AdminAuthorizationTest from '@/components/pages/authentication/AdminAuthorizationTest.vue'
+import UserAuthorizationTest from '@/components/pages/authentication/UserAuthorizationTest.vue'
+
+import UploadImage from '@/components/pages/images/UploadImage.vue'
 
 const routes = [
     {
@@ -64,6 +64,14 @@ const routes = [
         children: [
             { 
                 path: '/images/upload', 
+                component: UploadImage, 
+                meta: { 
+                    title: 'Upload image',
+                    isAuthenticated: true
+                }
+            },
+            { 
+                path: '/images', 
                 component: Upload, 
                 meta: { 
                     title: 'Upload image',

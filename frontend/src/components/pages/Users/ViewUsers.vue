@@ -1,0 +1,38 @@
+<template>
+
+    <h1>Users</h1>
+
+    <?php   
+        include $partialsDir."/errorAlert.php";
+        include $partialsDir."/successAlert.php"; 
+    ?>
+
+    <a class="btn btn-success" href="users/create">Create new user</a>
+
+    <table class="table mt-4">
+        <thead class="table-dark">
+            <th scope="col">User ID</th>
+            <th scope="col">Username</th>
+            <th scope="col">Image tokens</th>
+            <th scope="col">Role</th>
+            <th scope="col">Actions</th>
+        </thead>
+        <tbody>
+            <?php foreach($viewModel as $user){ ?>
+                <tr>
+                    <th scope="row"><?php echo $user->getUserId(); ?></th>
+                    <td><?php echo StringFormatter::getStringWithoutHtmlElements($user->getUsername()); ?></td>
+                    <td><?php echo StringFormatter::getDottedNumberStringFromNumber($user->getImageTokens()); ?></td>
+                    <td><?php echo $user->getRole()->value; ?></td>
+                    <td>
+                        <a href="users/update/<?php echo $user->getUserId() ?>" class="btn btn-primary">Update</a> |
+                        <button class="btn btn-danger user-deletion-btn" data-user-id="<?php echo $user->getUserId(); ?>">Delete</button>
+                    </td>
+                </tr>
+            <?php }?>
+        </tbody>
+    </table>
+
+    <script src="assets/js/AlertMessaging.js"></script>
+    <script src="assets/js/UserDeletionAjax.js"></script>
+</template>

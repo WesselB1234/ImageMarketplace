@@ -11,7 +11,18 @@ import Logout from '@/components/pages/authentication/Logout.vue'
 import AdminAuthorizationTest from '@/components/pages/authentication/AdminAuthorizationTest.vue'
 import UserAuthorizationTest from '@/components/pages/authentication/UserAuthorizationTest.vue'
 
+import ImageDetails from '@/components/pages/images/ImageDetails.vue'
+import SellImage from '@/components/pages/images/SellImage.vue'
 import UploadImage from '@/components/pages/images/UploadImage.vue'
+import ViewImages from '@/components/pages/images/ViewImages.vue'
+
+import ViewPortfolio from '@/components/pages/porfolio/ViewPortfolio.vue'
+
+import viewPrivacy from '@/components/pages/privacy/ViewPrivacy.vue'
+
+import CreateUser from '@/components/pages/Users/CreateUser.vue'
+import UpdateUser from '@/components/pages/Users/UpdateUser.vue'
+import ViewUsers from '@/components/pages/Users/ViewUsers.vue'
 
 const routes = [
     {
@@ -63,6 +74,22 @@ const routes = [
         component: DefaultLayout,
         children: [
             { 
+                path: '/images/:id', 
+                component: ImageDetails, 
+                meta: { 
+                    title: 'Image details',
+                    isAuthenticated: true
+                }
+            },
+            { 
+                path: '/images/sell/:id', 
+                component: SellImage, 
+                meta: { 
+                    title: 'Sell image',
+                    isAuthenticated: true
+                }
+            },
+            { 
                 path: '/images/upload', 
                 component: UploadImage, 
                 meta: { 
@@ -72,10 +99,61 @@ const routes = [
             },
             { 
                 path: '/images', 
-                component: Upload, 
+                component: ViewImages, 
                 meta: { 
-                    title: 'Upload image',
+                    title: 'Image',
                     isAuthenticated: true
+                }
+            },
+            { 
+                path: '/privacy', 
+                component: viewPrivacy, 
+                meta: { 
+                    title: 'Privacy',
+                    isAuthenticated: true
+                }
+            },
+            { 
+                path: '/portfolio', 
+                component: ViewPortfolio, 
+                meta: { 
+                    title: 'Portfolio',
+                    isAuthenticated: true
+                }
+            },
+            { 
+                path: '/settings', 
+                component: ViewPortfolio, 
+                meta: { 
+                    title: 'Settings',
+                    isAuthenticated: true
+                }
+            },
+            { 
+                path: '/users/create', 
+                component: CreateUser, 
+                meta: { 
+                    title: 'Create user',
+                    isAuthenticated: true,
+                    roles: ['Admin']
+                }
+            },
+            { 
+                path: '/users/update/:id', 
+                component: UpdateUser, 
+                meta: { 
+                    title: 'Update user',
+                    isAuthenticated: true,
+                    roles: ['Admin']
+                }
+            },
+            { 
+                path: '/users', 
+                component: ViewUsers, 
+                meta: { 
+                    title: 'User',
+                    isAuthenticated: true,
+                    roles: ['Admin']
                 }
             },
         ]

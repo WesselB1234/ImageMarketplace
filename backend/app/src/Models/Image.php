@@ -68,6 +68,11 @@ class Image
         return $this->imageId;
     }
 
+    public function setImageId(int $imageId)
+    {
+        $this->imageId = $imageId;
+    }
+
     public function getOwnerId(): ?int
     {
         return $this->ownerId;
@@ -106,6 +111,11 @@ class Image
     public function getTimeCreated(): DateTime
     {
         return $this->timeCreated;
+    }
+
+    public function setTimeCreated(DateTime $timeCreated)
+    {
+        $this->timeCreated = $timeCreated;
     }
 
     public function getAltText(): string

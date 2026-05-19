@@ -41,7 +41,12 @@ class AuthenticationService implements IAuthenticationService
             "iss" => $_ENV["DOMAIN"],
             "iat" => $now,
             "exp" => $expiration,
-            "data" => $user
+            "data" => [
+                "userId" => $user->getUserId(),
+                "username" => $user->getUsername(),
+                "imageTokens" => $user->getImageTokens(),
+                "role" => $user->getRole()->value
+            ]
         ];
         
         return JWT::encode($payload, $_ENV["TOKEN_SECRET_KEY"], self::JWT_ALGORITHM);

@@ -31,19 +31,6 @@ class ImagesController extends ApiController
         $this->authenticationService = $authenticationService;
     }
 
-    #[Route("GET", "/")] 
-    #[Route("GET", "/images/portfolio")]
-    public function index()
-    {
-        $loggedInUser = $this->authenticationService->getLoggedInUser();
-        $images = $this->imagesService->getAllImagesFromUserId($loggedInUser->getUserId());
-
-        $imageDtosArray = DtoMapper::mapImagesArrayToDtoList($images);
-
-        http_response_code(201); 
-        echo json_encode($imageDtosArray, JSON_PRETTY_PRINT);
-    }
-
     // #[Route("GET", "/images")]
     // public function index()
     // {
@@ -196,11 +183,13 @@ class ImagesController extends ApiController
             $this->imagesService->validateImageFile($imageFile);
             $imageId = $this->imagesService->createImage($image);
             $this->imagesService->uploadImageFile($imageFile, $imageId);
+            $image->setImageId($imageId);
+            $image->setTimeCreated(New DateTime());
 
-            $dto = new ImageDto($imageId, $image->getOwnerId(), $image->getCreatorId(), $image->getName(), $image->getDescription(), $image->getPrice(), $image->getIsModerated(), $image->getIsOnSale(), New DateTime(), $image->getAltText());
+            $imageDto = DtoMapper::mapImageToDto($image);
             
             http_response_code(201);
-            echo json_encode($dto);
+            echo json_encode($imageDto);
         }
         catch(Exception $e){
 

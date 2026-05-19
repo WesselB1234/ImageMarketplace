@@ -1,6 +1,6 @@
 <?php 
 
-namespace App\Models\Helpers;
+namespace App\Mappers;
 
 use App\Models\User;
 use App\Models\Image;

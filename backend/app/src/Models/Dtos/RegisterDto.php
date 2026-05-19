@@ -2,26 +2,23 @@
 
 namespace App\Models\Dtos;
 
-use App\Models\User;
 use JsonSerializable;
 
 class RegisterDto implements JsonSerializable
 {
-    private User $user;
+    private UserDto $userDto;
     private string $jwt;
 
-    public function __construct(User $user, string $jwt) 
+    public function __construct(UserDto $userDto, string $jwt) 
     {
-        $this->user = $user;
+        $this->userDto = $userDto;
         $this->jwt = $jwt;
     }
 
     public function jsonSerialize(): array 
     { 
         return [
-            "userId" => $this->user->getUserId(),
-            "username" => $this->user->getUsername(),
-            "image_tokens" => $this->user->getImageTokens(),
+            "user" => json_encode($this->userDto),
             "jwt" => $this->jwt,
         ];
     }

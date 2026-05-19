@@ -20,6 +20,26 @@ class UserDto implements JsonSerializable
         $this->role = $role;
     }
 
+    public function getUserId(): ?int
+    {
+        return $this->userId;
+    }
+
+    public function getUsername(): string
+    {
+        return $this->username;
+    }
+
+    public function getImageTokens(): int
+    {
+        return $this->imageTokens;
+    }
+
+    public function getRole(): UserRole
+    {
+        return $this->role;
+    }
+
     public function jsonSerialize(): array 
     { 
         return [ 

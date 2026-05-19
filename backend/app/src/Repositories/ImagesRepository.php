@@ -5,7 +5,7 @@ namespace App\Repositories;
 use App\Repositories\Interfaces\IImagesRepository;
 use App\Repositories\Repository;
 use App\Models\Image;
-use App\Models\Helpers\DataMapper;
+use App\Mappers\DataMapper;
 use App\Models\Exceptions\NotFoundException;
 
 use PDO;

@@ -32,6 +32,56 @@ class ImageDto implements JsonSerializable
         $this->altText = $altText;
     }
 
+    public function getImageId(): ?int
+    {
+        return $this->imageId;
+    }
+
+    public function getOwnerId(): ?int
+    {
+        return $this->ownerId;
+    }
+
+    public function getCreatorId(): ?int
+    {
+        return $this->creatorId;
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function getDescription(): string
+    {
+        return $this->description;
+    }
+
+    public function getPrice(): ?int
+    {
+        return $this->price;
+    }
+
+    public function getIsModerated(): bool
+    {
+        return $this->isModerated;
+    }
+
+    public function getIsOnSale(): bool
+    {
+        return $this->isOnSale;
+    }
+
+    public function getTimeCreated(): DateTime
+    {
+        return $this->timeCreated;
+    }
+
+    public function getAltText(): string
+    {
+        return $this->altText;
+    }
+
     public function jsonSerialize(): array 
     { 
         return [ 

@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Mappers\DtoMapper;
 use App\Models\Dtos\ImageDto;
 use App\Services\Interfaces\IAuthenticationService;
 use App\Services\Interfaces\IImagesService;
@@ -28,6 +29,19 @@ class ImagesController extends ApiController
         $this->imagesService = $imagesService;
         $this->usersService = $usersService;
         $this->authenticationService = $authenticationService;
+    }
+
+    #[Route("GET", "/")] 
+    #[Route("GET", "/images/portfolio")]
+    public function index()
+    {
+        $loggedInUser = $this->authenticationService->getLoggedInUser();
+        $images = $this->imagesService->getAllImagesFromUserId($loggedInUser->getUserId());
+
+        $imageDtosArray = DtoMapper::mapImagesArrayToDtoList($images);
+
+        http_response_code(201); 
+        echo json_encode($imageDtosArray, JSON_PRETTY_PRINT);
     }
 
     // #[Route("GET", "/images")]

@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Controllers\ApiController;
+use App\Mappers\DtoMapper;
 use App\Models\Dtos\AuthorizationTestDto;
 use App\Models\Dtos\LoginDto;
 use App\Models\Dtos\RegisterDto;
@@ -49,7 +50,9 @@ class AuthenticationController extends ApiController
         $userId = $this->usersService->createUser($user);
         $user->setUserId($userId);
         
-        $dto = new RegisterDto($user, $this->authenticationService->generateAuthTokenFromUser($user));
+        $userDto = DtoMapper::mapUserToDto($user);
+        
+        $dto = new RegisterDto($userDto, $this->authenticationService->generateAuthTokenFromUser($user));
 
         http_response_code(201); 
         echo json_encode($dto, JSON_PRETTY_PRINT);

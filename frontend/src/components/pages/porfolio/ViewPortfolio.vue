@@ -1,7 +1,8 @@
 <script setup>
-    import ErrorAlert from '@/components/atoms/errorHandling/ErrorAlert.vue';
-    import SuccessAlert from '@/components/atoms/errorHandling/SuccessAlert.vue';
-    import ImagesDisplay from '@/components/organisms/images/ImagesDisplay.vue';
+    import CreateBtn from '@/components/atoms/buttons/CreateBtn.vue'
+    import ErrorAlert from '@/components/atoms/errorHandling/ErrorAlert.vue'
+    import SuccessAlert from '@/components/atoms/errorHandling/SuccessAlert.vue'
+    import ImagesDisplay from '@/components/organisms/images/ImagesDisplay.vue'
     import axios from '@/utils/axios.js'
     import { onMounted, ref } from 'vue';
 
@@ -27,7 +28,7 @@
     <ErrorAlert />
     <SuccessAlert ref="currentSuccessAlert" />
 
-    <a class="btn btn-success" href="images/upload">Upload an image</a>
+    <CreateBtn to="images/upload" text="Upload an image" />
 
     <ImagesDisplay :images="images" />
 </template>

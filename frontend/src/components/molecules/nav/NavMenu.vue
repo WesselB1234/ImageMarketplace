@@ -11,10 +11,10 @@ defineProps({
 
 <template>
     <ul class="navbar-nav mr-auto">
-        <NavLink href="/portfolio" label="Portfolio" />
-        <NavLink href="/images" label="Images on sale" />
-        <NavLink href="/privacy" label="Privacy" />
-        <NavLink href="/settings" label="Settings" />
-        <NavLink v-if="isAdmin" href="/users" label="Users" />
+        <NavLink to="/portfolio" text="Portfolio" />
+        <NavLink to="/images" text="Images on sale" />
+        <NavLink to="/privacy" text="Privacy" />
+        <NavLink to="/settings" text="Settings" />
+        <NavLink v-if="isAdmin" to="/users" text="Users" />
     </ul>
 </template>

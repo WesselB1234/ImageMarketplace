@@ -2,14 +2,13 @@
     const props = defineProps({
         text: {
             type: String,
+        },
+        to: {
+            type: String,
         }
     })
 </script>
 
 <template>
-    <div class="mb-3">
-        <button type="submit" class="btn btn-success">
-            {{ text }}
-        </button>
-    </div>
+    <router-link :to="to" class="btn btn-success">{{ text }}</router-link>
 </template>

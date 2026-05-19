@@ -56,6 +56,6 @@
         <TextAreaField labelName="Description" id="description" name="description" placeholder="Enter description" v-model="description"/>
         <TextAreaField labelName="Alt text (shows if image is not able to load on the screen)" id="alt_text" name="alt_text" placeholder="Enter alt text" v-model="altText"/>
 
-        <SubmitBtn buttonText="Upload" />
+        <SubmitBtn text="Upload" />
   </form>
 </template>

@@ -6,4 +6,8 @@ function getPriceFormatted(price){
     });    
 }
 
-export { getPriceFormatted };
+function getImageUrl(imageId) {
+    return import.meta.env.VITE_BACK_END_URL + import.meta.env.VITE_USER_UPLOADED_IMAGES_URL + '/' + imageId + '.png'
+}
+
+export { getPriceFormatted, getImageUrl };

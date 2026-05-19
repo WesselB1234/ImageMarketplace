@@ -50,6 +50,6 @@
         <BaseFormField labelName="Username" id="username" name="username" placeholder="Enter your username" v-model="username"/>
         <BaseFormField labelName="Password" type="password" id="password" name="password" placeholder="Enter your password" v-model="password"/>
         <BaseFormField labelName="Repeat password" type="password" id="repeat_password" placeholder="Repeat your password" v-model="repeatPassword"/>
-        <AuthsubmitBtn buttonText="Register" />
+        <AuthsubmitBtn text="Register" />
     </form>
 </template>

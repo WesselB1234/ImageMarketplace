@@ -1,14 +1,14 @@
 <script setup>
     const props = defineProps({
-        buttonText: {
+        text: {
             type: String,
         },
-        route: {
+        to: {
             type: String,
         }
     })
 </script>
 
 <template>
-    <router-link :to="props.route" class="btn btn-secondary mb-4">{{ props.buttonText }}</router-link>
+    <router-link :to="to" class="btn btn-secondary mb-4">{{ text }}</router-link>
 </template>

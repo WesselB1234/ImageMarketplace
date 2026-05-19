@@ -159,4 +159,25 @@ class UsersController extends ApiController
     //         );
     //     } 
     // }
+
+    //     #[Route("GET", "/settings/deleteaccount")]
+//     public function deleteAccount()
+//     {
+//         try{
+//             $this->usersService->deleteUserByUserId($this->loggedInUser->getUserId());
+            
+//             unset($_SESSION["logged_in_user_id"]);
+//             $_SESSION["success_message"] = "Successfully deleted your account.";
+
+//             header("location: /login");
+//         }
+//         catch(Exception $e){
+//             $this->displayView([
+//                     "errorMessage" => $e->getMessage()
+//                 ],
+//                 "Settings/index.php"
+//             );
+//         } 
+//     }
+// }
 }

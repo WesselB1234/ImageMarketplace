@@ -1,19 +1,21 @@
 <script setup>
     import { ref } from 'vue'
+    import axios from '@/utils/axios.js'
+    import { useErrorHandlingStore } from '@/stores/errorHandlingStore'
+
     import BaseFormField from '@/components/molecules/forms/BaseFormField.vue'
     import SuccessAlert from '@/components/atoms/errorHandling/SuccessAlert.vue'
     import ErrorAlert from '@/components/atoms/errorHandling/ErrorAlert.vue'
     import SubmitBtn from '@/components/atoms/buttons/forms/SubmitBtn.vue'
     import FileFormField from '@/components/molecules/forms/FileFormField.vue'
     import TextAreaField from '@/components/molecules/forms/TextAreaField.vue'
-    import axios from '@/utils/axios.js'
+
+    const errorHandlingStore = useErrorHandlingStore()
 
     const name = ref('')
     const image = ref(null)
     const description = ref('')
     const altText = ref('')
-    const currentErrorAlert = ref(null)
-    const currentSuccessAlert = ref(null)
 
     async function handleUpload(e) {
         try {
@@ -31,16 +33,14 @@
                 }
             })
 
-            console.log(response)
-
-            currentSuccessAlert.value.displaySuccessMessage('Successfully uploaded image.')
+            errorHandlingStore.successMessage = 'Successfully uploaded image.'
         }
         catch (ex){
             if (ex.response){
-                currentErrorAlert.value.displayErrorMessage(ex.response.data.message)
+                errorHandlingStore.errorMessage = ex.response.data.message
             }
             else {
-                currentErrorAlert.value.displayErrorMessage(ex.message)
+                errorHandlingStore.errorMessage = ex.message
             }
         }
     }
@@ -48,8 +48,8 @@
 
 <template>
     <form @submit="handleUpload">
-        <ErrorAlert ref="currentErrorAlert" />
-        <SuccessAlert ref="currentSuccessAlert" />
+        <ErrorAlert />
+        <SuccessAlert />
 
         <BaseFormField labelName="Image name" id="name" name="name" placeholder="Enter image name" v-model="name"/>
         <FileFormField labelName="Image file (extension must be .png)" id="image" name="image" accept="image/*" v-model="image"/>

@@ -179,7 +179,7 @@ router.beforeEach((to) => {
         const decodedAuthToken = authStore.decodedAuthToken
 
         if (decodedAuthToken === null) {
-            errorHandlingStore.setErrorMessage('You need to be logged in to perform this action.')
+            errorHandlingStore.errorMessage = 'You need to be logged in to perform this action.'
             return '/auth/login'
         }
 
@@ -195,7 +195,7 @@ router.beforeEach((to) => {
             }
 
             if (isAuthorized === false) {
-                errorHandlingStore.setErrorMessage(`Your account doesn't have the right role to perform this action.`)
+                errorHandlingStore.errorMessage = `Your account doesn't have the right role to perform this action.`
                 return '/auth/login'
             }
         }

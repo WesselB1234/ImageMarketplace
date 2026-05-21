@@ -10,5 +10,5 @@
 </script>
 
 <template>
-    <router-link :to="to" class="btn btn-success">{{ text }}</router-link>
+    <RouterLink :to="to" class="btn btn-success">{{ text }}</RouterLink>
 </template>

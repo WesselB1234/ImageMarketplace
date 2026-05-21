@@ -1,12 +1,12 @@
 <script setup>
-import NavLink from '@/components/atoms/nav/NavLink.vue'
+    import NavLink from '@/components/atoms/nav/NavLink.vue'
 
-defineProps({
-    isAdmin: { 
-        type: Boolean, 
-        default: false 
-    },
-})
+    defineProps({
+        isAdmin: { 
+            type: Boolean, 
+            default: false 
+        },
+    })
 </script>
 
 <template>

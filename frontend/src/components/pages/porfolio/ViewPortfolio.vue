@@ -1,13 +1,15 @@
 <script setup>
+    import axios from '@/utils/axios.js'
+    import { onMounted, ref } from 'vue';
+    import { useErrorHandlingStore } from '@/stores/errorHandlingStore'
+
     import CreateBtn from '@/components/atoms/buttons/CreateBtn.vue'
     import ErrorAlert from '@/components/atoms/errorHandling/ErrorAlert.vue'
     import SuccessAlert from '@/components/atoms/errorHandling/SuccessAlert.vue'
     import ImagesDisplay from '@/components/organisms/images/ImagesDisplay.vue'
-    import axios from '@/utils/axios.js'
-    import { onMounted, ref } from 'vue';
 
+    const errorHandlingStore = useErrorHandlingStore()
     const images = ref([])
-    const currentErrorAlert = ref(null)
 
     onMounted(async () => {
         try {
@@ -15,7 +17,7 @@
         }
         catch (ex){
             if (ex.response){
-                currentErrorAlert.value.displayErrorMessage(ex.response.data.message)
+                errorHandlingStore.errorMessage = ex.response.data.message
             }
         }
     })
@@ -26,7 +28,7 @@
     <h1>Portfolio</h1>
 
     <ErrorAlert />
-    <SuccessAlert ref="currentSuccessAlert" />
+    <SuccessAlert />
 
     <CreateBtn to="images/upload" text="Upload an image" />
 

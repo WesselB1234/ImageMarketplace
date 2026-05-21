@@ -8,7 +8,7 @@
             <div class="card-body">
                 <h3 class="card-title text-center mb-4">Login</h3>
                 <LoginForm />
-                <router-link to="/auth/register">Register a new account</router-link>
+                <RouterLink to="/auth/register">Register a new account</RouterLink>
             </div>
         </div>
     </section>

@@ -7,7 +7,7 @@
     const errorHandlingStore = useErrorHandlingStore()
 
     authStore.setAuthToken(null)
-    errorHandlingStore.setSuccessMessage("Successfully logged out of your account.")
+    errorHandlingStore.successMessage = 'Successfully logged out of your account.'
 
     router.push('/auth/login')
 </script>

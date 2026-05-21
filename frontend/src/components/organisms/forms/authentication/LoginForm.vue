@@ -3,18 +3,18 @@
     import axios from '@/utils/axios.js'
     import { useAuthStore } from '@/stores/authStore.js'
     import { useErrorHandlingStore } from '@/stores/errorHandlingStore'
+    import router from '@/router'
+
     import AuthsubmitBtn from '@/components/atoms/buttons/forms/AuthsubmitBtn.vue'
     import BaseFormField from '@/components/molecules/forms/BaseFormField.vue'
     import SuccessAlert from '@/components/atoms/errorHandling/SuccessAlert.vue'
     import ErrorAlert from '@/components/atoms/errorHandling/ErrorAlert.vue'
-    import router from '@/router'
     
     const authStore = useAuthStore()
     const errorHandlingStore = useErrorHandlingStore()
 
     const username = ref('')
     const password = ref('')
-    const currentErrorAlert = ref(null)
 
     async function handleLogin(e) {
         try {
@@ -27,12 +27,11 @@
             const response = await axios.post('/users/login', form)
 
             authStore.setAuthToken(response.data.jwt)
-            errorHandlingStore.setSuccessMessage('Successfully logged in.')
             router.push('/')
         }
         catch (ex){
             if (ex.response){
-                currentErrorAlert.value.displayErrorMessage(ex.response.data.message)
+                errorHandlingStore.errorMessage = ex.response.data.message
             }
         }
     }
@@ -40,7 +39,7 @@
 
 <template>
     <form @submit="handleLogin">
-        <ErrorAlert ref="currentErrorAlert" />
+        <ErrorAlert />
         <SuccessAlert />
         <BaseFormField labelName="Username" id="username" name="username" placeholder="Enter your username" v-model="username"/>
         <BaseFormField labelName="Password" type="password" id="password" name="password" placeholder="Enter your password" v-model="password"/>

@@ -1,5 +1,5 @@
 <script setup>
-    import { onMounted, ref } from 'vue'
+    import { onMounted, ref, watch } from 'vue'
     import { useErrorHandlingStore } from "@/stores/errorHandlingStore.js"
 
     const errorHandlingStore = useErrorHandlingStore();
@@ -7,9 +7,10 @@
     const displayer = ref('d-none')
     const errorMessage = ref('')
 
-    function displayErrorMessage(newErrorMessage){
+    function displayErrorMessage(){
         displayer.value = ''
-        errorMessage.value = newErrorMessage
+        errorMessage.value = errorHandlingStore.errorMessage
+        errorHandlingStore.errorMessage = null
     }
 
     function handleDismissClick(){
@@ -18,15 +19,20 @@
 
     onMounted(() => {
 
-        const newErrorMessage = errorHandlingStore.getErrorMessage()
-
-        if (newErrorMessage !== null) {
-            displayErrorMessage(newErrorMessage)
+        if (errorHandlingStore.errorMessage) {
+            displayErrorMessage()
         }
-    })
 
-    defineExpose({
-        displayErrorMessage
+        watch(
+            () => errorHandlingStore.errorMessage,
+            (newValue) => {
+                if (!newValue) {
+                    return
+                }
+                
+                displayErrorMessage()
+            }
+        )
     })
 </script>
 

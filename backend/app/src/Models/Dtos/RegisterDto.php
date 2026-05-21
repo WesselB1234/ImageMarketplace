@@ -18,8 +18,8 @@ class RegisterDto implements JsonSerializable
     public function jsonSerialize(): array 
     { 
         return [
-            "user" => json_encode($this->userDto),
-            "jwt" => $this->jwt,
+            "user" => $this->userDto,
+            "jwt" => $this->jwt
         ];
     }
 }

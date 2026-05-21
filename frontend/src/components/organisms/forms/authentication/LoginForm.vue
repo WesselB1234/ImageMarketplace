@@ -13,6 +13,8 @@
     const authStore = useAuthStore()
     const errorHandlingStore = useErrorHandlingStore()
 
+    const currentSuccessAlert = ref(null)
+
     const username = ref('')
     const password = ref('')
 
@@ -27,6 +29,8 @@
             const response = await axios.post('/users/login', form)
 
             authStore.setAuthToken(response.data.jwt)
+            currentSuccessAlert.value.shutdown()
+            errorHandlingStore.successMessage = 'Successfully logged in'
             router.push('/')
         }
         catch (ex){
@@ -40,7 +44,7 @@
 <template>
     <form @submit="handleLogin">
         <ErrorAlert />
-        <SuccessAlert />
+        <SuccessAlert ref="currentSuccessAlert"/>
         <BaseFormField labelName="Username" id="username" name="username" placeholder="Enter your username" v-model="username"/>
         <BaseFormField labelName="Password" type="password" id="password" name="password" placeholder="Enter your password" v-model="password"/>
         <AuthsubmitBtn text="Login" />

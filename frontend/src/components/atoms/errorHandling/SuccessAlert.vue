@@ -6,6 +6,13 @@
 
     const displayer = ref('d-none')
     const successMessage = ref('')
+    let stopWatchingSuccess;
+
+    function shutdown(){
+        if (stopWatchingSuccess !== undefined) {
+            stopWatchingSuccess()
+        }
+    }
 
     function displaySuccessMessage(){
         displayer.value = ''
@@ -23,7 +30,7 @@
             displaySuccessMessage()
         }
 
-        watch(
+        stopWatchingSuccess = watch(
             () => errorHandlingStore.successMessage,
             (newValue) => {
                 if (!newValue) {
@@ -33,6 +40,10 @@
                 displaySuccessMessage()
             }
         )
+    })
+
+    defineExpose({
+        shutdown
     })
 </script>
 

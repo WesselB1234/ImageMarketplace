@@ -31,8 +31,8 @@
             const response = await axios.post('/users/register', form)
 
             authStore.setAuthToken(response.data.jwt)
-            router.push('/')
             errorHandlingStore.successMessage = 'Successfully created a new account.'
+            router.push('/')
         }
         catch (ex){
             if (ex.response){

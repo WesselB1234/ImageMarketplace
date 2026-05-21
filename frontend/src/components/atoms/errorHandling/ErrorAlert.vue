@@ -6,6 +6,13 @@
 
     const displayer = ref('d-none')
     const errorMessage = ref('')
+    let stopWatchingError;
+
+    function shutdown(){
+        if (stopWatchingError !== undefined) {
+            stopWatchingError()
+        }
+    }
 
     function displayErrorMessage(){
         displayer.value = ''
@@ -23,7 +30,7 @@
             displayErrorMessage()
         }
 
-        watch(
+        stopWatchingError = watch(
             () => errorHandlingStore.errorMessage,
             (newValue) => {
                 if (!newValue) {
@@ -33,6 +40,10 @@
                 displayErrorMessage()
             }
         )
+    })
+
+    defineExpose({
+        shutdown
     })
 </script>
 

@@ -1,10 +1,8 @@
 <script setup>
     import { useRoute } from 'vue-router'
 
-    // 1. Initialize the hook
     const route = useRoute()
 
-    // 2. Access the specific parameter
     console.log(route.params.id) 
 </script>
 

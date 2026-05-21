@@ -9,7 +9,9 @@ class ImageDto implements JsonSerializable
 {
     private ?int $imageId;
     private ?int $ownerId;
+    private ?UserDto $owner;
     private ?int $creatorId;
+    private ?UserDto $creator;
     private string $name;
     private string $description;
     private ?int $price;
@@ -42,9 +44,29 @@ class ImageDto implements JsonSerializable
         return $this->ownerId;
     }
 
+    public function getOwner(): ?UserDto
+    {
+        return $this->owner;
+    }
+
     public function getCreatorId(): ?int
     {
         return $this->creatorId;
+    }
+
+    public function getCreator(): ?UserDto
+    {
+        return $this->creator;
+    }
+
+    public function setOwner(?UserDto $owner)
+    {
+        $this->owner = $owner;
+    }
+
+    public function setCreator(?UserDto $creator)
+    {
+        $this->creator = $creator;
     }
 
     public function getName(): string
@@ -87,7 +109,9 @@ class ImageDto implements JsonSerializable
         return [ 
             "imageId" => $this->imageId, 
             "ownerId" => $this->ownerId, 
-            "creatorId" => $this->creatorId, 
+            "owner" => $this->owner,
+            "creatorId" => $this->creatorId,
+            "creator" => $this->creator,
             "name" => $this->name, 
             "description" => $this->description, 
             "price" => $this->price, 

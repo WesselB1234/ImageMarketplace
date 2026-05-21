@@ -39,38 +39,33 @@ class ImagesController extends ApiController
     //     $this->displayView(["viewModel" => $images], "Images/index.php");
     // }
 
-    // #[Route("GET", "/images/details", ["id"])]
-    // public function details(array $requestParams)
-    // {
-    //     $imageId = $requestParams["id"];
-
-    //     try{
-    //         RequestParamValidator::validateRequestParamId($imageId);
-
-    //         $image = $this->imagesService->getImageByImageIdOrThrow($imageId);
+    #[Route("GET", "/images", ["id"])]
+    public function getImageById(array $requestParams)
+    {
+        $imageId = $requestParams["id"];
+        $loggedInUser = $this->authenticationService->getLoggedInUser();
             
-    //         if ($image->getIsOnSale() === false && $this->loggedInUser->getRole() !== UserRole::Admin && $image->getOwnerId() !== $this->loggedInUser->getUserId()){
-    //             throw new NotAuthorizedException("You cannot view private off sale images.");
-    //         }
+        RequestParamValidator::validateRequestParamId($imageId);
 
-    //         $ownerUser = null;
-    //         $creatorUser = null;
+        $image = $this->imagesService->getImageByImageIdOrThrow($imageId);
+        
+        if ($image->getIsOnSale() === false && $loggedInUser->getRole() !== UserRole::Admin && $image->getOwnerId() !== $loggedInUser->getUserId()){
+            throw new NotAuthorizedException("You cannot view private off sale images.");
+        }
 
-    //         if ($image->getOwnerId() !== null){
-    //             $ownerUser = $this->usersService->getUserByUserId($image->getOwnerId());
-    //         }
+        if ($image->getOwnerId() !== null){
+            $image->setOwner($this->usersService->getUserByUserId($image->getOwnerId()));
+        }
 
-    //         if ($image->getCreatorId() !== null){
-    //             $creatorUser = $this->usersService->getUserByUserId($image->getCreatorId());
-    //         }
-           
-    //         $this->displayView(["viewModel" => new ImageDetailsVM($image, $ownerUser, $creatorUser)], null);
-    //     }
-    //     catch(Exception $e){
-    //         $_SESSION["error_message"] = $e->getMessage();
-    //         header("Location: /portfolio");
-    //     }
-    // }
+        if ($image->getCreatorId() !== null){
+            $image->setCreator($this->usersService->getUserByUserId($image->getCreatorId()));
+        }
+        
+        $imageDto = DtoMapper::mapImageToDto($image);
+            
+        http_response_code(200);
+        echo json_encode($imageDto);
+    }
 
     // #[Route("GET", "/images/sell", ["id"])]
     // public function sell(array $requestParams)

@@ -8,7 +8,9 @@ class Image
 {
     private ?int $imageId;
     private ?int $ownerId;
+    private ?User $owner;
     private ?int $creatorId;
+    private ?User $creator;
     private string $name;
     private string $description;
     private ?int $price;
@@ -81,6 +83,26 @@ class Image
     public function getCreatorId(): ?int
     {
         return $this->creatorId;
+    }
+
+    public function getOwner(): ?User
+    {
+        return $this->owner;
+    }
+
+    public function getCreator(): ?User
+    {
+        return $this->creator;
+    }
+
+    public function setOwner(User $owner)
+    {
+        $this->owner = $owner;
+    }
+
+    public function setCreator(User $creator)
+    {
+        $this->creator = $creator;
     }
 
     public function getName(): string

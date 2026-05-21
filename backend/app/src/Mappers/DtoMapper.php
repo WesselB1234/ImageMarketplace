@@ -23,7 +23,7 @@ class DtoMapper
 
     public static function mapImageToDto(Image $image): ImageDto
     {
-        return new ImageDto(
+        $imageDto = new ImageDto(
             $image->getImageId(),
             $image->getOwnerId(),
             $image->getCreatorId(),
@@ -35,6 +35,16 @@ class DtoMapper
             $image->getTimeCreated(),
             $image->getAltText()
         );
+
+        if ($image->getOwner() !== null) {
+            $imageDto->setOwner(self::mapUserToDto($image->getOwner()));
+        }
+
+        if ($image->getCreator() !== null) {
+            $imageDto->setCreator(self::mapUserToDto($image->getCreator()));
+        }
+
+        return $imageDto;
     }
 
     public static function mapUsersArrayToDtoList(array $users): array

@@ -1,28 +1,43 @@
 <script setup>
+    import axios from '@/utils/axios.js'
+    import { getImageUrl, getPriceFormatted } from '@/utils/stringFormatter'
+    import { onMounted, ref } from 'vue'
     import { useRoute } from 'vue-router'
+    
+    import ErrorAlert from '@/components/atoms/errorHandling/ErrorAlert.vue'
+    import SuccessAlert from '@/components/atoms/errorHandling/SuccessAlert.vue'
+    import { useAuthStore } from '@/stores/authStore'
 
     const route = useRoute()
+    const image = ref(null)
 
-    console.log(route.params.id) 
+    onMounted(async () => {
+        try {
+            image.value = (await axios.get('/images/' + route.params.id)).data
+            console.log(image.value)
+        }
+        catch (ex){
+            if (ex.response){
+                errorHandlingStore.errorMessage = ex.response.data.message
+            }
+        }
+    })
 </script>
 
 <template>
-
     <h1 class="mb-4">Image details</h1>
 
-    <!-- < 
-        include $partialsDir."/successAlert.php"; 
-        include $partialsDir."/errorAlert.php";
-    ?> -->
+    <ErrorAlert />
+    <SuccessAlert />
 
-    <!-- <div class="row g-4">
+    <div class="row g-4">
         <div class="col-md-6">
             <div class="card">
-                <img src="/assets/img/UserUploadedImages/<?php echo $viewModel->getImage()->getImageId(); ?>.png" class="card-img-top" alt="<?php echo StringFormatter::getStringWithoutHtmlElements($viewModel->getImage()->getAltText()); ?>">
+                <img v-if="image !== null" :src="getImageUrl(image.imageId)" class="card-img-top" :alt="image.altText">
             </div>
         </div>
 
-        <div class="col-md-6">
+        <!-- <div class="col-md-6">
             <div class="card">
                 <div class="card-body d-flex flex-column">
                     <h3 class="card-title mb-3">echo StringFormatter::getStringWithoutHtmlElements($viewModel->getImage()->getName()); ?></h3>
@@ -82,6 +97,6 @@
                     }?>
                 </div>
             </div>
-        </div>
-    </div> -->
+        </div> -->
+    </div>
 </template>

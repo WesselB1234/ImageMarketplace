@@ -7,6 +7,7 @@
     import ErrorAlert from '@/components/atoms/errorHandling/ErrorAlert.vue'
     import SuccessAlert from '@/components/atoms/errorHandling/SuccessAlert.vue'
     import { useAuthStore } from '@/stores/authStore'
+    import ReturnBtn from '@/components/atoms/buttons/ReturnBtn.vue'
 
     const authStore = useAuthStore()
 
@@ -29,7 +30,7 @@
 
 <template>
     <h1 class="mb-4">Image details</h1>
-
+    <ReturnBtn to="/portfolio" text="Return back to portfolio" />
     <ErrorAlert />
     <SuccessAlert />
 
@@ -53,7 +54,7 @@
                         <li class="list-group-item">
                             <span class="font-weight-bold">Owned by:</span>
                             <span v-if="image?.owner !== null">
-                                {{ image?.owner.username + ' (User ID: ' + image?.ownerId + ')' }}
+                                {{' ' +  image?.owner.username + ' (User ID: ' + image?.ownerId + ')' }}
                             </span>
                             <span v-else>
                                 Unknown
@@ -62,7 +63,7 @@
                         <li class="list-group-item">
                             <span class="font-weight-bold">Created by:</span>
                             <span v-if="image?.creator !== null">
-                                {{ image?.creator.username + ' (User ID: ' + image?.creatorId + ')' }}
+                                {{' ' + image?.creator.username + ' (User ID: ' + image?.creatorId + ')' }}
                             </span>
                             <span v-else>
                                 Unknown

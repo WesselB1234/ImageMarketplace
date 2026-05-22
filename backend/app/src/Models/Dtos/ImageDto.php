@@ -24,7 +24,9 @@ class ImageDto implements JsonSerializable
     {
         $this->imageId = $imageId;
         $this->ownerId = $ownerId;
+        $this->owner = null;
         $this->creatorId = $creatorId;
+        $this->creator = null;
         $this->name = $name;
         $this->description = $description;
         $this->price = $price;

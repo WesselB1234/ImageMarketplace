@@ -193,13 +193,14 @@ class ImagesController extends ApiController
         }               
     }
 
-    #[Route("PATCH", "/images/moderate", ["id", "isModerate"])]
+    #[Route("PATCH", "/images/moderate", ["id"])]
     public function moderateImage(array $requestParams)
     {
         $this->authenticationService->getLoggedInUserByRoleAuthorization([UserRole::Admin]);
-        
+        $data = $this->getDataFromInput(["isModerate"]);
+
         $imageId = $requestParams["id"];
-        $isModerateRaw = $requestParams["isModerate"];
+        $isModerateRaw = $data["isModerate"];
 
         RequestParamValidator::validateRequestParamId($imageId);
         

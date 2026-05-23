@@ -34,8 +34,10 @@
     }
 
     async function handleModerateRequest(isModerate) {
-         try {
-            const response = await axios.patch('/images/moderate/' + image.value.imageId + '/' + isModerate)
+        try {
+            const response = await axios.patch('/images/moderate/' + image.value.imageId, {
+                "isModerate": isModerate 
+            })
             image.value.isModerated = response.data.isModerated
         }
         catch (ex){

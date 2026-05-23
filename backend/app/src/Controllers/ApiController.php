@@ -3,17 +3,23 @@
 namespace App\Controllers;
 
 use App\Models\Exceptions\BadRequestException;
+use App\Models\Exceptions\NotFoundException;
 
 class ApiController
 {
-    private function throwIfInputDataIsInvalid(array $data, array $requiredParams) 
+    private function throwIfInputDataIsInvalid(?array $data, array $requiredParams): void
     {
-        foreach($requiredParams as $requiredParam) {
-            if (empty($data[$requiredParam])) {
-                throw new BadRequestException("Input data does not contain the ".$requiredParam." parameter.");
+        if ($data === null) {
+            throw new BadRequestException("Invalid JSON.");
+        }
+
+        foreach ($requiredParams as $param) {
+            if (!array_key_exists($param, $data)) {
+                throw new NotFoundException("Missing required param: $param.");
             }
         }
     }
+
 
     public function getDataFromInput(array $requiredParams): array
     {
@@ -23,8 +29,8 @@ class ApiController
             return array_merge($_POST, $_FILES);
         }
 
-        $input = file_get_contents("php://input"); 
-        $data = json_decode($input, true); 
+        $input = file_get_contents("php://input");
+        $data = json_decode($input, true);
 
         $this->throwIfInputDataIsInvalid($data, $requiredParams);
 

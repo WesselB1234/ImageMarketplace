@@ -3,50 +3,70 @@
     import { getImageUrl, getPriceFormatted } from '@/utils/stringFormatter'
     import { onMounted, ref } from 'vue'
     import { useRoute } from 'vue-router'
+    import { useAuthStore } from '@/stores/authStore'
+    import { useErrorHandlingStore } from '@/stores/errorHandlingStore'
     
     import ErrorAlert from '@/components/atoms/errorHandling/ErrorAlert.vue'
     import SuccessAlert from '@/components/atoms/errorHandling/SuccessAlert.vue'
-    import { useAuthStore } from '@/stores/authStore'
     import ReturnBtn from '@/components/atoms/buttons/ReturnBtn.vue'
 
     const authStore = useAuthStore()
+    const errorHandlingStore = useErrorHandlingStore()
 
     const route = useRoute()
     const image = ref(null)
     const loggedInUser = authStore.decodedAuthToken.data
 
-    function handleBuy() {
+    async function handleBuy() {
         console.log('/images/buy/' + image.value.imageId)
     }
 
-    function handleSell() {
+    async function handleSell() {
         console.log('/images/sell/' + image.value.imageId)
     }
 
-    function handleTakeOffSale() {
+    async function handleTakeOffSale() {
         console.log('/images/takeoffsale/' + image.value.imageId)
     }
 
-    function handleDelete() {
+    async function handleDelete() {
         console.log('/images/delete/' + image.value.imageId)
     }
 
-    function handleModerate() {
-        console.log('/images/moderate/' + image.value.imageId + '/true')
-    }
-
-    function handleUnModerate() {
-        console.log('/images/moderate/' + image.value.imageId + '/false')
-    }
-
-    onMounted(async () => {
-        try {
-            image.value = (await axios.get('/images/' + route.params.id)).data
-            console.log(image.value)
+    async function handleModerateRequest(isModerate) {
+         try {
+            const response = await axios.patch('/images/moderate/' + image.value.imageId + '/' + isModerate)
+            image.value.isModerated = response.data.isModerated
         }
         catch (ex){
             if (ex.response){
                 errorHandlingStore.errorMessage = ex.response.data.message
+            }
+            else {
+                useErrorHandlingStore.errorMessage = ex.message
+            }
+        }
+    }
+
+    async function handleModerate() {
+        handleModerateRequest(true)
+    }
+
+    async function handleUnModerate() {
+        handleModerateRequest(false)
+    }
+
+    onMounted(async () => {
+        try {
+            const response = await axios.get('/images/' + route.params.id)
+            image.value = response.data
+        }
+        catch (ex){
+            if (ex.response){
+                errorHandlingStore.errorMessage = ex.response.data.message
+            }
+            else {
+                useErrorHandlingStore.errorMessage = ex.message
             }
         }
     })

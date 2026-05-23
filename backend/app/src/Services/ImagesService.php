@@ -107,9 +107,9 @@ class ImagesService implements IImagesService
         $this->imagesRepository->updateImageOwnershipByImageId($image->getImageId(), $buyerUser->getUserId());
     }
 
-    public function sellImage(Image $image, int $price)
+    public function sellImage(Image $image, int $price, User $loggedInUser)
     {
-        if (!$this->isUserAuthorizedToImage($image)){
+        if (!$this->isUserAuthorizedToImage($image, $loggedInUser)){
             throw new NotAuthorizedException("You are not authorized to sell this image.");
         }
 
@@ -120,11 +120,11 @@ class ImagesService implements IImagesService
         $this->imagesRepository->updateImageSellingPrice($image->getImageId(), $price);
     }
 
-    public function takeImageOffSaleByImageId(int $imageId)
+    public function takeImageOffSaleByImageId(int $imageId, User $loggedInUser)
     {
         $image = $this->getImageByImageIdOrThrow($imageId);
 
-        if (!$this->isUserAuthorizedToImage($image)){
+        if (!$this->isUserAuthorizedToImage($image, $loggedInUser)){
             throw new NotAuthorizedException("You are not authorized to take this image off sale.");
         }
 

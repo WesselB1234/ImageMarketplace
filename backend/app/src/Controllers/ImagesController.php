@@ -3,17 +3,14 @@
 namespace App\Controllers;
 
 use App\Mappers\DtoMapper;
-use App\Models\Dtos\ImageDto;
+use App\Models\Dtos\ModerateImageDto;
 use App\Services\Interfaces\IAuthenticationService;
 use App\Services\Interfaces\IImagesService;
 use App\Services\Interfaces\IUsersService;
 use App\Models\Image;
 use App\Models\Enums\UserRole;
-use App\Models\ViewModels\ImageDetailsVM;
-use App\Models\ViewModels\ImageSellingVM;
 use DateTime;
 use Exception;
-use App\Models\Exceptions\NotFoundException;
 use App\Models\Exceptions\NotAuthorizedException;
 use App\Models\Attributes\Route;
 use App\Models\Helpers\RequestParamValidator;
@@ -196,33 +193,24 @@ class ImagesController extends ApiController
         }               
     }
 
-    // #[Route("GET", "/images/moderate", ["id", "isModerate"])]
-    // public function moderateImage(array $requestParams)
-    // {
-    //     $this->adminAuthorization();
+    #[Route("PATCH", "/images/moderate", ["id", "isModerate"])]
+    public function moderateImage(array $requestParams)
+    {
+        $this->authenticationService->getLoggedInUserByRoleAuthorization([UserRole::Admin]);
         
-    //     $imageId = $requestParams["id"];
-    //     $isModerateRaw = $requestParams["isModerate"];
+        $imageId = $requestParams["id"];
+        $isModerateRaw = $requestParams["isModerate"];
 
-    //     try{
-    //         RequestParamValidator::validateRequestParamId($imageId);
-            
-    //         $isModerate = filter_var($isModerateRaw, FILTER_VALIDATE_BOOL);
+        RequestParamValidator::validateRequestParamId($imageId);
+        
+        $isModerate = filter_var($isModerateRaw, FILTER_VALIDATE_BOOL);
 
-    //         $this->imagesService->updateImageModerationByImageId($imageId, $isModerate);
-            
-    //         $_SESSION["success_message"] = "Image successfully ".($isModerate ? "moderated" : "unmoderated").".";
-    //         header("Location: /images/details/$imageId");
-    //     }
-    //     catch(NotFoundException $e){
-    //         $_SESSION["error_message"] = $e->getMessage();
-    //         header("Location: /portfolio");
-    //     }
-    //     catch(Exception $e){
-    //         $_SESSION["error_message"] = $e->getMessage();
-    //         header("Location: /images/details/$imageId");
-    //     }
-    // }
+        $this->imagesService->updateImageModerationByImageId($imageId, $isModerate);
+        
+        $dto = new ModerateImageDto($imageId, $isModerate);
+        http_response_code(201);
+        echo json_encode($dto);
+    }
 
     // #[Route("GET", "/images/delete", ["id"])]
     // public function deleteImage(array $requestParams)

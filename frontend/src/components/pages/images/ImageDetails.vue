@@ -15,6 +15,30 @@
     const image = ref(null)
     const loggedInUser = authStore.decodedAuthToken.data
 
+    function handleBuy() {
+        console.log('/images/buy/' + image.value.imageId)
+    }
+
+    function handleSell() {
+        console.log('/images/sell/' + image.value.imageId)
+    }
+
+    function handleTakeOffSale() {
+        console.log('/images/takeoffsale/' + image.value.imageId)
+    }
+
+    function handleDelete() {
+        console.log('/images/delete/' + image.value.imageId)
+    }
+
+    function handleModerate() {
+        console.log('/images/moderate/' + image.value.imageId + '/true')
+    }
+
+    function handleUnModerate() {
+        console.log('/images/moderate/' + image.value.imageId + '/false')
+    }
+
     onMounted(async () => {
         try {
             image.value = (await axios.get('/images/' + route.params.id)).data
@@ -81,18 +105,18 @@
                         </li>
                     </ul>
                     
-                    <a v-if="image?.isModerated === false && image?.isOnSale === true && image?.ownerId !== loggedInUser.userId" :href="'/images/buy/' + image?.imageId" class="btn btn-success w-100 mb-2">Buy</a>
+                    <button v-if="image?.isModerated === false && image?.isOnSale === true && image?.ownerId !== loggedInUser.userId" @click="handleBuy()" class="btn btn-success w-100 mb-2">Buy</button>
                     
                     <template v-if="image?.isModerated === false && loggedInUser.role === 'Admin' || image?.ownerId === loggedInUser.userId">
-                        <a v-if="image?.isOnSale === false" :href="'/images/sell/' + image?.imageId" class="btn btn-danger w-100 mb-2">Sell</a> 
-                        <a v-else :href="'/images/takeoffsale/' + image?.imageId" class="btn btn-danger w-100 mb-2">Take off sale</a>
+                        <button v-if="image?.isOnSale === false" @click="handleSell()" class="btn btn-danger w-100 mb-2">Sell</button> 
+                        <button v-else @click="handleTakeOffSale()" class="btn btn-danger w-100 mb-2">Take off sale</button>
                     </template>
 
-                    <a v-if="loggedInUser.role === 'Admin' || image?.ownerId === loggedInUser.userId" :href="'/images/delete/' + image?.imageId" class="btn btn-danger w-100 mb-2">Delete</a>
+                    <button v-if="loggedInUser.role === 'Admin' || image?.ownerId === loggedInUser.userId" @click="handleDelete()" class="btn btn-danger w-100 mb-2">Delete</button>
                      
                     <template v-if="loggedInUser.role === 'Admin'">
-                        <a v-if="image?.isModerated === false" :href="'/images/moderate/' + image?.imageId + '/true'" class="btn btn-warning w-100 mb-2">Moderate</a>
-                        <a v-else :href="'/images/moderate/' + image?.imageId + '/false'" class="btn btn-warning w-100 mb-2">Unmoderate</a>
+                        <button v-if="image?.isModerated === false" @click="handleModerate()" class="btn btn-warning w-100 mb-2">Moderate</button>
+                        <button v-else @click="handleUnModerate()" class="btn btn-warning w-100 mb-2">Unmoderate</button>
                     </template>
                 </div>
             </div>

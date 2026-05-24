@@ -1,7 +1,7 @@
 <script setup>
     const props = defineProps({
         imageId: {
-            type: String,
+            type: Number,
         }
     })
 </script>

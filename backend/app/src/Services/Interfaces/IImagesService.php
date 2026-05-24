@@ -14,7 +14,7 @@ interface IImagesService
     public function createImage(Image $image): int;
     public function validateImageFile(array $imageFile);
     public function uploadImageFile(array $imageFile, int $imageId);
-    public function buyImage(Image $image);
+    public function buyImage(Image $image, User $buyerUser);
     public function sellImage(Image $image, int $price, User $loggedInUser);
     public function takeImageOffSaleByImageId(int $imageId, User $loggedInUser);
     public function updateImageSellingPrice(int $imageId, ?int $price);

@@ -79,11 +79,9 @@ class ImagesService implements IImagesService
         return $this->imagesRepository->createImage($image);
     }
 
-    public function buyImage(Image $image)
+    public function buyImage(Image $image, User $buyerUser)
     {
-        $buyerUser = $_SESSION["user"];
-
-        if ($image->getOwnerId() === $_SESSION["user"]->getUserId()){
+        if ($image->getOwnerId() === $buyerUser->getUserId()){
             throw new NotAuthorizedException("You cannot buy your own image.");
         }
 

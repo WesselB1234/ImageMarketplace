@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Mappers\DtoMapper;
 use App\Models\Dtos\ModerateImageDto;
 use App\Models\Dtos\SellImageDto;
+use App\Models\Dtos\BuyImageDto;
 use App\Services\Interfaces\IAuthenticationService;
 use App\Services\Interfaces\IImagesService;
 use App\Services\Interfaces\IUsersService;
@@ -31,9 +32,9 @@ class ImagesController extends ApiController
 
     #[Route("GET", "/images", ["id"])]
     public function getImageById(array $requestParams)
-    {
-        $imageId = $requestParams["id"];
+    {   
         $loggedInUser = $this->authenticationService->getLoggedInUser();
+        $imageId = $requestParams["id"];
             
         RequestParamValidator::validateRequestParamId($imageId);
 
@@ -59,10 +60,10 @@ class ImagesController extends ApiController
 
     #[Route("PATCH", "/images/sell", ["id"])]
     public function sell(array $requestParams)
-    {
+    {   
+        $loggedInUser = $this->authenticationService->getLoggedInUser();
         $imageId = $requestParams["id"];    
         $data = $this->getDataFromInput(["price"]); 
-        $loggedInUser = $this->authenticationService->getLoggedInUser();
 
         $image = $this->imagesService->getImageByImageIdOrThrow($imageId);
         $this->imagesService->sellImage($image, $data["price"], $loggedInUser);
@@ -87,35 +88,27 @@ class ImagesController extends ApiController
         echo json_encode($dto);
     }
 
-    #[Route("GET", "/images/buy", ["id"])]
+    #[Route("PATCH", "/images/buy", ["id"])]
     public function buyImage(array $requestParams)
     {
         $imageId = $requestParams["id"];    
+        $loggedInUser = $this->authenticationService->getLoggedInUser();
+        
+        RequestParamValidator::validateRequestParamId($imageId);
 
-        try{
-            RequestParamValidator::validateRequestParamId($imageId);
+        $image = $this->imagesService->getImageByImageIdOrThrow($imageId);
+        $this->imagesService->buyImage($image, $loggedInUser);
 
-            $image = $this->imagesService->getImageByImageIdOrThrow($imageId);
-            $this->imagesService->buyImage($image);
-
-            $_SESSION["success_message"] = "Successfully bought image: ".$image->getName()." (Image ID: ".$image->getImageId().").";
-            header("Location: /portfolio");
-        }
-        catch(NotFoundException $e){
-            $_SESSION["error_message"] = $e->getMessage();
-            header("Location: /portfolio");
-        }
-        catch(Exception $e){
-            $_SESSION["error_message"] = $e->getMessage();
-            header("Location: /images/details/$imageId");
-        }
+        $dto = new BuyImageDto($imageId, $loggedInUser->getUserId());
+        http_response_code(200);
+        echo json_encode($dto);
     }
 
-    #[Route("POST", "/images/upload")]
-    public function processUpload()
+    #[Route("POST", "/images")]
+    public function upload()
     {
-        $imageId = null;
         $loggedInUser = $this->authenticationService->getLoggedInUser();
+        $imageId = null;
 
         $data = $this->getDataFromInput(["name", "description", "image", "altText"]);
         $image = Image::constructUnknownImage($loggedInUser->getUserId(), $loggedInUser->getUserId(), $data["name"], $data["description"], $data["altText"]);
@@ -164,21 +157,16 @@ class ImagesController extends ApiController
         echo json_encode($dto);
     }
 
-    #[Route("DELETE", "/images/delete", ["id"])]
+    #[Route("DELETE", "/images", ["id"])]
     public function deleteImage(array $requestParams)
     {
+        $loggedInUser = $this->authenticationService->getLoggedInUser();
         $imageId = $requestParams["id"];
+    
+        RequestParamValidator::validateRequestParamId($imageId);
         
-        try{
-            RequestParamValidator::validateRequestParamId($imageId);
-            
-            $this->imagesService->deleteImageByImageId($imageId);
-            $_SESSION["success_message"] = "Successfully deleted image.";
-        } 
-        catch(Exception $e){
-            $_SESSION["error_message"] = $e->getMessage();
-        } 
+        $this->imagesService->deleteImageByImageId($imageId, $loggedInUser);
 
-        header("Location: /portfolio");
+        http_response_code(204);
     }
 }

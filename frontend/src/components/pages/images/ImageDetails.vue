@@ -25,8 +25,10 @@
     async function handleBuy() {
         try {
             const response = await axios.patch('/images/buy/' + image.value.imageId)
-            //image.value.ownerId = response.data.ownerId
+            image.value.ownerId = response.data.ownerId
+            successAlertRef.value.shutdown()
             errorHandlingStore.successMessage = 'Successfully bought this image.'
+            router.push('/')
         }
         catch (ex){
             if (ex.response){
@@ -56,14 +58,13 @@
     }
 
     async function handleDelete() {
-        console.log('/images/delete/' + image.value.imageId)
-
         try {
-            await axios.delete('/images/take-off-sale/' + image.value.imageId)
-            //image.value.ownerId = response.data.ownerId
+            await axios.delete('/images/' + image.value.imageId)
             successAlertRef.value.shutdown()
-            errorHandlingStore.successMessage = 'Successfully deleted this image'
+            errorHandlingStore.successMessage = 'Successfully deleted image.'
             router.push('/')
+
+            console.log('next')
         }
         catch (ex){
             if (ex.response){

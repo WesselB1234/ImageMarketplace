@@ -2,6 +2,7 @@
     import { ref } from 'vue'
     import axios from '@/utils/axios.js'
     import { useErrorHandlingStore } from '@/stores/errorHandlingStore'
+    import router from '@/router'
 
     import BaseFormField from '@/components/molecules/forms/BaseFormField.vue'
     import SuccessAlert from '@/components/atoms/errorHandling/SuccessAlert.vue'
@@ -17,6 +18,8 @@
     const description = ref('')
     const altText = ref('')
 
+    const successAlertRef = ref(null)
+
     async function handleUpload(e) {
         try {
             e.preventDefault()
@@ -27,13 +30,15 @@
             form.append('description', description.value)
             form.append('altText', altText.value)
 
-            const response = await axios.post('/images/upload', form, {
+            await axios.post('/images', form, {
                 headers: {
                     'Content-Type': undefined
                 }
             })
-
+            
+            successAlertRef.value.shutdown()
             errorHandlingStore.successMessage = 'Successfully uploaded image.'
+            router.push('/')
         }
         catch (ex){
             if (ex.response){
@@ -49,7 +54,7 @@
 <template>
     <form @submit="handleUpload">
         <ErrorAlert />
-        <SuccessAlert />
+        <SuccessAlert ref="successAlertRef" />
 
         <BaseFormField labelName="Image name" id="name" name="name" placeholder="Enter image name" v-model="name"/>
         <FileFormField labelName="Image file (extension must be .png)" id="image" name="image" accept="image/*" v-model="image"/>

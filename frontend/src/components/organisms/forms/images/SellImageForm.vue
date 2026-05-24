@@ -32,8 +32,6 @@
             if (ex.response){
                 errorHandlingStore.errorMessage = ex.response.data.message
             }
-
-            console.log(ex.message)
         }
     }
 </script>

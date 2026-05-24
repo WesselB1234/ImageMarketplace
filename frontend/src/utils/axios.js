@@ -50,7 +50,7 @@ apiClient.interceptors.response.use(
         if (error.response) {
             if (error.response.status === 440) {
                 authStore.setAuthToken(null)
-                errorHandlingStore.setErrorMessage("You must login again for the following reason: " + error.response.data.message)
+                errorHandlingStore.errorMessage = "You must login again for the following reason: " + error.response.data.message
                 router.push('/auth/login')
             }
 

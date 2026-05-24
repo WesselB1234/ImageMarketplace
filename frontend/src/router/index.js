@@ -180,7 +180,12 @@ router.beforeEach((to) => {
 
         if (decodedAuthToken === null) {
             errorHandlingStore.errorMessage = 'You need to be logged in to perform this action.'
-            return '/auth/login'
+            return { 
+                path: '/auth/login', 
+                query: { 
+                    _refresh: Date.now() 
+                } 
+            }
         }
 
         if (to.meta.roles) {
@@ -196,7 +201,12 @@ router.beforeEach((to) => {
 
             if (isAuthorized === false) {
                 errorHandlingStore.errorMessage = `Your account doesn't have the right role to perform this action.`
-                return '/auth/login'
+                return { 
+                    path: '/auth/login', 
+                    query: { 
+                        _refresh: Date.now() 
+                    } 
+                }
             }
         }
     }

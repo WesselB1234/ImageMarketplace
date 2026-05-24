@@ -5,7 +5,8 @@
     import { useRoute } from 'vue-router'
     import { useAuthStore } from '@/stores/authStore'
     import { useErrorHandlingStore } from '@/stores/errorHandlingStore'
-    
+    import { getImageById } from '@/utils/imageLoader'
+
     import ErrorAlert from '@/components/atoms/errorHandling/ErrorAlert.vue'
     import SuccessAlert from '@/components/atoms/errorHandling/SuccessAlert.vue'
     import ReturnBtn from '@/components/atoms/buttons/ReturnBtn.vue'
@@ -58,29 +59,9 @@
         handleModerateRequest(false)
     }
 
-    async function setImageValue() {
-        try {
-            const response = await axios.get('/images/' + routeImageId)
-            image.value = response.data
-        }
-        catch (ex){
-            if (ex.response){
-                if (ex.response.status === 404) {
-                    errorAlertRef.value.shutdown()
-                    errorHandlingStore.errorMessage = ex.response.data.message
-                    router.push('/portfolio')
-                }
-                else {
-                    errorHandlingStore.errorMessage = ex.response.data.message
-                }
-            }
-            else {
-                useErrorHandlingStore.errorMessage = ex.message
-            }
-        }
-    }
-
-    onMounted(async () => setImageValue())
+    onMounted(async () => {
+        image.value = await getImageById(routeImageId, errorAlertRef)
+    })
 </script>
 
 <template>

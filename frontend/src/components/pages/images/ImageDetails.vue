@@ -39,6 +39,7 @@
                 "isModerate": isModerate 
             })
             image.value.isModerated = response.data.isModerated
+            errorHandlingStore.successMessage = 'Successfully ' + (isModerate ? 'moderated' : 'unmoderated') + ' this image.'
         }
         catch (ex){
             if (ex.response){

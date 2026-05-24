@@ -9,20 +9,19 @@
     import ErrorAlert from '@/components/atoms/errorHandling/ErrorAlert.vue'
     import SuccessAlert from '@/components/atoms/errorHandling/SuccessAlert.vue'
     import ReturnBtn from '@/components/atoms/buttons/ReturnBtn.vue'
+    import router from '@/router'
 
     const authStore = useAuthStore()
     const errorHandlingStore = useErrorHandlingStore()
 
     const route = useRoute()
+    const routeImageId = route.params.id
     const image = ref(null)
     const loggedInUser = authStore.decodedAuthToken.data
+    const errorAlertRef = ref(null)
 
     async function handleBuy() {
         console.log('/images/buy/' + image.value.imageId)
-    }
-
-    async function handleSell() {
-        console.log('/images/sell/' + image.value.imageId)
     }
 
     async function handleTakeOffSale() {
@@ -59,26 +58,35 @@
         handleModerateRequest(false)
     }
 
-    onMounted(async () => {
+    async function setImageValue() {
         try {
-            const response = await axios.get('/images/' + route.params.id)
+            const response = await axios.get('/images/' + routeImageId)
             image.value = response.data
         }
         catch (ex){
             if (ex.response){
-                errorHandlingStore.errorMessage = ex.response.data.message
+                if (ex.response.status === 404) {
+                    errorAlertRef.value.shutdown()
+                    errorHandlingStore.errorMessage = ex.response.data.message
+                    router.push('/portfolio')
+                }
+                else {
+                    errorHandlingStore.errorMessage = ex.response.data.message
+                }
             }
             else {
                 useErrorHandlingStore.errorMessage = ex.message
             }
         }
-    })
+    }
+
+    onMounted(async () => setImageValue())
 </script>
 
 <template>
     <h1 class="mb-4">Image details</h1>
     <ReturnBtn to="/portfolio" text="Return back to portfolio" />
-    <ErrorAlert />
+    <ErrorAlert ref="errorAlertRef"/>
     <SuccessAlert />
 
     <div class="row g-4">
@@ -131,7 +139,7 @@
                     <button v-if="image?.isModerated === false && image?.isOnSale === true && image?.ownerId !== loggedInUser.userId" @click="handleBuy()" class="btn btn-success w-100 mb-2">Buy</button>
                     
                     <template v-if="image?.isModerated === false && loggedInUser.role === 'Admin' || image?.ownerId === loggedInUser.userId">
-                        <button v-if="image?.isOnSale === false" @click="handleSell()" class="btn btn-danger w-100 mb-2">Sell</button> 
+                        <RouterLink v-if="image?.isOnSale === false" :to="'/images/sell/' + image?.imageId" class="btn btn-danger w-100 mb-2">Sell</RouterLink> 
                         <button v-else @click="handleTakeOffSale()" class="btn btn-danger w-100 mb-2">Take off sale</button>
                     </template>
 

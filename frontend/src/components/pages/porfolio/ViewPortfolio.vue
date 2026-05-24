@@ -13,7 +13,8 @@
 
     onMounted(async () => {
         try {
-            images.value = (await axios.get('/users/portfolio')).data
+            const response = await axios.get('/users/portfolio')
+            images.value = response.data
         }
         catch (ex){
             if (ex.response){

@@ -20,17 +20,59 @@
     const image = ref(null)
     const loggedInUser = authStore.decodedAuthToken.data
     const errorAlertRef = ref(null)
+    const successAlertRef = ref(null)
 
     async function handleBuy() {
-        console.log('/images/buy/' + image.value.imageId)
+        try {
+            const response = await axios.patch('/images/buy/' + image.value.imageId)
+            //image.value.ownerId = response.data.ownerId
+            errorHandlingStore.successMessage = 'Successfully bought this image.'
+        }
+        catch (ex){
+            if (ex.response){
+                errorHandlingStore.errorMessage = ex.response.data.message
+            }
+            else {
+                useErrorHandlingStore.errorMessage = ex.message
+            }
+        }
     }
 
     async function handleTakeOffSale() {
-        console.log('/images/takeoffsale/' + image.value.imageId)
+        try {
+            const response = await axios.patch('/images/take-off-sale/' + image.value.imageId)
+            image.value.isOnSale = response.data.isOnSale
+            image.value.price = response.data.price
+            errorHandlingStore.successMessage = 'Successfully taken this image offsale.'
+        }
+        catch (ex){
+            if (ex.response){
+                errorHandlingStore.errorMessage = ex.response.data.message
+            }
+            else {
+                useErrorHandlingStore.errorMessage = ex.message
+            }
+        }
     }
 
     async function handleDelete() {
         console.log('/images/delete/' + image.value.imageId)
+
+        try {
+            await axios.delete('/images/take-off-sale/' + image.value.imageId)
+            //image.value.ownerId = response.data.ownerId
+            successAlertRef.value.shutdown()
+            errorHandlingStore.successMessage = 'Successfully deleted this image'
+            router.push('/')
+        }
+        catch (ex){
+            if (ex.response){
+                errorHandlingStore.errorMessage = ex.response.data.message
+            }
+            else {
+                useErrorHandlingStore.errorMessage = ex.message
+            }
+        }
     }
 
     async function handleModerateRequest(isModerate) {
@@ -68,7 +110,7 @@
     <h1 class="mb-4">Image details</h1>
     <ReturnBtn to="/portfolio" text="Return back to portfolio" />
     <ErrorAlert ref="errorAlertRef"/>
-    <SuccessAlert />
+    <SuccessAlert ref="successAlertRef" />
 
     <div class="row g-4">
         <div class="col-md-6">

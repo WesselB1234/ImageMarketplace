@@ -9,7 +9,7 @@
 
     const props = defineProps({
         imageId: {
-            type: Number,
+            type: String,
             required: true
         }
     })

@@ -29,14 +29,6 @@ class ImagesController extends ApiController
         $this->authenticationService = $authenticationService;
     }
 
-    // #[Route("GET", "/images")]
-    // public function index()
-    // {
-    //     $images = $this->imagesService->getAllOnSaleImages();
-        
-    //     $this->displayView(["viewModel" => $images], "Images/index.php");
-    // }
-
     #[Route("GET", "/images", ["id"])]
     public function getImageById(array $requestParams)
     {
@@ -65,28 +57,6 @@ class ImagesController extends ApiController
         echo json_encode($imageDto);
     }
 
-    // #[Route("GET", "/images/sell", ["id"])]
-    // public function sell(array $requestParams)
-    // {
-    //     $imageId = $requestParams["id"];
-        
-    //     try{
-    //         RequestParamValidator::validateRequestParamId($imageId);
-            
-    //         $image = $this->imagesService->getImageByImageIdOrThrow($imageId);
-
-    //         if (!$this->imagesService->isUserAuthorizedToImage($image)){
-    //             throw new NotAuthorizedException("You are not authorized to sell this image.");
-    //         }
-
-    //         $this->displayView(["viewModel" => new ImageSellingVM($image, null)]);
-    //     }
-    //     catch(Exception $e){
-    //         $_SESSION["error_message"] = $e->getMessage();
-    //         header("Location: /portfolio");
-    //     }
-    // }
-
     #[Route("PATCH", "/images/sell", ["id"])]
     public function sell(array $requestParams)
     {
@@ -97,57 +67,49 @@ class ImagesController extends ApiController
         $image = $this->imagesService->getImageByImageIdOrThrow($imageId);
         $this->imagesService->sellImage($image, $data["price"], $loggedInUser);
 
-        $dto = new SellImageDto($imageId, $data["price"]);
+        $dto = new SellImageDto($imageId, $data["price"], true);
         http_response_code(200);
         echo json_encode($dto);
     }
 
-    // #[Route("GET", "/images/takeoffsale", ["id"])]
-    // public function takeOffSale(array $requestParams)
-    // {
-    //     $imageId = $requestParams["id"];       
+    #[Route("PATCH", "/images/take-off-sale", ["id"])]
+    public function takeOffSale(array $requestParams)
+    {
+        $loggedInUser = $this->authenticationService->getLoggedInUser();
+        $imageId = $requestParams["id"];
 
-    //     try{
-    //         RequestParamValidator::validateRequestParamId($imageId);
+        RequestParamValidator::validateRequestParamId($imageId);   
 
-    //         $this->imagesService->takeImageOffSaleByImageId($imageId);
+        $this->imagesService->takeImageOffSaleByImageId($imageId, $loggedInUser);
 
-    //         $_SESSION["success_message"] = "Successfully put image off sale.";
-    //         header("Location: /images/details/$imageId");
-    //     }
-    //     catch(NotFoundException $e){
-    //         $_SESSION["error_message"] = $e->getMessage();
-    //         header("Location: /portfolio");
-    //     }
-    //     catch(Exception $e){
-    //         $_SESSION["error_message"] = $e->getMessage();
-    //         header("Location: /images/details/$imageId");
-    //     }
-    // }
+        $dto = new SellImageDto($imageId, null, false);
+        http_response_code(200);
+        echo json_encode($dto);
+    }
 
-    // #[Route("GET", "/images/buy", ["id"])]
-    // public function buyImage(array $requestParams)
-    // {
-    //     $imageId = $requestParams["id"];    
+    #[Route("GET", "/images/buy", ["id"])]
+    public function buyImage(array $requestParams)
+    {
+        $imageId = $requestParams["id"];    
 
-    //     try{
-    //         RequestParamValidator::validateRequestParamId($imageId);
+        try{
+            RequestParamValidator::validateRequestParamId($imageId);
 
-    //         $image = $this->imagesService->getImageByImageIdOrThrow($imageId);
-    //         $this->imagesService->buyImage($image);
+            $image = $this->imagesService->getImageByImageIdOrThrow($imageId);
+            $this->imagesService->buyImage($image);
 
-    //         $_SESSION["success_message"] = "Successfully bought image: ".$image->getName()." (Image ID: ".$image->getImageId().").";
-    //         header("Location: /portfolio");
-    //     }
-    //     catch(NotFoundException $e){
-    //         $_SESSION["error_message"] = $e->getMessage();
-    //         header("Location: /portfolio");
-    //     }
-    //     catch(Exception $e){
-    //         $_SESSION["error_message"] = $e->getMessage();
-    //         header("Location: /images/details/$imageId");
-    //     }
-    // }
+            $_SESSION["success_message"] = "Successfully bought image: ".$image->getName()." (Image ID: ".$image->getImageId().").";
+            header("Location: /portfolio");
+        }
+        catch(NotFoundException $e){
+            $_SESSION["error_message"] = $e->getMessage();
+            header("Location: /portfolio");
+        }
+        catch(Exception $e){
+            $_SESSION["error_message"] = $e->getMessage();
+            header("Location: /images/details/$imageId");
+        }
+    }
 
     #[Route("POST", "/images/upload")]
     public function processUpload()
@@ -202,21 +164,21 @@ class ImagesController extends ApiController
         echo json_encode($dto);
     }
 
-    // #[Route("GET", "/images/delete", ["id"])]
-    // public function deleteImage(array $requestParams)
-    // {
-    //     $imageId = $requestParams["id"];
+    #[Route("DELETE", "/images/delete", ["id"])]
+    public function deleteImage(array $requestParams)
+    {
+        $imageId = $requestParams["id"];
         
-    //     try{
-    //         RequestParamValidator::validateRequestParamId($imageId);
+        try{
+            RequestParamValidator::validateRequestParamId($imageId);
             
-    //         $this->imagesService->deleteImageByImageId($imageId);
-    //         $_SESSION["success_message"] = "Successfully deleted image.";
-    //     } 
-    //     catch(Exception $e){
-    //         $_SESSION["error_message"] = $e->getMessage();
-    //     } 
+            $this->imagesService->deleteImageByImageId($imageId);
+            $_SESSION["success_message"] = "Successfully deleted image.";
+        } 
+        catch(Exception $e){
+            $_SESSION["error_message"] = $e->getMessage();
+        } 
 
-    //     header("Location: /portfolio");
-    // }
+        header("Location: /portfolio");
+    }
 }

@@ -7,7 +7,6 @@ import DefaultLayout from '@/components/layout/DefaultLayout.vue'
 
 import Login from '@/components/pages/authentication/Login.vue'
 import Register from '@/components/pages/authentication/Register.vue'
-import Logout from '@/components/pages/authentication/Logout.vue'
 import AdminAuthorizationTest from '@/components/pages/authentication/AdminAuthorizationTest.vue'
 import UserAuthorizationTest from '@/components/pages/authentication/UserAuthorizationTest.vue'
 
@@ -45,13 +44,6 @@ const routes = [
                 component: Register,
                 meta: { 
                     title: 'Register'
-                }
-            },
-            { 
-                path: 'logout', 
-                component: Logout,
-                meta: { 
-                    isAuthenticated: true,
                 }
             },
             { 

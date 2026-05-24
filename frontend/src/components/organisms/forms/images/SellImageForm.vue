@@ -1,14 +1,46 @@
 <script setup>
+    import { ref } from 'vue'
+    import axios from '@/utils/axios.js'
+    import { useErrorHandlingStore } from '@/stores/errorHandlingStore'
+    import router from '@/router'
+
     import BaseFormField from '@/components/molecules/forms/BaseFormField.vue'
+    import SubmitBtn from '@/components/atoms/buttons/forms/SubmitBtn.vue'
+
+    const props = defineProps({
+        imageId: {
+            type: Number,
+            required: true
+        }
+    })
+
+    const errorHandlingStore = useErrorHandlingStore()
+    const price = ref('')
+
+    async function handleSell(e) {  
+        try {
+            e.preventDefault()
+
+            await axios.patch('/images/sell/' + props.imageId, {
+                "price": price.value
+            })
+
+            errorHandlingStore.successMessage = 'Successfully put image on sale.'
+            router.push('/images/' + props.imageId) 
+        }
+        catch (ex) {
+            if (ex.response){
+                errorHandlingStore.errorMessage = ex.response.data.message
+            }
+
+            console.log(ex.message)
+        }
+    }
 </script>
 
 <template>
-    <form class="mt-4" action="/images/sell/<?php echo $viewModel->getImage()->getImageId(); ?>" method="post">
-        <div class="mb-3">
-            <label for="price" class="form-label">Price</label>
-            <input type="number" class="form-control" id="price" name="price" placeholder="Enter selling price" required>
-        </div>
-
-        <button type="submit" class="btn btn-danger">Sell</button>
+    <form @submit="handleSell">
+        <BaseFormField labelName="Price" type="number" id="price" name="price" placeholder="Price" v-model="price"/>
+        <SubmitBtn text="Sell" />
     </form>
 </template>

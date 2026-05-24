@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Mappers\DtoMapper;
 use App\Models\Dtos\ModerateImageDto;
+use App\Models\Dtos\SellImageDto;
 use App\Services\Interfaces\IAuthenticationService;
 use App\Services\Interfaces\IImagesService;
 use App\Services\Interfaces\IUsersService;
@@ -86,32 +87,20 @@ class ImagesController extends ApiController
     //     }
     // }
 
-    // #[Route("POST", "/images/sell", ["id"])]
-    // public function processSell(array $requestParams)
-    // {
-    //     $image = null;
-    //     $imageId = $requestParams["id"];       
+    #[Route("PATCH", "/images/sell", ["id"])]
+    public function sell(array $requestParams)
+    {
+        $imageId = $requestParams["id"];    
+        $data = $this->getDataFromInput(["price"]); 
+        $loggedInUser = $this->authenticationService->getLoggedInUser();
 
-    //     try{
-    //         $image = $this->imagesService->getImageByImageIdOrThrow($imageId);
-    //         $this->imagesService->sellImage($image, $_POST["price"]);
+        $image = $this->imagesService->getImageByImageIdOrThrow($imageId);
+        $this->imagesService->sellImage($image, $data["price"], $loggedInUser);
 
-    //         $_SESSION["success_message"] = "Image successfully put on sale.";
-    //         header("Location: /images/details/$imageId");
-    //     }
-    //     catch(NotFoundException | NotAuthorizedException $e){
-    //         $_SESSION["error_message"] = $e->getMessage();
-    //         header("Location: /portfolio");
-    //     }
-    //     catch(Exception $e){
-    //         $this->displayView([
-    //                 "viewModel" => new ImageSellingVM($image, $_POST["price"]),
-    //                 "errorMessage" => $e->getMessage()
-    //             ],
-    //             "Images/sell.php"
-    //         );
-    //     }
-    // }
+        $dto = new SellImageDto($imageId, $data["price"]);
+        http_response_code(200);
+        echo json_encode($dto);
+    }
 
     // #[Route("GET", "/images/takeoffsale", ["id"])]
     // public function takeOffSale(array $requestParams)
@@ -209,7 +198,7 @@ class ImagesController extends ApiController
         $this->imagesService->updateImageModerationByImageId($imageId, $isModerate);
         
         $dto = new ModerateImageDto($imageId, $isModerate);
-        http_response_code(201);
+        http_response_code(200);
         echo json_encode($dto);
     }
 

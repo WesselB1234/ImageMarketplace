@@ -14,7 +14,7 @@
     const errorAlertRef = ref(null)
 
     onMounted(async () => {
-        image.value = await getImageById(routeImageId, errorAlertRef)
+        image.value = await getImageById(routeImageId)
     })
 </script>
 
@@ -24,5 +24,5 @@
     
     <ErrorAlert ref="errorAlertRef" />
     <ReturnBtn :to="'/images/' + routeImageId" text="Return back to image details page" />
-    <SellImageForm :imageId="routeImageId"/>
+    <SellImageForm :imageId="routeImageId" :errorAlertRef="errorAlertRef"/>
 </template>

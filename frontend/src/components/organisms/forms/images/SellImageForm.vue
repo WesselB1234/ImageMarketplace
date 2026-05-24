@@ -6,10 +6,15 @@
 
     import BaseFormField from '@/components/molecules/forms/BaseFormField.vue'
     import SubmitBtn from '@/components/atoms/buttons/forms/SubmitBtn.vue'
+    import ErrorAlert from '@/components/atoms/errorHandling/ErrorAlert.vue'
 
     const props = defineProps({
         imageId: {
             type: String,
+            required: true
+        },
+        errorAlertRef: {
+            type: Object,
             required: true
         }
     })
@@ -28,9 +33,12 @@
             errorHandlingStore.successMessage = 'Successfully put image on sale.'
             router.push('/images/' + props.imageId) 
         }
-        catch (ex) {
+        catch (ex){
             if (ex.response){
-                errorHandlingStore.errorMessage = ex.response.data.message
+                props.errorAlertRef.displayErrorMessage(ex.response.data.message)
+            }
+            else {
+                props.errorAlertRef.displayErrorMessage(ex.message)
             }
         }
     }

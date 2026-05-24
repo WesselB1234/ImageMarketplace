@@ -19,11 +19,10 @@
         try {
             e.preventDefault()
 
-            const form = new FormData()
-            form.append('username', username.value)
-            form.append('password', password.value)
-
-            const response = await axios.post('/users/login', form)
+            const response = await axios.post('/users/login', {
+                'username': username.value,
+                'password': password.value
+            })
 
             authStore.setAuthToken(response.data.jwt)
             errorHandlingStore.successMessage = 'Successfully logged in'
@@ -31,7 +30,10 @@
         }
         catch (ex){
             if (ex.response){
-                errorHandlingStore.errorMessage = ex.response.data.message
+                errorAlertRef.value.displayErrorMessage(ex.response.data.message)
+            }
+            else {
+                errorAlertRef.value.displayErrorMessage(ex.message)
             }
         }
     }

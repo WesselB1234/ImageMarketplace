@@ -2,7 +2,7 @@ import router from "@/router"
 import axios from '@/utils/axios.js'
 import { useErrorHandlingStore } from '@/stores/errorHandlingStore'
 
-async function getImageById(imageId, errorAlertRef) {
+async function getImageById(imageId) {
     
     const errorHandlingStore = useErrorHandlingStore()
     
@@ -12,18 +12,8 @@ async function getImageById(imageId, errorAlertRef) {
     }
     catch (ex){
         if (ex.response){
-            if (ex.response.status === 404) {
-                
-                if (errorAlertRef !== undefined) {
-                    errorAlertRef.value.shutdown()
-                }
-
-                errorHandlingStore.errorMessage = ex.response.data.message
-                router.push('/portfolio')
-            }
-            else {
-                errorHandlingStore.errorMessage = ex.response.data.message
-            }
+            errorHandlingStore.errorMessage = ex.response.data.message
+            router.push('/portfolio')
         }
         else {
             useErrorHandlingStore.errorMessage = ex.message

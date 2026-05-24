@@ -16,6 +16,8 @@
     const password = ref('')
     const repeatPassword = ref('')
 
+    const errorAlertRef = ref(null)
+
     async function handleRegister(e){
         try {
             e.preventDefault()
@@ -24,22 +26,21 @@
                 throw new Error('Repeated password is not equal to password');
             }
 
-            const form = new FormData()
-            form.append('username', username.value)
-            form.append('password', password.value)
-
-            const response = await axios.post('/users/register', form)
+            const response = await axios.post('/users/register', {
+                'username': username.value,
+                'password': password.value
+            })
 
             authStore.setAuthToken(response.data.jwt)
             errorHandlingStore.successMessage = 'Successfully created a new account.'
             router.push('/')
         }
         catch (ex){
-            if (ex.response){
-                errorHandlingStore.errorMessage = ex.response.data.message
+            if (ex.response) {
+                errorAlertRef.value.displayErrorMessage(ex.response.data.message)
             }
             else {
-                errorHandlingStore.errorMessage = ex.message
+                errorAlertRef.value.displayErrorMessage(ex.message)
             }
         }
     }
@@ -47,7 +48,7 @@
 
 <template>
     <form @submit="handleRegister">
-        <ErrorAlert />
+        <ErrorAlert ref="errorAlertRef" />
         <BaseFormField labelName="Username" id="username" name="username" placeholder="Enter your username" v-model="username"/>
         <BaseFormField labelName="Password" type="password" id="password" name="password" placeholder="Enter your password" v-model="password"/>
         <BaseFormField labelName="Repeat password" type="password" id="repeat_password" placeholder="Repeat your password" v-model="repeatPassword"/>

@@ -18,7 +18,7 @@
     const description = ref('')
     const altText = ref('')
 
-    const successAlertRef = ref(null)
+    const errorAlertRef = ref(null)
 
     async function handleUpload(e) {
         try {
@@ -36,16 +36,15 @@
                 }
             })
             
-            successAlertRef.value.shutdown()
             errorHandlingStore.successMessage = 'Successfully uploaded image.'
             router.push('/')
         }
         catch (ex){
             if (ex.response){
-                errorHandlingStore.errorMessage = ex.response.data.message
+                errorAlertRef.value.displayErrorMessage(ex.response.data.message)
             }
             else {
-                errorHandlingStore.errorMessage = ex.message
+                errorAlertRef.value.displayErrorMessage(ex.message)
             }
         }
     }
@@ -53,8 +52,8 @@
 
 <template>
     <form @submit="handleUpload">
-        <ErrorAlert />
-        <SuccessAlert ref="successAlertRef" />
+        <ErrorAlert ref="errorAlertRef" />
+        <SuccessAlert />
 
         <BaseFormField labelName="Image name" id="name" name="name" placeholder="Enter image name" v-model="name"/>
         <FileFormField labelName="Image file (extension must be .png)" id="image" name="image" accept="image/*" v-model="image"/>

@@ -26,16 +26,15 @@
         try {
             const response = await axios.patch('/images/buy/' + image.value.imageId)
             image.value.ownerId = response.data.ownerId
-            successAlertRef.value.shutdown()
             errorHandlingStore.successMessage = 'Successfully bought this image.'
             router.push('/')
         }
         catch (ex){
             if (ex.response){
-                errorHandlingStore.errorMessage = ex.response.data.message
+                errorAlertRef.value.displayErrorMessage(ex.response.data.message)
             }
             else {
-                useErrorHandlingStore.errorMessage = ex.message
+                errorAlertRef.value.displayErrorMessage(ex.message)
             }
         }
     }
@@ -45,14 +44,14 @@
             const response = await axios.patch('/images/take-off-sale/' + image.value.imageId)
             image.value.isOnSale = response.data.isOnSale
             image.value.price = response.data.price
-            errorHandlingStore.successMessage = 'Successfully taken this image offsale.'
+            successAlertRef.value.displaySuccessMessage('Successfully taken this image offsale.')
         }
         catch (ex){
             if (ex.response){
-                errorHandlingStore.errorMessage = ex.response.data.message
+                errorAlertRef.value.displayErrorMessage(ex.response.data.message)
             }
             else {
-                useErrorHandlingStore.errorMessage = ex.message
+                errorAlertRef.value.displayErrorMessage(ex.message)
             }
         }
     }
@@ -60,18 +59,15 @@
     async function handleDelete() {
         try {
             await axios.delete('/images/' + image.value.imageId)
-            successAlertRef.value.shutdown()
             errorHandlingStore.successMessage = 'Successfully deleted image.'
             router.push('/')
-
-            console.log('next')
         }
         catch (ex){
             if (ex.response){
-                errorHandlingStore.errorMessage = ex.response.data.message
+                errorAlertRef.value.displayErrorMessage(ex.response.data.message)
             }
             else {
-                useErrorHandlingStore.errorMessage = ex.message
+                errorAlertRef.value.displayErrorMessage(ex.message)
             }
         }
     }
@@ -82,14 +78,14 @@
                 "isModerate": isModerate 
             })
             image.value.isModerated = response.data.isModerated
-            errorHandlingStore.successMessage = 'Successfully ' + (isModerate ? 'moderated' : 'unmoderated') + ' this image.'
+            successAlertRef.value.displaySuccessMessage('Successfully ' + (isModerate ? 'moderated' : 'unmoderated') + ' this image.')
         }
         catch (ex){
             if (ex.response){
-                errorHandlingStore.errorMessage = ex.response.data.message
+                errorAlertRef.value.displayErrorMessage(ex.response.data.message)
             }
             else {
-                useErrorHandlingStore.errorMessage = ex.message
+                errorAlertRef.value.displayErrorMessage(ex.message)
             }
         }
     }

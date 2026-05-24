@@ -25,7 +25,7 @@
             })
 
             authStore.setAuthToken(response.data.jwt)
-            errorHandlingStore.successMessage = 'Successfully logged in'
+            errorHandlingStore.successMessage = 'Successfully logged in.'
             router.push('/')
         }
         catch (ex){

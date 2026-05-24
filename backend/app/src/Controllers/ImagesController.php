@@ -100,6 +100,7 @@ class ImagesController extends ApiController
         $this->imagesService->buyImage($image, $loggedInUser);
 
         $dto = new BuyImageDto($imageId, $loggedInUser->getUserId());
+        header("Authorization: Bearer ". $this->authenticationService->generateAuthTokenFromUser($loggedInUser));
         http_response_code(200);
         echo json_encode($dto);
     }

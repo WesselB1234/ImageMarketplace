@@ -3,9 +3,6 @@
         id: {
             type: String
         },
-        name: {
-            type: String
-        },
         accept: {
             type: String
         },
@@ -27,5 +24,5 @@
 </script>
 
 <template>
-    <input type="file" :id="id" class="form-control" :name="name" :accept="accept" @change="onFileInputChange" :required="isRequired"/>
+    <input type="file" :id="id" class="form-control" :accept="accept" @change="onFileInputChange" :required="isRequired"/>
 </template>

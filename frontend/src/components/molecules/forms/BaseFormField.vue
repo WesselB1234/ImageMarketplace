@@ -14,9 +14,6 @@
         id: {
             type: String,
         },
-        name: {
-            type: String,
-        },
         placeholder: {
             type: String,
         },
@@ -40,6 +37,6 @@
 <template>
     <div class="mb-3">
         <FormLabel :labelName="props.labelName" :id="props.id" />
-        <BaseInput v-model="value" :type="props.type" :id="props.id" :name="props.name" :placeholder="props.placeholder" :isRequired="isRequired" />
+        <BaseInput v-model="value" :type="props.type" :id="props.id" :placeholder="props.placeholder" :isRequired="isRequired" />
     </div>
 </template>

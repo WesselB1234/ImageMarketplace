@@ -55,10 +55,10 @@
         <ErrorAlert ref="errorAlertRef" />
         <SuccessAlert />
 
-        <BaseFormField labelName="Image name" id="name" name="name" placeholder="Enter image name" v-model="name"/>
-        <FileFormField labelName="Image file (extension must be .png)" id="image" name="image" accept="image/*" v-model="image"/>
-        <TextAreaField labelName="Description" id="description" name="description" placeholder="Enter description" v-model="description"/>
-        <TextAreaField labelName="Alt text (shows if image is not able to load on the screen)" id="alt_text" name="alt_text" placeholder="Enter alt text" v-model="altText"/>
+        <BaseFormField labelName="Image name" id="name" placeholder="Enter image name" v-model="name"/>
+        <FileFormField labelName="Image file (extension must be .png)" id="image" accept="image/*" v-model="image"/>
+        <TextAreaField labelName="Description" id="description" placeholder="Enter description" v-model="description"/>
+        <TextAreaField labelName="Alt text (shows if image is not able to load on the screen)" id="alt_text" placeholder="Enter alt text" v-model="altText"/>
 
         <SubmitBtn text="Upload" />
   </form>

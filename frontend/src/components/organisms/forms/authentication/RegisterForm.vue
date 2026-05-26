@@ -49,8 +49,8 @@
 <template>
     <form @submit="handleRegister">
         <ErrorAlert ref="errorAlertRef" />
-        <BaseFormField labelName="Username" id="username" name="username" placeholder="Enter your username" v-model="username"/>
-        <BaseFormField labelName="Password" type="password" id="password" name="password" placeholder="Enter your password" v-model="password"/>
+        <BaseFormField labelName="Username" id="username" placeholder="Enter your username" v-model="username"/>
+        <BaseFormField labelName="Password" type="password" id="password" placeholder="Enter your password" v-model="password"/>
         <BaseFormField labelName="Repeat password" type="password" id="repeat_password" placeholder="Repeat your password" v-model="repeatPassword"/>
         <AuthsubmitBtn text="Register" />
     </form>

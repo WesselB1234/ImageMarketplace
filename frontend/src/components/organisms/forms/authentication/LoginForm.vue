@@ -42,8 +42,8 @@
 <template>
     <form @submit="handleLogin">
         <ErrorAlert />
-        <BaseFormField labelName="Username" id="username" name="username" placeholder="Enter your username" v-model="username"/>
-        <BaseFormField labelName="Password" type="password" id="password" name="password" placeholder="Enter your password" v-model="password"/>
+        <BaseFormField labelName="Username" id="username" placeholder="Enter your username" v-model="username"/>
+        <BaseFormField labelName="Password" type="password" id="password" placeholder="Enter your password" v-model="password"/>
         <AuthsubmitBtn text="Login" />
   </form>
 </template>

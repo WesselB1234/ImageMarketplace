@@ -10,9 +10,6 @@
         id: {
             type: String
         },
-        name: {
-            type: String
-        },
         accept: {
             type: String
         },
@@ -36,6 +33,6 @@
 <template>
     <div class="mb-3">
         <FormLabel :labelName="props.labelName" :id="props.id" />
-        <FileInput v-model="value" :id="props.id" :name="props.name" :accept="props.accept" :isRequired="isRequired" />
+        <FileInput v-model="value" :id="props.id" :accept="props.accept" :isRequired="isRequired" />
     </div>
 </template>

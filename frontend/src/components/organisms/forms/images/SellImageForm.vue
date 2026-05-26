@@ -46,7 +46,7 @@
 
 <template>
     <form @submit="handleSell">
-        <BaseFormField labelName="Price" type="number" id="price" name="price" placeholder="Price" v-model="price"/>
+        <BaseFormField labelName="Price" type="number" id="price" placeholder="Price" v-model="price"/>
         <SubmitBtn text="Sell" />
     </form>
 </template>

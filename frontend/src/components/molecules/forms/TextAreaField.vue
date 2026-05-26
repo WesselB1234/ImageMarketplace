@@ -10,9 +10,6 @@
         id: {
             type: String,
         },
-        name: {
-            type: String,
-        },
         placeholder: {
             type: String,
         },
@@ -36,6 +33,6 @@
 <template>
     <div class="mb-3">
         <FormLabel :labelName="props.labelName" :id="props.id" />
-        <TextAreaInput v-model="value" :id="props.id" :name="props.name" :placeholder="props.placeholder" :isRequired="isRequired" />
+        <TextAreaInput v-model="value" :id="props.id" :placeholder="props.placeholder" :isRequired="isRequired" />
     </div>
 </template>

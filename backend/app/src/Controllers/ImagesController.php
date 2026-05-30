@@ -30,7 +30,19 @@ class ImagesController extends ApiController
         $this->authenticationService = $authenticationService;
     }
 
-    #[Route("GET", "/images", ["id"])]
+    #[Route("GET", "/images/all-on-sale")]
+    public function getOnSaleImages()
+    {   
+        $this->authenticationService->getLoggedInUser();
+        $images = $this->imagesService->getAllOnSaleImages();
+
+        $imageDtosArray = DtoMapper::mapImagesArrayToDtoList($images);
+
+        http_response_code(200); 
+        echo json_encode($imageDtosArray, JSON_PRETTY_PRINT);
+    }
+
+    #[Route("GET", "/images/get-by-id", ["id"])]
     public function getImageById(array $requestParams)
     {   
         $loggedInUser = $this->authenticationService->getLoggedInUser();

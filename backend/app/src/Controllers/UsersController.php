@@ -35,7 +35,7 @@ class UsersController extends ApiController
 
         $imageDtosArray = DtoMapper::mapImagesArrayToDtoList($images);
 
-        http_response_code(201); 
+        http_response_code(200); 
         echo json_encode($imageDtosArray, JSON_PRETTY_PRINT);
     }
 

@@ -20,12 +20,14 @@ class UsersController extends ApiController
     private IUsersService $usersService;
     private IAuthenticationService $authenticationService;
     private IImagesService $imagesService;
+    private DtoMapper $dtoMapper;
     
-    public function __construct(IUsersService $usersService, IAuthenticationService $authenticationService, IImagesService $imagesService)
+    public function __construct(IUsersService $usersService, IAuthenticationService $authenticationService, IImagesService $imagesService, DtoMapper $dtoMapper)
     {
         $this->usersService = $usersService;
         $this->authenticationService = $authenticationService;
         $this->imagesService = $imagesService;
+        $this->dtoMapper = $dtoMapper;
     }
 
     #[Route("GET", "/")] 
@@ -75,13 +77,17 @@ class UsersController extends ApiController
         echo json_encode($dto, JSON_PRETTY_PRINT);
     }
 
-    // #[Route("GET", "/users")]
-    // public function index()
-    // {
-    //     $users = $this->usersService->getAllUsers();
+    #[Route("GET", "/users")]
+    public function index()
+    {
+        $this->authenticationService->getLoggedInUser();
+        $users = $this->usersService->getAllUsers();
 
-    //     $this->displayView(["viewModel" => $users]);
-    // }
+        $dtoUsers = $this->dtoMapper->mapUsersArrayToDtoList($users);
+
+        http_response_code(200); 
+        echo json_encode($dtoUsers, JSON_PRETTY_PRINT);
+    }
 
     // #[Route("GET", "/users/create")]
     // public function create()

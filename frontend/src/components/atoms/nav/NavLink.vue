@@ -1,7 +1,8 @@
 <script setup>
     import { computed } from 'vue';
+    import router from '@/router/index.js'
 
-    defineProps({
+    const props = defineProps({
         to: { 
             type: String, 
             required: true 
@@ -12,13 +13,19 @@
         },
     })
 
+    console.log(router.currentRoute.value.fullPath)
+
     const navEnabled = computed(() => {
-        
+        if (router.currentRoute.value.fullPath === props.to) {
+            return 'nav-enabled'
+        }
+
+        return ''
     })
 </script>
 
 <template>
     <li class="nav-link">
-        <RouterLink class="nav-btn" :to="to">{{ text }}</RouterLink>
+        <RouterLink :class="'nav-btn ' + navEnabled" :to="to">{{ text }}</RouterLink>
     </li>
 </template>

@@ -13,8 +13,6 @@
         },
     })
 
-    console.log(router.currentRoute.value.fullPath)
-
     const navEnabled = computed(() => {
         if (router.currentRoute.value.fullPath === props.to) {
             return 'nav-enabled'

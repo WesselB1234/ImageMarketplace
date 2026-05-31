@@ -8,12 +8,15 @@
     import AuthsubmitBtn from '@/components/atoms/buttons/forms/AuthsubmitBtn.vue'
     import BaseFormField from '@/components/molecules/forms/BaseFormField.vue'
     import ErrorAlert from '@/components/atoms/errorHandling/ErrorAlert.vue'
+    import SuccessAlert from '@/components/atoms/errorHandling/SuccessAlert.vue'
     
     const authStore = useAuthStore()
     const errorHandlingStore = useErrorHandlingStore()
 
     const username = ref('')
     const password = ref('')
+
+    const errorAlertRef = ref(null)
 
     async function handleLogin(e) {
         try {
@@ -41,7 +44,8 @@
 
 <template>
     <form @submit="handleLogin">
-        <ErrorAlert />
+        <ErrorAlert ref="errorAlertRef"/>
+        <SuccessAlert />
         <BaseFormField labelName="Username" id="username" placeholder="Enter your username" v-model="username"/>
         <BaseFormField labelName="Password" type="password" id="password" placeholder="Enter your password" v-model="password"/>
         <AuthsubmitBtn text="Login" />

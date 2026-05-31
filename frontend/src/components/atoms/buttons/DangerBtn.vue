@@ -7,5 +7,5 @@
 </script>
 
 <template>
-    <Button class="btn btn-danger">{{ text }}</Button>
+    <button class="btn btn-danger">{{ text }}</button>
 </template>

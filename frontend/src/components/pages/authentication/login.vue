@@ -9,7 +9,6 @@
                 <h3 class="card-title text-center mb-4">Login</h3>
                 <LoginForm />
                 <RouterLink to="/auth/register">Register a new account</RouterLink>
-                <RouterLink to="/portfolio">Portfolio</RouterLink>
             </div>
         </div>
     </section>

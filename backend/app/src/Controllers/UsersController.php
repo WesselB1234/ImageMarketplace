@@ -82,7 +82,6 @@ class UsersController extends ApiController
     {
         $this->authenticationService->getLoggedInUser();
         $users = $this->usersService->getAllUsers();
-
         $dtoUsers = $this->dtoMapper->mapUsersArrayToDtoList($users);
 
         http_response_code(200); 

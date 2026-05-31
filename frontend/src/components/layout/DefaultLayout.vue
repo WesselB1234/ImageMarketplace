@@ -8,7 +8,7 @@
     <NavbarLayout />
 
     <main class="container">
-        <router-view></router-view>
+        <RouterView></RouterView>
     </main>
 
     <FooterLayout />

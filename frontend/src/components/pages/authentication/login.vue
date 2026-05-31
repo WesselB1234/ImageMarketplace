@@ -39,15 +39,9 @@
 </script>
 
 <template>
-    <section class="container d-flex justify-content-center align-items-center vh-100">
-        <div class="card shadow-sm authentication-box">
-            <div class="card-body">
-                <h3 class="card-title text-center mb-4">Login</h3>
-                <ErrorAlert ref="errorAlertRef"/>
-                <SuccessAlert />
-                <LoginForm :vModel="vModel" @submit="handleLogin" />
-                <RouterLink to="/auth/register">Register a new account</RouterLink>
-            </div>
-        </div>
-    </section>
+    <h3 class="card-title text-center mb-4">Login</h3>
+    <ErrorAlert ref="errorAlertRef"/>
+    <SuccessAlert />
+    <LoginForm :vModel="vModel" @submit="handleLogin" />
+    <RouterLink to="/auth/register">Register a new account</RouterLink> 
 </template>

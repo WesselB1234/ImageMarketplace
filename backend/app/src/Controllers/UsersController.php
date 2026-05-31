@@ -3,8 +3,10 @@
 namespace App\Controllers;
 
 use App\Mappers\DtoMapper;
+use App\Models\ApiResponses\UserDeletionDto;
 use App\Models\Dtos\LoginDto;
 use App\Models\Dtos\RegisterDto;
+use App\Models\Exceptions\ForbiddenException;
 use App\Models\Exceptions\NotAuthorizedException;
 use App\Services\Interfaces\IAuthenticationService;
 use App\Services\Interfaces\IImagesService;
@@ -160,24 +162,26 @@ class UsersController extends ApiController
     //     } 
     // }
 
-    //     #[Route("GET", "/settings/deleteaccount")]
-//     public function deleteAccount()
-//     {
-//         try{
-//             $this->usersService->deleteUserByUserId($this->loggedInUser->getUserId());
-            
-//             unset($_SESSION["logged_in_user_id"]);
-//             $_SESSION["success_message"] = "Successfully deleted your account.";
+    #[Route("DELETE", "/users/delete", ["id"])]
+    public function delete(array $params)
+    {
+        $loggedInUser = $this->authenticationService->getLoggedInUserByRoleAuthorization([UserRole::Admin]);
+        $userId = $params["id"];
 
-//             header("location: /login");
-//         }
-//         catch(Exception $e){
-//             $this->displayView([
-//                     "errorMessage" => $e->getMessage()
-//                 ],
-//                 "Settings/index.php"
-//             );
-//         } 
-//     }
-// }
+        if (intval($userId) === $loggedInUser->getUserId()){
+            throw new ForbiddenException("You cannot delete yourself.");
+        }
+        
+        $this->usersService->deleteUserByUserId($userId);
+        http_response_code(200); 
+    }
+
+    #[Route("DELETE", "/users/settings")]
+    public function deleteAccount()
+    {
+        $loggedInUser = $this->authenticationService->getLoggedInUser();
+        $this->usersService->deleteUserByUserId($loggedInUser->getUserId());
+        
+        http_response_code(200); 
+    }
 }

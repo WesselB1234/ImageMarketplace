@@ -3,6 +3,7 @@
 use App\Models\Dtos\ErrorDto;
 use App\Models\Exceptions\BadRequestException;
 use App\Models\Exceptions\ConflictException;
+use App\Models\Exceptions\ForbiddenException;
 use App\Models\Exceptions\InvalidAuthTokenException;
 use App\Models\Exceptions\NotAuthorizedException;
 use App\Models\Exceptions\NotFoundException;
@@ -21,7 +22,8 @@ class GlobalExceptionHandler {
             $e instanceof BadRequestException => $this->handleBadRequestException($e),
             $e instanceof ExpiredException => $this->handleExpiredException($e),
             $e instanceof SignatureInvalidException => $this->handleSignatureInvalidException($e),
-            default => $this->handleGeneric($e),
+            $e instanceof ForbiddenException => $this->handleForbiddenException($e),
+            default => $this->handleGeneric($e)
         };
     }
 
@@ -70,5 +72,10 @@ class GlobalExceptionHandler {
     private function handleSignatureInvalidException(SignatureInvalidException $e) 
     {
         $this->displayErrorJson(440, "Auth token signature is not valid.");
+    }
+
+    private function handleForbiddenException(ForbiddenException $e) 
+    {
+        $this->displayErrorJson(403, $e->getMessage());
     }
 }

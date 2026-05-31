@@ -1,15 +1,13 @@
 <script setup>
-    import { useRoute } from 'vue-router'
     import { onMounted, ref } from 'vue'
+    import { getImageById } from '@/utils/imageLoader'
+    import router from '@/router/index.js'
 
     import SellImageForm from '@/components/organisms/forms/images/SellImageForm.vue'
     import ReturnBtn from '@/components/atoms/buttons/ReturnBtn.vue'
     import ErrorAlert from '@/components/atoms/errorHandling/ErrorAlert.vue'
-    import { getImageById } from '@/utils/imageLoader'
-    
-    const route = useRoute()
 
-    const routeImageId = route.params.id
+    const routeImageId = router.currentRoute.value.params.id
     const image = ref(null)
     const errorAlertRef = ref(null)
 

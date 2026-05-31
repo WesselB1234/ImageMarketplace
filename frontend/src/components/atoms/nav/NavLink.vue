@@ -1,4 +1,6 @@
 <script setup>
+    import { computed } from 'vue';
+
     defineProps({
         to: { 
             type: String, 
@@ -8,6 +10,10 @@
             type: String, 
             required: true 
         },
+    })
+
+    const navEnabled = computed(() => {
+        
     })
 </script>
 

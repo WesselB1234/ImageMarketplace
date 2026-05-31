@@ -17,6 +17,8 @@ import ViewImages from '@/components/pages/images/ViewImages.vue'
 
 import ViewPortfolio from '@/components/pages/porfolio/ViewPortfolio.vue'
 
+import ViewSettings from '@/components/pages/Settings/ViewSettings.vue'
+
 import viewPrivacy from '@/components/pages/privacy/ViewPrivacy.vue'
 
 import CreateUser from '@/components/pages/Users/CreateUser.vue'
@@ -119,7 +121,7 @@ const routes = [
             },
             { 
                 path: '/settings', 
-                component: ViewPortfolio, 
+                component: ViewSettings, 
                 meta: { 
                     title: 'Settings',
                     isAuthenticated: true

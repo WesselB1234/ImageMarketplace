@@ -2,21 +2,19 @@
     import axios from '@/utils/axios.js'
     import { getImageUrl, getPriceFormatted } from '@/utils/stringFormatter'
     import { onMounted, ref } from 'vue'
-    import { useRoute } from 'vue-router'
     import { useAuthStore } from '@/stores/authStore'
     import { useErrorHandlingStore } from '@/stores/errorHandlingStore'
     import { getImageById } from '@/utils/imageLoader'
+    import router from '@/router/index.js'
 
     import ErrorAlert from '@/components/atoms/errorHandling/ErrorAlert.vue'
     import SuccessAlert from '@/components/atoms/errorHandling/SuccessAlert.vue'
     import ReturnBtn from '@/components/atoms/buttons/ReturnBtn.vue'
-    import router from '@/router'
 
     const authStore = useAuthStore()
     const errorHandlingStore = useErrorHandlingStore()
 
-    const route = useRoute()
-    const routeImageId = route.params.id
+    const routeImageId = router.currentRoute.value.params.id
     const image = ref(null)
     const loggedInUser = authStore.decodedAuthToken.data
     const errorAlertRef = ref(null)

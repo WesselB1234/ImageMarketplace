@@ -1,10 +1,13 @@
+<script setup>
+    import ErrorAlert from '@/components/atoms/errorHandling/ErrorAlert.vue';
+    import SuccessAlert from '@/components/atoms/errorHandling/ErrorAlert.vue';
+</script>
+
 <template>
     <h1 class="mb-4">Settings</h1>
 
-<!--      
-        include $partialsDir."/errorAlert.php";
-        include $partialsDir."/successAlert.php"; 
-    ?> -->
+    <ErrorAlert />
+    <SuccessAlert />
 
     <h4>Account actions</h4>
     <ul class="list-unstyled">

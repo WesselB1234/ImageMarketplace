@@ -11,7 +11,7 @@
 </script>
 
 <template>
-    <form @submit="handleRegister">
+    <form>
         <BaseFormField labelName="Username" id="username" placeholder="Enter your username" v-model="vModel.username"/>
         <BaseFormField labelName="Password" type="password" id="password" placeholder="Enter your password" v-model="vModel.password"/>
         <BaseFormField labelName="Repeat password" type="password" id="repeat_password" placeholder="Repeat your password" v-model="vModel.repeatPassword"/>

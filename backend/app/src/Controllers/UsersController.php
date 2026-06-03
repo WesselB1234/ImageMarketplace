@@ -43,40 +43,6 @@ class UsersController extends ApiController
         echo json_encode($imageDtosArray, JSON_PRETTY_PRINT);
     }
 
-    #[Route("POST", "/users/login")]
-    public function login()
-    {            
-        $data = $this->getDataFromInput(["username", "password"]);
-
-        $user = $this->authenticationService->getUserByUsernameAndPassword($data["username"], $data["password"]);
-        
-        if ($user == null){
-            throw new NotAuthorizedException("Password or username is not correct.");
-        }
-
-        $dto = new LoginDto($this->authenticationService->generateAuthTokenFromUser($user));
-        
-        http_response_code(201); 
-        echo json_encode($dto, JSON_PRETTY_PRINT);     
-    }
-
-    #[Route("POST", "/users/register")]
-    public function register()
-    {
-        $data = $this->getDataFromInput(["username", "password"]);
-
-        $user = User::constructUnknownUser($data["username"], $data["password"], 100, UserRole::User); 
-        $userId = $this->usersService->createUser($user);
-        $user->setUserId($userId);
-        
-        $userDto = DtoMapper::mapUserToDto($user);
-        
-        $dto = new RegisterDto($userDto, $this->authenticationService->generateAuthTokenFromUser($user));
-
-        http_response_code(201); 
-        echo json_encode($dto, JSON_PRETTY_PRINT);
-    }
-
     #[Route("GET", "/users")]
     public function index()
     {

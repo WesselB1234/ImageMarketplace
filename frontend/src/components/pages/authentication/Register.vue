@@ -23,7 +23,7 @@
                 throw new Error('Repeated password is not equal to password');
             }
 
-            const response = await axios.post('/users/register', vModel.value)
+            const response = await axios.post('/auth/register', vModel.value)
 
             authStore.setAuthToken(response.data.jwt)
             errorHandlingStore.successMessage = 'Successfully created a new account.'

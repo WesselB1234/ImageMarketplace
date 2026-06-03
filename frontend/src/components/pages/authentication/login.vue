@@ -21,7 +21,7 @@
         try {
             e.preventDefault()
 
-            const response = await axios.post('/users/login', vModel.value)
+            const response = await axios.post('/auth/login', vModel.value)
 
             authStore.setAuthToken(response.data.jwt)
             errorHandlingStore.successMessage = 'Successfully logged in.'

@@ -1,7 +1,4 @@
 <script setup>
-
-    // script src="assets/js/AlertMessaging.js"script
-    // script src="assets/js/UserDeletionAjax.js"script
     import axios from '@/utils/axios.js'
     import { onMounted, ref } from 'vue'
 

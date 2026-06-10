@@ -2,6 +2,7 @@
     import { ref } from 'vue'
     import { useErrorHandlingStore } from '@/stores/errorHandlingStore'
     import router from '@/router/index.js'
+    import axios from '@/utils/axios.js'
 
     import ReturnBtn from '@/components/atoms/buttons/ReturnBtn.vue'
     import ErrorAlert from '@/components/atoms/errorHandling/ErrorAlert.vue'
@@ -14,13 +15,11 @@
     })
     const errorAlertRef = ref(null)
 
-    function handleCreateUser(e) {
+    async function handleCreateUser(e) {
         try {
             e.preventDefault()
 
-            //const response = await axios.post('/auth/login', vModel.value)
-
-            console.log(vModel.value)
+            await axios.post('/users', vModel.value)
 
             errorHandlingStore.successMessage = 'Successfully created a new user.'
             router.push('/users')

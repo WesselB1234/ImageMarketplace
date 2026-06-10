@@ -45,7 +45,7 @@ class UsersController extends ApiController
     }
 
     #[Route("GET", "/users")]
-    public function index()
+    public function getAll()
     {
         $this->authenticationService->getLoggedInUser();
         $users = $this->usersService->getAllUsers();
@@ -55,33 +55,21 @@ class UsersController extends ApiController
         echo json_encode($dtoUsers, JSON_PRETTY_PRINT);
     }
 
-    // #[Route("GET", "/users/create")]
-    // public function create()
-    // {
-    //     $this->displayView();
-    // }
+    #[Route("POST", "/users")]
+    public function create()
+    {    
+        $data = $this->getDataFromInput(["username", "imageTokens", "role"]);
 
-    // #[Route("POST", "/users/create")]
-    // public function processCreate()
-    // {
-    //     $user = null;
-    
-    //     try{
-    //         $user = User::constructUnknownUser($_POST["username"], $_POST["password"], intval($_POST["image_tokens"]), UserRole::from($_POST["role"])); 
-    //         $userId = $this->usersService->createUser($user);
+        $user = User::constructUnknownUser($data["username"], $data["password"], intval($data["imageTokens"]), UserRole::from($data["role"])); 
+        
+        $userId = $this->usersService->createUser($user);
+        $user->setUserId($userId);
+        
+        $userDto = $this->dtoMapper->mapUserToDto($user);
 
-    //         $_SESSION["success_message"] = "Successfully created a new user with User ID $userId.";
-    //         header("Location: /users");
-    //     }
-    //     catch(Exception $e){
-    //         $this->displayView([
-    //                 "viewModel" => $user, 
-    //                 "errorMessage" => $e->getMessage()
-    //             ], 
-    //             "Users/create.php"
-    //         );
-    //     }
-    // }
+        http_response_code(201); 
+        echo json_encode($userDto, JSON_PRETTY_PRINT);
+    }
 
     #[Route("GET", "/users/get-by-id", ["id"])]
     public function getById(array $requestParams)

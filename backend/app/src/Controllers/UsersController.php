@@ -8,6 +8,7 @@ use App\Models\Dtos\LoginDto;
 use App\Models\Dtos\RegisterDto;
 use App\Models\Exceptions\ForbiddenException;
 use App\Models\Exceptions\NotAuthorizedException;
+use App\Models\Helpers\RequestParamValidator;
 use App\Services\Interfaces\IAuthenticationService;
 use App\Services\Interfaces\IImagesService;
 use App\Services\Interfaces\IUsersService;
@@ -82,23 +83,19 @@ class UsersController extends ApiController
     //     }
     // }
 
-    // #[Route("GET", "/users/get-by-id", ["id"])]
-    // public function update(array $requestParams)
-    // {
-    //     $userId = $requestParams["id"];        
+    #[Route("GET", "/users/get-by-id", ["id"])]
+    public function getById(array $requestParams)
+    {
+        $userId = $requestParams["id"];        
+    
+        RequestParamValidator::validateRequestParamId($userId);
         
-    //     try{
-    //         RequestParamValidator::validateRequestParamId($userId);
-            
-    //         $user = $this->usersService->getUserByUserIdOrThrow($userId);
+        $user = $this->usersService->getUserByUserIdOrThrow($userId); 
+        $userDto = $this->dtoMapper->mapUserToDto($user);
 
-    //         $this->displayView(["viewModel" => $user]);
-    //     }
-    //     catch(Exception $e){
-    //         $_SESSION["error_message"] = $e->getMessage();
-    //         header("Location: /users");
-    //     }        
-    // }
+        http_response_code(200); 
+        echo json_encode($userDto, JSON_PRETTY_PRINT);   
+    }
 
     // #[Route("POST", "/users/update", ["id"])]
     // public function processUpdate(array $requestParams)

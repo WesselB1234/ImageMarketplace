@@ -2,6 +2,7 @@
     import router from '@/router/index.js'
     import { onMounted, ref } from 'vue'
     import { useErrorHandlingStore } from '@/stores/errorHandlingStore'
+    import axios from '@/utils/axios.js'
 
     import ReturnBtn from '@/components/atoms/buttons/ReturnBtn.vue'
     import ErrorAlert from '@/components/atoms/errorHandling/ErrorAlert.vue'
@@ -15,13 +16,11 @@
     })
     const errorAlertRef = ref(null)
 
-    function handleUpdateUser(e) {
+    async function handleUpdateUser(e) {
         try {
             e.preventDefault()
 
             //const response = await axios.post('/auth/login', vModel.value)
-
-            console.log(vModel.value)
 
             errorHandlingStore.successMessage = 'Successfully updated user with id: #' + routeUserId
             router.push('/users')
@@ -36,8 +35,23 @@
         }
     }
 
-    onMounted(() => {
-        console.log('getUser')
+    onMounted(async () => {
+        try {
+            const response = await axios.get('/users/get-by-id/' + routeUserId)
+            vModel.value.username = response.data.username
+            vModel.value.imageTokens = response.data.imageTokens
+            vModel.value.role = response.data.role
+        }
+        catch (ex){
+            if (ex.response){
+                errorHandlingStore.errorMessage = ex.response.data.message
+            }
+            else {
+                errorHandlingStore.errorMessage = ex.message
+            }
+
+            router.push('/users')
+        }
     })
 </script>
 

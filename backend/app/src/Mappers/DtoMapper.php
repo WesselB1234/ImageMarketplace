@@ -6,8 +6,6 @@ use App\Models\Dtos\ImageDto;
 use App\Models\Dtos\UserDto;
 use App\Models\User;
 use App\Models\Image;
-use App\Models\Enums\UserRole;
-use DateTime;
 
 class DtoMapper
 {

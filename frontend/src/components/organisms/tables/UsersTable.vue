@@ -2,13 +2,20 @@
     import axios from '@/utils/axios.js'
     import { onMounted, ref } from 'vue'
 
-    import SuccessAlert from '@/components/atoms/errorHandling/SuccessAlert.vue'
-    import ErrorAlert from '@/components/atoms/errorHandling/SuccessAlert.vue'
     import UserRow from '@/components/molecules/tables/UserRow.vue'
 
-    const users = ref(null)
+    const props = defineProps({
+        errorAlertRef: {
+            type: Object,
+            required: true
+        },
+        successAlertRef: {
+            type: Object,
+            required: true
+        },
+    });
 
-    const errorAlertRef = ref(null)
+    const users = ref(null)
 
     onMounted(async () => {
         try {
@@ -17,19 +24,16 @@
         }
         catch (ex){
             if (ex.response){
-                errorAlertRef.value.displayErrorMessage(ex.response.data.message)
+                props.errorAlertRef.displayErrorMessage(ex.response.data.message)
             }
             else {
-                errorAlertRef.value.displayErrorMessage(ex.message)
+                props.errorAlertRef.displayErrorMessage(ex.message)
             }
         }
     })
 </script>
 
 <template>
-    <SuccessAlert /> 
-    <ErrorAlert ref="errorAlertRef" />
-
     <table class="table mt-4">
         <thead class="table-dark">
             <tr>
@@ -41,7 +45,7 @@
             </tr>
         </thead>
         <tbody>
-            <UserRow v-for="user in users" :user="user" />
+            <UserRow v-for="user in users" :user="user" :successAlertRef="successAlertRef" :errorAlertRef="errorAlertRef" />
         </tbody>
     </table>
 </template>

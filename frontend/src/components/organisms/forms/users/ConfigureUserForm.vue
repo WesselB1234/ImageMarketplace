@@ -18,12 +18,10 @@
 
         <div class="mb-3">
             <FormLabel id="role" labelName="Role"/>
-            <select class="form-select" id="role" name="role" required>
-                <!-- foreach (UserRole::cases() as $case){ ?>
-                    <option value="<?php echo $case->name; ?>"  echo (isset($viewModel) && $case->name == $viewModel->getRole()->value ? "selected" : "") ?>>
-                         echo $case->name; ?>
-                    </option>
-                } ?>   -->
+            <select v-model="vModel.role" class="custom-select" id="role" name="role" required>
+                <option value="" disabled>Select a role</option>
+                <option value="User">User</option> 
+                <option value="Admin">Admin</option>
             </select>
         </div>
 

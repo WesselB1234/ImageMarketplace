@@ -82,7 +82,7 @@ class UsersController extends ApiController
     //     }
     // }
 
-    // #[Route("GET", "/users/update", ["id"])]
+    // #[Route("GET", "/users/get-by-id", ["id"])]
     // public function update(array $requestParams)
     // {
     //     $userId = $requestParams["id"];        

@@ -1,20 +1,48 @@
 <script setup>
     import { ref } from 'vue'
+    import { useErrorHandlingStore } from '@/stores/errorHandlingStore'
+    import router from '@/router/index.js'
 
     import ReturnBtn from '@/components/atoms/buttons/ReturnBtn.vue'
-    import ErrorAlert from '@/components/atoms/errorHandling/ErrorAlert.vue';
+    import ErrorAlert from '@/components/atoms/errorHandling/ErrorAlert.vue'
     import ConfigureUserForm from '@/components/organisms/forms/users/ConfigureUserForm.vue'
 
-    const vModel = ref({})
+    const errorHandlingStore = useErrorHandlingStore()
+
+    const vModel = ref({
+        'role': ''
+    })
+    const errorAlertRef = ref(null)
+
+    function handleCreateUser(e) {
+        try {
+            e.preventDefault()
+
+            //const response = await axios.post('/auth/login', vModel.value)
+
+            console.log(vModel.value)
+
+            errorHandlingStore.successMessage = 'Successfully created a new user.'
+            router.push('/users')
+        }
+        catch (ex){
+            if (ex.response){
+                errorAlertRef.value.displayErrorMessage(ex.response.data.message)
+            }
+            else {
+                errorAlertRef.value.displayErrorMessage(ex.message)
+            }
+        }
+    }
 </script>
 
 <template>
 
     <h1>Create User</h1>
 
-    <ErrorAlert />
+    <ErrorAlert ref="errorAlertRef" />
 
     <ReturnBtn to="/users" text="Return back to users" />
     
-    <ConfigureUserForm :vModel="vModel" />
+    <ConfigureUserForm :vModel="vModel" @submit="handleCreateUser" />
 </template>

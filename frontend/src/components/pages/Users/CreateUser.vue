@@ -41,8 +41,6 @@
     <h1>Create User</h1>
 
     <ErrorAlert ref="errorAlertRef" />
-
     <ReturnBtn to="/users" text="Return back to users" />
-    
-    <ConfigureUserForm :vModel="vModel" @submit="handleCreateUser" />
+    <ConfigureUserForm :vModel="vModel" @submit="handleCreateUser" :isPasswordRequired="true" />
 </template>

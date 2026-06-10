@@ -7,6 +7,10 @@
         vModel: {
             type: Object,
             required: true
+        },
+        isPasswordRequired: {
+            type: Boolean,
+            default: false
         }
     });
 </script>
@@ -25,7 +29,7 @@
             </select>
         </div>
 
-        <BaseFormField labelName="Password" type="password" id="password" placeholder="Enter password" v-model="vModel.password" />
+        <BaseFormField labelName="Password" type="password" id="password" placeholder="Enter password" v-model="vModel.password" :isRequired="isPasswordRequired" />
 
         <SubmitBtn text="Create" />
     </form>

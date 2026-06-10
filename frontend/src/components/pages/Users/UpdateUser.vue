@@ -20,7 +20,7 @@
         try {
             e.preventDefault()
 
-            //const response = await axios.post('/auth/login', vModel.value)
+            await axios.put('/users/' + routeUserId, vModel.value)
 
             errorHandlingStore.successMessage = 'Successfully updated user with id: #' + routeUserId
             router.push('/users')
@@ -60,8 +60,6 @@
     <h1>Update User: #{{ routeUserId }}</h1>
 
     <ErrorAlert ref="errorAlertRef" />
-
     <ReturnBtn to="/users" text="Return back to users" />
-    
     <ConfigureUserForm :vModel="vModel" @submit="handleUpdateUser" />
 </template>

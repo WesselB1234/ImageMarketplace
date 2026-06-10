@@ -97,38 +97,27 @@ class UsersController extends ApiController
         echo json_encode($userDto, JSON_PRETTY_PRINT);   
     }
 
-    // #[Route("POST", "/users/update", ["id"])]
-    // public function processUpdate(array $requestParams)
-    // {
-    //     $user = null;
-    //     $userId = $requestParams["id"];   
+    #[Route("PUT", "/users", ["id"])]
+    public function update(array $requestParams)
+    {
+        $userId = $requestParams["id"];   
+        RequestParamValidator::validateRequestParamId($userId);
 
-    //     try{
-    //         if (empty($_POST["password"])) {
-    //             $user = User::constructKnownUserWithoutPassword($userId, $_POST["username"], intval($_POST["image_tokens"]), UserRole::from($_POST["role"])); 
-    //         }
-    //         else{
-    //             $user = User::constructFullyKnownUser($userId, $_POST["username"], $_POST["password"], $_POST["image_tokens"], UserRole::from($_POST["role"]));
-    //         }
+        $data = $this->getDataFromInput(["username", "imageTokens", "role"]);
+
+        if (empty($data["password"])) {
+            $user = User::constructKnownUserWithoutPassword($userId, $data["username"], intval($data["imageTokens"]), UserRole::from($data["role"])); 
+        }
+        else{
+            $user = User::constructFullyKnownUser($userId, $data["username"], $data["password"], $data["imageTokens"], UserRole::from($data["role"]));
+        }
             
-    //         $this->usersService->updateUser($user);
-            
-    //         $_SESSION["success_message"] = "Successfully updated user.";
-    //         header("Location: /users");
-    //     } 
-    //     catch(NotFoundException $e){
-    //         $_SESSION["error_message"] = $e->getMessage();
-    //         header("Location: /users");
-    //     } 
-    //     catch(Exception $e){
-    //         $this->displayView([
-    //                 "viewModel" => $user,
-    //                 "errorMessage" => $e->getMessage()
-    //             ],
-    //             "Users/update.php"
-    //         );
-    //     } 
-    // }
+        $this->usersService->updateUser($user);
+        $userDto = $this->dtoMapper->mapUserToDto($user);
+
+        http_response_code(200); 
+        echo json_encode($userDto, JSON_PRETTY_PRINT);
+    }
 
     #[Route("DELETE", "/users/delete", ["id"])]
     public function delete(array $params)
@@ -136,7 +125,7 @@ class UsersController extends ApiController
         $loggedInUser = $this->authenticationService->getLoggedInUserByRoleAuthorization([UserRole::Admin]);
         $userId = $params["id"];
 
-        if (intval($userId) === $loggedInUser->getUserId()){
+        if (intval($userId) === $loggedInUser->getUserId()) {
             throw new ForbiddenException("You cannot delete yourself.");
         }
         

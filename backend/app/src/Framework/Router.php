@@ -116,6 +116,8 @@ class Router
             }
         });
 
+        $routeInfo = $dispatcher->dispatch($httpMethod, $uri);
+
         switch ($routeInfo[0]) {
             case FastRoute\Dispatcher::METHOD_NOT_ALLOWED:
                 throw new MethodNotAllowedException("HttpMethod is not allowed.");

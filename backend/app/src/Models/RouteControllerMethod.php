@@ -24,4 +24,9 @@ class RouteControllerMethod
     {
         return $this->controllerPath;
     }
+
+    public function getRequestParams(): ?array
+    {
+        return $this->requestParams;
+    }
 }

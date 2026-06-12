@@ -107,6 +107,15 @@ class UsersController extends ApiController
         echo json_encode($userDto, JSON_PRETTY_PRINT);
     }
 
+    #[Route("DELETE", "/users/delete-by-self")]
+    public function deleteAccount()
+    {
+        $loggedInUser = $this->authenticationService->getLoggedInUser();
+        $this->usersService->deleteUserByUserId($loggedInUser->getUserId());
+        
+        http_response_code(200); 
+    }
+
     #[Route("DELETE", "/users/{id}")]
     public function delete(array $params)
     {
@@ -118,15 +127,6 @@ class UsersController extends ApiController
         }
         
         $this->usersService->deleteUserByUserId($userId);
-        http_response_code(200); 
-    }
-
-    #[Route("DELETE", "/users/delete-by-self")]
-    public function deleteAccount()
-    {
-        $loggedInUser = $this->authenticationService->getLoggedInUser();
-        $this->usersService->deleteUserByUserId($loggedInUser->getUserId());
-        
         http_response_code(200); 
     }
 }

@@ -13,7 +13,7 @@
 
     async function handleDeleteAccount() {
         try {
-            await axios.delete('/users/settings')
+            await axios.delete('/users/delete-by-self')
 
             errorHandlingStore.successMessage = 'Successfully deleted your account'
             router.push('/auth/login')

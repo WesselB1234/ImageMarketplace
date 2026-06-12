@@ -7,7 +7,7 @@ async function getImageById(imageId) {
     const errorHandlingStore = useErrorHandlingStore()
     
     try {
-        const response = await axios.get('/images/get-by-id/' + imageId)
+        const response = await axios.get('/images/' + imageId)
         return response.data
     }
     catch (ex){

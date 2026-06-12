@@ -31,8 +31,7 @@ class UsersController extends ApiController
         $this->dtoMapper = $dtoMapper;
     }
 
-    #[Route("GET", "/")] 
-    #[Route("GET", "/users/portfolio")]
+    #[Route("GET", "/users/me/portfolio")]
     public function portfolio()
     {
         $loggedInUser = $this->authenticationService->getLoggedInUser();
@@ -107,7 +106,7 @@ class UsersController extends ApiController
         echo json_encode($userDto, JSON_PRETTY_PRINT);
     }
 
-    #[Route("DELETE", "/users/delete-by-self")]
+    #[Route("DELETE", "/users/me")]
     public function deleteAccount()
     {
         $loggedInUser = $this->authenticationService->getLoggedInUser();

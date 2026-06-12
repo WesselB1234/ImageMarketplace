@@ -22,7 +22,7 @@
 
     async function handleBuy() {
         try {
-            const response = await axios.patch('/images/buy/' + image.value.imageId)
+            const response = await axios.patch('/images/' + image.value.imageId + '/buy')
             image.value.ownerId = response.data.ownerId
             errorHandlingStore.successMessage = 'Successfully bought this image.'
             router.push('/')
@@ -39,7 +39,7 @@
 
     async function handleTakeOffSale() {
         try {
-            const response = await axios.patch('/images/take-off-sale/' + image.value.imageId)
+            const response = await axios.patch('/images/' + image.value.imageId + '/take-off-sale')
             image.value.isOnSale = response.data.isOnSale
             image.value.price = response.data.price
             successAlertRef.value.displaySuccessMessage('Successfully taken this image offsale.')
@@ -72,7 +72,7 @@
 
     async function handleModerateRequest(isModerate) {
         try {
-            const response = await axios.patch('/images/moderate/' + image.value.imageId, {
+            const response = await axios.patch('/images/' + image.value.imageId + '/moderate', {
                 "isModerate": isModerate 
             })
             image.value.isModerated = response.data.isModerated
@@ -104,7 +104,7 @@
 <template>
     <h1 class="mb-4">Image details</h1>
     <ReturnBtn to="/portfolio" text="Return back to portfolio" />
-    <ErrorAlert ref="errorAlertRef"/>
+    <ErrorAlert ref="errorAlertRef" />
     <SuccessAlert ref="successAlertRef" />
 
     <div class="row g-4">

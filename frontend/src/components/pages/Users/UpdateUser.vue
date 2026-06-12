@@ -37,7 +37,7 @@
 
     onMounted(async () => {
         try {
-            const response = await axios.get('/users/get-by-id/' + routeUserId)
+            const response = await axios.get('/users/' + routeUserId)
             vModel.value.username = response.data.username
             vModel.value.imageTokens = response.data.imageTokens
             vModel.value.role = response.data.role

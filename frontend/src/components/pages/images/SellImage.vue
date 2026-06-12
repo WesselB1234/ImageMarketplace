@@ -20,7 +20,7 @@
         try {
             e.preventDefault()
 
-            await axios.patch('/images/sell/' + image.value.imageId, vModel.value)
+            await axios.patch('/images/' + image.value.imageId + '/sell', vModel.value)
 
             errorHandlingStore.successMessage = 'Successfully put image on sale.'
             router.push('/images/' + image.value.imageId) 

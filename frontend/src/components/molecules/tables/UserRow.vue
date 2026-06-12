@@ -22,7 +22,7 @@
         try {
             const userId = e.target.dataset.userId;
 
-            await axios.delete('/users/delete/' + userId)
+            await axios.delete('/users/' + userId)
 
             e.target.parentElement.parentElement.remove()
             props.successAlertRef.displaySuccessMessage('Successfully deleted user with id: #' + userId)

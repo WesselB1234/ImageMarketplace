@@ -70,7 +70,7 @@ class ImagesController extends ApiController
         echo json_encode($imageDto);
     }
 
-    #[Route("PATCH", "/images/sell/{id}")]
+    #[Route("PATCH", "/images/{id}/sell")]
     public function sell(array $requestParams)
     {   
         $loggedInUser = $this->authenticationService->getLoggedInUser();
@@ -85,7 +85,7 @@ class ImagesController extends ApiController
         echo json_encode($dto);
     }
 
-    #[Route("PATCH", "/images/take-off-sale/{id}")]
+    #[Route("PATCH", "/images/{id}/take-off-sale")]
     public function takeOffSale(array $requestParams)
     {
         $loggedInUser = $this->authenticationService->getLoggedInUser();
@@ -100,7 +100,7 @@ class ImagesController extends ApiController
         echo json_encode($dto);
     }
 
-    #[Route("PATCH", "/images/buy/{id}")]
+    #[Route("PATCH", "/images/{id}/buy")]
     public function buyImage(array $requestParams)
     {
         $imageId = $requestParams["id"];    
@@ -150,7 +150,7 @@ class ImagesController extends ApiController
         }               
     }
 
-    #[Route("PATCH", "/images/moderate", ["id"])]
+    #[Route("PATCH", "/images/{id}/moderate")]
     public function moderateImage(array $requestParams)
     {
         $this->authenticationService->getLoggedInUserByRoleAuthorization([UserRole::Admin]);
@@ -170,7 +170,7 @@ class ImagesController extends ApiController
         echo json_encode($dto);
     }
 
-    #[Route("DELETE", "/images", ["id"])]
+    #[Route("DELETE", "/images/{id}")]
     public function deleteImage(array $requestParams)
     {
         $loggedInUser = $this->authenticationService->getLoggedInUser();

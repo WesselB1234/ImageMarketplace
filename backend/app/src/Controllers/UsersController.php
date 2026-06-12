@@ -71,7 +71,7 @@ class UsersController extends ApiController
         echo json_encode($userDto, JSON_PRETTY_PRINT);
     }
 
-    #[Route("GET", "/users/get-by-id", ["id"])]
+    #[Route("GET", "/users/{id}")]
     public function getById(array $requestParams)
     {
         $userId = $requestParams["id"];        
@@ -85,7 +85,7 @@ class UsersController extends ApiController
         echo json_encode($userDto, JSON_PRETTY_PRINT);   
     }
 
-    #[Route("PUT", "/users", ["id"])]
+    #[Route("PUT", "/users/{id}")]
     public function update(array $requestParams)
     {
         $userId = $requestParams["id"];   
@@ -107,7 +107,7 @@ class UsersController extends ApiController
         echo json_encode($userDto, JSON_PRETTY_PRINT);
     }
 
-    #[Route("DELETE", "/users/delete", ["id"])]
+    #[Route("DELETE", "/users/{id}")]
     public function delete(array $params)
     {
         $loggedInUser = $this->authenticationService->getLoggedInUserByRoleAuthorization([UserRole::Admin]);
@@ -121,7 +121,7 @@ class UsersController extends ApiController
         http_response_code(200); 
     }
 
-    #[Route("DELETE", "/users/settings")]
+    #[Route("DELETE", "/users/delete-by-self")]
     public function deleteAccount()
     {
         $loggedInUser = $this->authenticationService->getLoggedInUser();

@@ -3,11 +3,14 @@
 namespace App\Framework;
 
 use App\Models\Attributes\Route;
+use App\Models\Exceptions\MethodNotAllowedException;
 use App\Models\Exceptions\NotFoundException;
 use App\Models\RouteControllerMethod;
-use Exception;
 use ReflectionClass;
 use DI\Container;
+use FastRoute\RouteCollector;
+use FastRoute;
+use function FastRoute\simpleDispatcher;
 
 class Router
 {
@@ -40,7 +43,7 @@ class Router
         $controllerClassPath = $this->getControllerClassPathOfDir($dir);
 
         if ($controllerClassPath === null || !class_exists($controllerClassPath)){
-            throw new Exception("$controllerClassPath does not exist as a class.");
+            throw new NotFoundException("$controllerClassPath does not exist as a class.");
         }
 
         $refController = new ReflectionClass($controllerClassPath); 
@@ -65,12 +68,6 @@ class Router
                     "method_name" => $refMethod->getName()
                 ];
 
-                $routeRequestParams = $route->getRequestParams();
-
-                if ($routeRequestParams !== null){
-                    $cacheRoute["request_params"] = $routeRequestParams;
-                }
-
                 $cacheRoutes[$httpMethod][$route->getRoute()] = $cacheRoute;
             }  
         }
@@ -92,22 +89,6 @@ class Router
             }
         }
     }
-
-    private function getRequestParamsFromSegments(array $routeSegments, ?array $routeParams, array $uriSegments): ?array
-    {
-        if ($routeParams === null){
-            return null;
-        }
-
-        $routeSegmentCount = count($routeSegments);
-        $params = [];
-
-        foreach($routeParams as $i => $param){
-            $params[$param] = $uriSegments[$i + $routeSegmentCount];
-        }
-
-        return $params;
-    }
     
     private function callRouteMethodOfController($methodName, $controllerClassPath, $requestParams)
     {                    
@@ -126,36 +107,29 @@ class Router
         if (!isset($cacheRoutes[$httpMethod])){
             throw new NotFoundException("Cannot find specified http method.");
         }
-        
-        $cachedRoutesInHttpMethod = $cacheRoutes[$httpMethod];
-        $uriSegments = explode("/", trim($uri, "/"));
-        $uriMatcher = "";
 
-        foreach($uriSegments as $uriSegment){
-            
-            $uriMatcher.="/$uriSegment";
-
-            if (isset($cachedRoutesInHttpMethod[$uriMatcher])){
-                
-                $routeValues = $cachedRoutesInHttpMethod[$uriMatcher];
-                $routeSegments = explode("/", trim($uriMatcher, "/"));
-                $routeParams = (!isset($routeValues["request_params"]) ? null : $routeValues["request_params"]);
-
-                $paramsCount = ($routeParams === null ? 0 : count($routeValues["request_params"])); 
-                $totalRouteSegmentCount = count($routeSegments) + $paramsCount;
-                $totalUriSegmentCount = count($uriSegments);
-
-                if ($totalRouteSegmentCount !== $totalUriSegmentCount){
-                    continue;
+        $dispatcher = simpleDispatcher(function (RouteCollector $r) use ($cacheRoutes) {
+            foreach ($cacheRoutes as $cacheHttpMethod => $cacheMethodRoutes) {
+                foreach ($cacheMethodRoutes as $cacheRoute => $controllerMethods) {
+                    $r->addRoute($cacheHttpMethod, $cacheRoute, $controllerMethods);
                 }
-
-                $requestParams = $this->getRequestParamsFromSegments($routeSegments, $routeParams, $uriSegments);
-
-                return new RouteControllerMethod($routeValues["method_name"], $routeValues["controller_path"], $requestParams);
             }
+        });
+
+        switch ($routeInfo[0]) {
+            case FastRoute\Dispatcher::METHOD_NOT_ALLOWED:
+                throw new MethodNotAllowedException("HttpMethod is not allowed.");
+
+            case FastRoute\Dispatcher::FOUND:
+                
+                $methodName = $routeInfo[1]["method_name"];
+                $controllerPath = $routeInfo[1]["controller_path"];
+                $requestParams = $routeInfo[2];
+
+                return new RouteControllerMethod($methodName, $controllerPath, $requestParams);
         }
 
-        throw new NotFoundException("Cannot find specified route.");
+        throw new NotFoundException("Cannot find specified route.");;
     }
 
     private function refreshRoutesCacheFile()
@@ -181,7 +155,7 @@ class Router
         try{
             $routeControllerMethod = $this->getRouteControllerMethodOfHttpRequest($httpMethod, $uri);
         }
-        catch(Exception $e){
+        catch(NotFoundException $e){
             $this->refreshRoutesCacheFile();
             $routeControllerMethod = $this->getRouteControllerMethodOfHttpRequest($httpMethod, $uri);
         }

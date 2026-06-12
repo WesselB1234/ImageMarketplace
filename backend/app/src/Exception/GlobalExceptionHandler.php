@@ -7,6 +7,7 @@ use App\Models\Exceptions\ForbiddenException;
 use App\Models\Exceptions\InvalidAuthTokenException;
 use App\Models\Exceptions\NotAuthorizedException;
 use App\Models\Exceptions\NotFoundException;
+use App\Models\Exceptions\MethodNotAllowedException;
 use Firebase\JWT\ExpiredException;
 use Firebase\JWT\SignatureInvalidException;
 
@@ -23,6 +24,7 @@ class GlobalExceptionHandler {
             $e instanceof ExpiredException => $this->handleExpiredException($e),
             $e instanceof SignatureInvalidException => $this->handleSignatureInvalidException($e),
             $e instanceof ForbiddenException => $this->handleForbiddenException($e),
+            $e instanceof handleMethodNotAllowedException => $this->handleMethodNotAllowedException($e),
             default => $this->handleGeneric($e)
         };
     }
@@ -77,5 +79,10 @@ class GlobalExceptionHandler {
     private function handleForbiddenException(ForbiddenException $e) 
     {
         $this->displayErrorJson(403, $e->getMessage());
+    }
+
+    private function handleMethodNotAllowedException(MethodNotAllowedException $e) 
+    {
+        $this->displayErrorJson(405, $e->getMessage());
     }
 }

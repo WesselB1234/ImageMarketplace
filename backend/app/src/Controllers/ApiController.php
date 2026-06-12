@@ -20,7 +20,6 @@ class ApiController
         }
     }
 
-
     public function getDataFromInput(array $requiredParams): array
     {
         $contentType = $_SERVER["CONTENT_TYPE"];

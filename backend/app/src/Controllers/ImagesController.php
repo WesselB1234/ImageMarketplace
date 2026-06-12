@@ -42,7 +42,7 @@ class ImagesController extends ApiController
         echo json_encode($imageDtosArray, JSON_PRETTY_PRINT);
     }
 
-    #[Route("GET", "/images/get-by-id", ["id"])]
+    #[Route("GET", "/images/{id}")]
     public function getImageById(array $requestParams)
     {   
         $loggedInUser = $this->authenticationService->getLoggedInUser();
@@ -70,7 +70,7 @@ class ImagesController extends ApiController
         echo json_encode($imageDto);
     }
 
-    #[Route("PATCH", "/images/sell", ["id"])]
+    #[Route("PATCH", "/images/sell/{id}")]
     public function sell(array $requestParams)
     {   
         $loggedInUser = $this->authenticationService->getLoggedInUser();
@@ -85,7 +85,7 @@ class ImagesController extends ApiController
         echo json_encode($dto);
     }
 
-    #[Route("PATCH", "/images/take-off-sale", ["id"])]
+    #[Route("PATCH", "/images/take-off-sale/{id}")]
     public function takeOffSale(array $requestParams)
     {
         $loggedInUser = $this->authenticationService->getLoggedInUser();
@@ -100,7 +100,7 @@ class ImagesController extends ApiController
         echo json_encode($dto);
     }
 
-    #[Route("PATCH", "/images/buy", ["id"])]
+    #[Route("PATCH", "/images/buy/{id}")]
     public function buyImage(array $requestParams)
     {
         $imageId = $requestParams["id"];    

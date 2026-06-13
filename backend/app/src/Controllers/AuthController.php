@@ -3,13 +3,6 @@
 namespace App\Controllers;
 
 use App\Controllers\ApiController;
-use App\Mappers\DtoMapper;
-use App\Models\Dtos\AuthorizationTestDto;
-use App\Models\Dtos\LoginDto;
-use App\Models\Dtos\RegisterDto;
-use App\Models\Enums\UserRole;
-use App\Models\Exceptions\NotAuthorizedException;
-use App\Models\User;
 use App\Services\Interfaces\IAuthenticationService;
 use App\Services\Interfaces\IUsersService;
 use App\Models\Attributes\Route;

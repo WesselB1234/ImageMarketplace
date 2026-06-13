@@ -9,13 +9,9 @@ use App\Models\Dtos\BuyImageDto;
 use App\Services\Interfaces\IAuthenticationService;
 use App\Services\Interfaces\IImagesService;
 use App\Services\Interfaces\IUsersService;
-use App\Models\Image;
 use App\Models\Enums\UserRole;
-use DateTime;
-use Exception;
 use App\Models\Exceptions\NotAuthorizedException;
 use App\Models\Attributes\Route;
-use App\Models\Helpers\RequestParamValidator;
 
 class ImagesController extends ApiController
 {
@@ -113,33 +109,12 @@ class ImagesController extends ApiController
     public function upload()
     {
         $loggedInUser = $this->authenticationService->getLoggedInUser();
-        $imageId = null;
-
         $data = $this->getDataFromInput(["name", "description", "image", "altText"]);
-        $image = Image::constructUnknownImage($loggedInUser->getUserId(), $loggedInUser->getUserId(), $data["name"], $data["description"], $data["altText"]);
-        
-        $imageFile = $data["image"];
 
-        try{
-            $this->imagesService->validateImageFile($imageFile);
-            $imageId = $this->imagesService->createImage($image);
-            $this->imagesService->uploadImageFile($imageFile, $imageId);
-            $image->setImageId($imageId);
-            $image->setTimeCreated(New DateTime());
+        $dto = $this->imagesService->createImage($data["name"], $data["description"], $data["image"], $data["altText"], $loggedInUser);
 
-            $imageDto = DtoMapper::mapImageToDto($image);
-            
-            http_response_code(201);
-            echo json_encode($imageDto);
-        }
-        catch(Exception $e){
-
-            if ($imageId !== null){
-                $this->imagesService->deleteImageByImageId($imageId, $loggedInUser);       
-            }
-            
-            throw $e;
-        }               
+        http_response_code(201);
+        echo json_encode($dto);               
     }
 
     #[Route("PATCH", "/images/{id}/moderate")]
@@ -150,8 +125,6 @@ class ImagesController extends ApiController
 
         $imageId = $requestParams["id"];
         $isModerateRaw = $data["isModerate"];
-
-        RequestParamValidator::validateRequestParamId($imageId);
         
         $isModerate = filter_var($isModerateRaw, FILTER_VALIDATE_BOOL);
 
@@ -167,8 +140,6 @@ class ImagesController extends ApiController
     {
         $loggedInUser = $this->authenticationService->getLoggedInUser();
         $imageId = $requestParams["id"];
-    
-        RequestParamValidator::validateRequestParamId($imageId);
         
         $this->imagesService->deleteImageByImageId($imageId, $loggedInUser);
 

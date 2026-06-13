@@ -4,7 +4,6 @@ namespace App\Controllers;
 
 use App\Mappers\DtoMapper;
 use App\Models\Exceptions\ForbiddenException;
-use App\Models\Helpers\RequestParamValidator;
 use App\Services\Interfaces\IAuthenticationService;
 use App\Services\Interfaces\IImagesService;
 use App\Services\Interfaces\IUsersService;

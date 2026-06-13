@@ -3,11 +3,13 @@
 namespace App\Services;
 
 use App\Mappers\DtoMapper;
+use App\Models\Dtos\ImageDto;
 use App\Models\User;
 use App\Services\Interfaces\IImagesService;
 use App\Repositories\Interfaces\IImagesRepository;
 use App\Repositories\Interfaces\IUsersRepository;
 use App\Models\Image;
+use DateTime;
 use Exception;
 use App\Models\Exceptions\NotFoundException;
 use App\Models\Exceptions\NotAuthorizedException;
@@ -79,9 +81,29 @@ class ImagesService implements IImagesService
         }
     }
 
-    public function createImage(Image $image): int
+    public function createImage(string $name, string $description, array $imageFile, string $altText, User $loggedInUser): ImageDto
     {
-        return $this->imagesRepository->createImage($image);
+        $imageId = null;
+        $image = Image::constructUnknownImage($loggedInUser->getUserId(), $loggedInUser->getUserId(), $name, $description, $altText);
+
+        try{
+            $this->validateImageFile($imageFile);
+            $imageId = $this->imagesRepository->createImage($image);
+            $this->uploadImageFile($imageFile, $imageId);
+            
+            $image->setImageId($imageId);
+            $image->setTimeCreated(New DateTime());
+
+            return DtoMapper::mapImageToDto($image);
+        }
+        catch(Exception $e){
+
+            if ($imageId !== null){
+                $this->deleteImageByImageId($imageId, $loggedInUser);       
+            }
+            
+            throw $e;
+        }
     }
 
     public function buyImage(Image $image, User $buyerUser)

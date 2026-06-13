@@ -2,6 +2,7 @@
 
 namespace App\Services\Interfaces;
 
+use App\Models\Dtos\ImageDto;
 use App\Models\Image;
 use App\Models\User;
 
@@ -11,7 +12,7 @@ interface IImagesService
     public function getAllOnSaleImages(): array;
     public function getImageByImageId(int $imageId): ?Image;
     public function getImageByImageIdOrThrow(int $imageId): Image;
-    public function createImage(Image $image): int;
+    public function createImage(string $name, string $description, array $imageFile, string $altText, User $loggedInUser): ImageDto;
     public function validateImageFile(array $imageFile);
     public function uploadImageFile(array $imageFile, int $imageId);
     public function buyImage(Image $image, User $buyerUser);

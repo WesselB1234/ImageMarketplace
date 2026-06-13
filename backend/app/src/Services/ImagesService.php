@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Mappers\DtoMapper;
+use App\Models\Dtos\BuyImageDto;
 use App\Models\Dtos\ImageDto;
 use App\Models\User;
 use App\Services\Interfaces\IImagesService;
@@ -106,8 +107,10 @@ class ImagesService implements IImagesService
         }
     }
 
-    public function buyImage(Image $image, User $buyerUser)
+    public function buyImage(int $imageId, User $buyerUser): BuyImageDto
     {
+        $image = $this->getImageByImageIdOrThrow($imageId);
+
         if ($image->getOwnerId() === $buyerUser->getUserId()){
             throw new NotAuthorizedException("You cannot buy your own image.");
         }
@@ -130,6 +133,8 @@ class ImagesService implements IImagesService
 
         $this->usersRepository->updateTokensBalanceByUserId($buyerUser->getUserId(), $buyerUser->getImageTokens());
         $this->imagesRepository->updateImageOwnershipByImageId($image->getImageId(), $buyerUser->getUserId());
+
+        return new BuyImageDto($image->getImageId(), $buyerUser->getUserId());
     }
 
     public function sellImage(Image $image, int $price, User $loggedInUser)

@@ -12,18 +12,21 @@ use App\Services\Interfaces\IUsersService;
 use App\Models\Enums\UserRole;
 use App\Models\Exceptions\NotAuthorizedException;
 use App\Models\Attributes\Route;
+use App\Utils\JwtUtil;
 
 class ImagesController extends ApiController
 {
     private IImagesService $imagesService;
     private IUsersService $usersService;
     private IAuthenticationService $authenticationService;
+    private JwtUtil $jwtUtil;
 
-    public function __construct(IImagesService $imagesService, IUsersService $usersService, IAuthenticationService $authenticationService)
+    public function __construct(IImagesService $imagesService, IUsersService $usersService, IAuthenticationService $authenticationService, JwtUtil $jwtUtil)
     {
         $this->imagesService = $imagesService;
         $this->usersService = $usersService;
         $this->authenticationService = $authenticationService;
+        $this->jwtUtil = $jwtUtil;
     }
 
     #[Route("GET", "/images/all-on-sale")]
@@ -96,11 +99,9 @@ class ImagesController extends ApiController
         $loggedInUser = $this->authenticationService->getLoggedInUser();
         $imageId = $requestParams["id"]; 
         
-        $image = $this->imagesService->getImageByImageIdOrThrow($imageId);
-        $this->imagesService->buyImage($image, $loggedInUser);
+        $dto = $this->imagesService->buyImage($imageId, $loggedInUser);
 
-        $dto = new BuyImageDto($imageId, $loggedInUser->getUserId());
-        header("Authorization: Bearer ". $this->authenticationService->generateAuthTokenFromUser($loggedInUser));
+        header("Authorization: Bearer ". $this->jwtUtil->generateAuthTokenFromUser($loggedInUser));
         http_response_code(200);
         echo json_encode($dto);
     }
@@ -121,11 +122,9 @@ class ImagesController extends ApiController
     public function moderateImage(array $requestParams)
     {
         $this->authenticationService->getLoggedInUserByRoleAuthorization([UserRole::Admin]);
-        $data = $this->getDataFromInput(["isModerate"]);
-
         $imageId = $requestParams["id"];
+        $data = $this->getDataFromInput(["isModerate"]);
         $isModerateRaw = $data["isModerate"];
-        
         $isModerate = filter_var($isModerateRaw, FILTER_VALIDATE_BOOL);
 
         $this->imagesService->updateImageModerationByImageId($imageId, $isModerate);

@@ -34,12 +34,10 @@ class ImagesController extends ApiController
     public function getOnSaleImages()
     {   
         $this->authenticationService->getLoggedInUser();
-        $images = $this->imagesService->getAllOnSaleImages();
+        $dtosArray = $this->imagesService->getAllOnSaleImages();
 
-        $imageDtosArray = DtoMapper::mapImagesArrayToDtoList($images);
-
-        http_response_code(200); 
-        echo json_encode($imageDtosArray, JSON_PRETTY_PRINT);
+        http_response_code(200);
+        echo json_encode($dtosArray, JSON_PRETTY_PRINT);
     }
 
     #[Route("GET", "/images/{id}")]
@@ -47,8 +45,6 @@ class ImagesController extends ApiController
     {   
         $loggedInUser = $this->authenticationService->getLoggedInUser();
         $imageId = $requestParams["id"];
-            
-        RequestParamValidator::validateRequestParamId($imageId);
 
         $image = $this->imagesService->getImageByImageIdOrThrow($imageId);
         
@@ -87,12 +83,10 @@ class ImagesController extends ApiController
 
     #[Route("PATCH", "/images/{id}/take-off-sale")]
     public function takeOffSale(array $requestParams)
-    {
+    {   
         $loggedInUser = $this->authenticationService->getLoggedInUser();
-        $imageId = $requestParams["id"];
-
-        RequestParamValidator::validateRequestParamId($imageId);   
-
+        $imageId = $requestParams["id"]; 
+        
         $this->imagesService->takeImageOffSaleByImageId($imageId, $loggedInUser);
 
         $dto = new SellImageDto($imageId, null, false);
@@ -102,12 +96,10 @@ class ImagesController extends ApiController
 
     #[Route("PATCH", "/images/{id}/buy")]
     public function buyImage(array $requestParams)
-    {
-        $imageId = $requestParams["id"];    
+    {   
         $loggedInUser = $this->authenticationService->getLoggedInUser();
+        $imageId = $requestParams["id"]; 
         
-        RequestParamValidator::validateRequestParamId($imageId);
-
         $image = $this->imagesService->getImageByImageIdOrThrow($imageId);
         $this->imagesService->buyImage($image, $loggedInUser);
 

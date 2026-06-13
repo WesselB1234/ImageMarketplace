@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Mappers\DtoMapper;
 use App\Models\User;
 use App\Services\Interfaces\IImagesService;
 use App\Repositories\Interfaces\IImagesRepository;
@@ -25,12 +26,16 @@ class ImagesService implements IImagesService
 
     public function getAllImagesFromUserId(int $userId): array
     {
-        return $this->imagesRepository->getAllImagesFromUserId($userId);
+        $images = $this->imagesRepository->getAllImagesFromUserId($userId);
+        
+        return DtoMapper::mapImagesArrayToDtoList($images);
     }
 
     public function getAllOnSaleImages(): array
     {
-        return $this->imagesRepository->getAllOnSaleImages();
+        $images = $this->imagesRepository->getAllOnSaleImages();
+
+        return DtoMapper::mapImagesArrayToDtoList($images);
     }
 
     public function getImageByImageId(int $imageId): ?Image

@@ -7,7 +7,6 @@ import DefaultLayout from '@/components/layout/DefaultLayout.vue'
 
 import Login from '@/components/pages/authentication/Login.vue'
 import Register from '@/components/pages/authentication/Register.vue'
-import AdminAuthorizationTest from '@/components/pages/authentication/AdminAuthorizationTest.vue'
 import UserAuthorizationTest from '@/components/pages/authentication/UserAuthorizationTest.vue'
 
 import ImageDetails from '@/components/pages/images/ImageDetails.vue'
@@ -46,15 +45,6 @@ const routes = [
                 component: Register,
                 meta: { 
                     title: 'Register'
-                }
-            },
-            { 
-                path: 'admin-test', 
-                component: AdminAuthorizationTest,
-                meta: { 
-                    title: 'AdminTest',
-                    isAuthenticated: true,
-                    roles: ['Admin']
                 }
             },
             { 

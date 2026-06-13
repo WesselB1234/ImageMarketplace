@@ -3,11 +3,7 @@
 namespace App\Controllers;
 
 use App\Mappers\DtoMapper;
-use App\Models\ApiResponses\UserDeletionDto;
-use App\Models\Dtos\LoginDto;
-use App\Models\Dtos\RegisterDto;
 use App\Models\Exceptions\ForbiddenException;
-use App\Models\Exceptions\NotAuthorizedException;
 use App\Models\Helpers\RequestParamValidator;
 use App\Services\Interfaces\IAuthenticationService;
 use App\Services\Interfaces\IImagesService;
@@ -35,17 +31,17 @@ class UsersController extends ApiController
     public function portfolio()
     {
         $loggedInUser = $this->authenticationService->getLoggedInUser();
-        $images = $this->imagesService->getAllImagesFromUserId($loggedInUser->getUserId());
-
-        $imageDtosArray = DtoMapper::mapImagesArrayToDtoList($images);
+        $dtosArray = $this->imagesService->getAllImagesFromUserId($loggedInUser->getUserId());
 
         http_response_code(200); 
-        echo json_encode($imageDtosArray, JSON_PRETTY_PRINT);
+        echo json_encode($dtosArray, JSON_PRETTY_PRINT);
     }
 
     #[Route("GET", "/users")]
     public function getAll()
     {
+        $this->authenticationService->getLoggedInUserByRoleAuthorization([UserRole::Admin]);
+        
         $this->authenticationService->getLoggedInUser();
         $users = $this->usersService->getAllUsers();
         $dtoUsers = $this->dtoMapper->mapUsersArrayToDtoList($users);
@@ -57,6 +53,7 @@ class UsersController extends ApiController
     #[Route("POST", "/users")]
     public function create()
     {    
+        $this->authenticationService->getLoggedInUserByRoleAuthorization([UserRole::Admin]);
         $data = $this->getDataFromInput(["username", "imageTokens", "role"]);
 
         $user = User::constructUnknownUser($data["username"], $data["password"], intval($data["imageTokens"]), UserRole::from($data["role"])); 
@@ -73,10 +70,8 @@ class UsersController extends ApiController
     #[Route("GET", "/users/{id}")]
     public function getById(array $requestParams)
     {
-        $userId = $requestParams["id"];        
-    
-        RequestParamValidator::validateRequestParamId($userId);
-        
+        $this->authenticationService->getLoggedInUserByRoleAuthorization([UserRole::Admin]);
+        $userId = $requestParams["id"];                
         $user = $this->usersService->getUserByUserIdOrThrow($userId); 
         $userDto = $this->dtoMapper->mapUserToDto($user);
 
@@ -87,9 +82,8 @@ class UsersController extends ApiController
     #[Route("PUT", "/users/{id}")]
     public function update(array $requestParams)
     {
+        $this->authenticationService->getLoggedInUserByRoleAuthorization([UserRole::Admin]);
         $userId = $requestParams["id"];   
-        RequestParamValidator::validateRequestParamId($userId);
-
         $data = $this->getDataFromInput(["username", "imageTokens", "role"]);
 
         if (empty($data["password"])) {

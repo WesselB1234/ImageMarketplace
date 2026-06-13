@@ -8,7 +8,7 @@
 
     onMounted(async () => {
         try {
-            const response = await axios.get('/auth/user-test')
+            const response = await axios.get('/auth/me')
 
             console.log(response.data)
             user.value = response.data

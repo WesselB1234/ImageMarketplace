@@ -24,22 +24,11 @@ class AuthController extends ApiController
         $this->authenticationService = $authenticationService;
     }
 
-    #[Route("GET", "/auth/admin-test")]
-    public function adminTest()
-    {
-        $loggedInUser = $this->authenticationService->getLoggedInUserByRoleAuthorization([UserRole::Admin]);
-
-        $dto = new AuthorizationTestDto($loggedInUser);
-        http_response_code(200); 
-        echo json_encode($dto, JSON_PRETTY_PRINT);
-    }
-
-    #[Route("GET", "/auth/user-test")]
+    #[Route("GET", "/auth/me")]
     public function userTest()
     {
-        $loggedInUser = $this->authenticationService->getLoggedInUser();
+        $dto = $this->authenticationService->getLoggedInUserDto();
 
-        $dto = new AuthorizationTestDto($loggedInUser);
         http_response_code(200); 
         echo json_encode($dto, JSON_PRETTY_PRINT);
     }
@@ -48,14 +37,7 @@ class AuthController extends ApiController
     public function login()
     {            
         $data = $this->getDataFromInput(["username", "password"]);
-
-        $user = $this->authenticationService->getUserByUsernameAndPassword($data["username"], $data["password"]);
-        
-        if ($user == null){
-            throw new NotAuthorizedException("Password or username is not correct.");
-        }
-
-        $dto = new LoginDto($this->authenticationService->generateAuthTokenFromUser($user));
+        $dto = $this->authenticationService->login($data["username"], $data["password"]);
         
         http_response_code(201); 
         echo json_encode($dto, JSON_PRETTY_PRINT);     
@@ -65,14 +47,7 @@ class AuthController extends ApiController
     public function register()
     {
         $data = $this->getDataFromInput(["username", "password"]);
-
-        $user = User::constructUnknownUser($data["username"], $data["password"], 100, UserRole::User); 
-        $userId = $this->usersService->createUser($user);
-        $user->setUserId($userId);
-        
-        $userDto = DtoMapper::mapUserToDto($user);
-        
-        $dto = new RegisterDto($userDto, $this->authenticationService->generateAuthTokenFromUser($user));
+        $dto = $this->authenticationService->register($data["username"], $data["password"]);
 
         http_response_code(201); 
         echo json_encode($dto, JSON_PRETTY_PRINT);

@@ -3,21 +3,20 @@
 namespace App\Services;
 
 use App\Models\Exceptions\ConflictException;
-use App\Services\Interfaces\IAuthenticationService;
 use App\Services\Interfaces\IUsersService;
 use App\Repositories\Interfaces\IUsersRepository;
 use App\Models\User;
-use Exception;
 use App\Models\Exceptions\NotFoundException;
+use App\Utils\PasswordHasherUtil;
 
 class UsersService implements IUsersService
 {
     private IUsersRepository $usersRepository; 
-    private IAuthenticationService $authenticationService;
+    private PasswordHasherUtil $passwordHasherUtil;
 
-    public function __construct(IUsersRepository $usersRepository, IAuthenticationService $authenticationService){
+    public function __construct(IUsersRepository $usersRepository, PasswordHasherUtil $passwordHasherUtil){
         $this->usersRepository = $usersRepository;
-        $this->authenticationService = $authenticationService;
+        $this->passwordHasherUtil = $passwordHasherUtil;
     }
 
     public function getAllUsers(): array
@@ -48,7 +47,7 @@ class UsersService implements IUsersService
         $password = $user->getPassword();
 
         if ($password !== null){
-            $user->setPassword($this->authenticationService->getHashedPassword($password));
+            $user->setPassword($this->passwordHasherUtil->getHashedPassword($password));
         }
 
         $this->usersRepository->updateUser($user);
@@ -67,7 +66,7 @@ class UsersService implements IUsersService
     public function createUser(User $user): int
     {
         $this->throwIfUserIsNotValid($user);
-        $user->setPassword($this->authenticationService->getHashedPassword($user->getPassword()));
+        $user->setPassword($this->passwordHasherUtil->getHashedPassword($user->getPassword()));
         
         return $this->usersRepository->createUser($user);
     }

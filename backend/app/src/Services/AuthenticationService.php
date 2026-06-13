@@ -2,23 +2,32 @@
 
 namespace App\Services;
 
+use App\Mappers\DtoMapper;
+use App\Models\Dtos\RegisterDto;
+use App\Models\Dtos\LoginDto;
+use App\Models\Dtos\UserDto;
 use App\Models\Enums\UserRole;
 use App\Models\Exceptions\InvalidAuthTokenException;
 use App\Models\Exceptions\NotAuthorizedException;
 use App\Repositories\Interfaces\IUsersRepository;
 use App\Models\User;
 use App\Services\Interfaces\IAuthenticationService;
-use Firebase\JWT\JWT;
-use Firebase\JWT\Key;
-use stdClass;
+use App\Services\Interfaces\IUsersService;
+use App\Utils\JwtUtil;
+use App\Policies\JwtPolicy;
 
 class AuthenticationService implements IAuthenticationService
 {
     private IUsersRepository $usersRepository; 
-    private const JWT_ALGORITHM = 'HS256';
+    private IUsersService $usersService;
+    private JwtUtil $jwtUtil;
+    private JwtPolicy $jwtPolicy;
 
-    public function __construct(IUsersRepository $usersRepository){
+    public function __construct(IUsersRepository $usersRepository, IUsersService $usersService, JwtUtil $jwtUtil, JwtPolicy $jwtPolicy){
         $this->usersRepository = $usersRepository;
+        $this->usersService = $usersService;
+        $this->jwtUtil = $jwtUtil;
+        $this->jwtPolicy = $jwtPolicy;
     }
     
     public function getUserByUsernameAndPassword(string $username, string $password): ?User
@@ -30,58 +39,6 @@ class AuthenticationService implements IAuthenticationService
         }
 
         return null;
-    }
-
-    public function generateAuthTokenFromUser(User $user): string
-    {
-        $now = time();
-        $expiration = $now + ($_ENV["TOKEN_EXPIRATION_IN_HOURS"] * 3600);
-
-        $payload = [
-            "iss" => $_ENV["DOMAIN"],
-            "iat" => $now,
-            "exp" => $expiration,
-            "data" => [
-                "userId" => $user->getUserId(),
-                "username" => $user->getUsername(),
-                "imageTokens" => $user->getImageTokens(),
-                "role" => $user->getRole()->value
-            ]
-        ];
-        
-        return JWT::encode($payload, $_ENV["TOKEN_SECRET_KEY"], self::JWT_ALGORITHM);
-    }
-
-    public function getDecodedAuthToken(string $authToken): stdClass
-    {
-        return JWT::decode($authToken, new Key($_ENV["TOKEN_SECRET_KEY"], self::JWT_ALGORITHM));
-    }
-
-    public function validateAuthToken(stdClass $decodedAuthToken)
-    {
-        if (!isset($decodedAuthToken->iss) || !isset($decodedAuthToken->exp) || !isset($decodedAuthToken->data) || !isset($decodedAuthToken->data->userId)) {
-            throw new InvalidAuthTokenException("Auth token is not valid.");
-        }
-        
-        if ($decodedAuthToken->iss !== $_ENV["DOMAIN"]) {
-            throw new InvalidAuthTokenException("Auth token domain is not equal to actual domain.");
-        }
-    }
-
-    public function isUserEqualToDecodedAuthToken(User $user, stdClass $decodedAuthToken): bool
-    {
-        $data = $decodedAuthToken->data;
-
-        if ($data->role !== $user->getRole()->value || $data->username !== $user->getUsername() || $data->imageTokens !== $user->getImageTokens()) {
-            return false;
-        }
-
-        return true;
-    }
-
-    public function getHashedPassword($rawPassword): string
-    {
-        return password_hash($rawPassword, PASSWORD_DEFAULT);   
     }
 
     public function getLoggedInUser(): User
@@ -98,8 +55,8 @@ class AuthenticationService implements IAuthenticationService
         }
 
         $authToken = $headerParts[1];
-        $decodedAuthToken = $this->getDecodedAuthToken($authToken);
-        $this->validateAuthToken($decodedAuthToken);
+        $decodedAuthToken = $this->jwtUtil->getDecodedAuthToken($authToken);
+        $this->jwtPolicy->enforceJwtPolicy($decodedAuthToken);
         
         $user = $this->usersRepository->getUserByUserId($decodedAuthToken->data->userId);
 
@@ -107,8 +64,8 @@ class AuthenticationService implements IAuthenticationService
             throw new InvalidAuthTokenException("User in your auth token does not exist.");
         }
 
-        if ($this->isUserEqualToDecodedAuthToken($user, $decodedAuthToken) === false) {
-            header("Authorization: Bearer ". $this->generateAuthTokenFromUser($user));
+        if ($this->jwtUtil->isUserEqualToDecodedAuthToken($user, $decodedAuthToken) === false) {
+            header("Authorization: Bearer ". $this->jwtUtil->generateAuthTokenFromUser($user));
         }
 
         return $user;
@@ -125,5 +82,34 @@ class AuthenticationService implements IAuthenticationService
         }
 
         throw new NotAuthorizedException("User does not have the right role.");
+    }
+
+    public function login(string $username, string $password): LoginDto
+    {            
+        $user = $this->getUserByUsernameAndPassword($username, $password);
+        
+        if ($user == null){
+            throw new NotAuthorizedException("Password or username is not correct.");
+        }
+
+        return new LoginDto($this->jwtUtil->generateAuthTokenFromUser($user));
+    }
+
+    public function register(string $username, string $password): RegisterDto
+    {
+        $user = User::constructUnknownUser($username, $password, 100, UserRole::User); 
+        $userId = $this->usersService->createUser($user);
+        $user->setUserId($userId);
+        
+        $userDto = DtoMapper::mapUserToDto($user);
+        
+        return new RegisterDto($userDto, $this->jwtUtil->generateAuthTokenFromUser($user));
+    }
+
+    public function getLoggedInUserDto(): UserDTO
+    {
+        $loggedInUser = $this->getLoggedInUser();
+        
+        return DtoMapper::mapUserToDto($loggedInUser);
     }
 }

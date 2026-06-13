@@ -44,22 +44,8 @@ class ImagesController extends ApiController
     {   
         $loggedInUser = $this->authenticationService->getLoggedInUser();
         $imageId = $requestParams["id"];
-
-        $image = $this->imagesService->getImageByImageIdOrThrow($imageId);
         
-        if ($image->getIsOnSale() === false && $loggedInUser->getRole() !== UserRole::Admin && $image->getOwnerId() !== $loggedInUser->getUserId()){
-            throw new NotAuthorizedException("You cannot view private off sale images.");
-        }
-
-        if ($image->getOwnerId() !== null){
-            $image->setOwner($this->usersService->getUserByUserId($image->getOwnerId()));
-        }
-
-        if ($image->getCreatorId() !== null){
-            $image->setCreator($this->usersService->getUserByUserId($image->getCreatorId()));
-        }
-        
-        $imageDto = DtoMapper::mapImageToDto($image);
+        $imageDto = $this->imagesService->getImageDtoById($imageId, $loggedInUser);
             
         http_response_code(200);
         echo json_encode($imageDto);

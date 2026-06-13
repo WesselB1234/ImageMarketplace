@@ -57,6 +57,25 @@ class ImagesService implements IImagesService
         return $image;
     }
 
+    public function getImageDtoById(int $imageId, User $loggedInUser): ImageDto
+    {
+        $image = $this->getImageByImageIdOrThrow($imageId);
+        
+        if ($image->getIsOnSale() === false && $loggedInUser->getRole() !== UserRole::Admin && $image->getOwnerId() !== $loggedInUser->getUserId()){
+            throw new NotAuthorizedException("You cannot view private off sale images.");
+        }
+
+        if ($image->getOwnerId() !== null){
+            $image->setOwner($this->usersRepository->getUserByUserId($image->getOwnerId()));
+        }
+
+        if ($image->getCreatorId() !== null){
+            $image->setCreator($this->usersRepository->getUserByUserId($image->getCreatorId()));
+        }
+        
+        return DtoMapper::mapImageToDto($image);
+    }
+
     public function validateImageFile(array $imageFile)
     {    
         if (!isset($imageFile) || $imageFile["error"] !== UPLOAD_ERR_OK) {

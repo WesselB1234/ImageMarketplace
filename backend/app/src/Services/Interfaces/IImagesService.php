@@ -12,6 +12,7 @@ interface IImagesService
     public function getAllImagesFromUserId(int $userId): array;
     public function getAllOnSaleImages(): array;
     public function getImageByImageId(int $imageId): ?Image;
+    public function getImageDtoById(int $imageId, User $loggedInUser): ImageDto;
     public function getImageByImageIdOrThrow(int $imageId): Image;
     public function createImage(string $name, string $description, array $imageFile, string $altText, User $loggedInUser): ImageDto;
     public function validateImageFile(array $imageFile);

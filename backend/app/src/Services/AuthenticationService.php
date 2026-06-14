@@ -30,7 +30,7 @@ class AuthenticationService implements IAuthenticationService
         $this->jwtPolicy = $jwtPolicy;
     }
     
-    public function getUserByUsernameAndPassword(string $username, string $password): ?User
+    private function getUserByUsernameAndPassword(string $username, string $password): ?User
     {
         $user = $this->usersRepository->getFullyKnownUserByUsername($username);
 

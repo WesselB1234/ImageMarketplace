@@ -43,14 +43,9 @@ class ImagesService implements IImagesService
         return DtoMapper::mapImagesArrayToDtoList($images);
     }
 
-    public function getImageByImageId(int $imageId): ?Image
+    private function getImageByImageIdOrThrow(int $imageId): Image
     {
-        return $this->imagesRepository->getImageByImageId($imageId);
-    }
-
-    public function getImageByImageIdOrThrow(int $imageId): Image
-    {
-        $image = $this->getImageByImageId($imageId);
+        $image = $this->imagesRepository->getImageByImageId($imageId);
 
         if ($image === null){
             throw new NotFoundException("Image with ID ".$imageId." does not exist.");
@@ -78,7 +73,7 @@ class ImagesService implements IImagesService
         return DtoMapper::mapImageToDto($image);
     }
 
-    public function validateImageFile(array $imageFile)
+    private function validateImageFile(array $imageFile)
     {    
         if (!isset($imageFile) || $imageFile["error"] !== UPLOAD_ERR_OK) {
             throw new Exception("The uploading of the file to the server has failed.");
@@ -92,7 +87,7 @@ class ImagesService implements IImagesService
         }
     }
 
-    public function uploadImageFile(array $imageFile, int $imageId)
+    private function uploadImageFile(array $imageFile, int $imageId)
     {
         $extension = pathinfo($imageFile["name"], PATHINFO_EXTENSION);
         $filename = strval($imageId).".".$extension;
@@ -183,14 +178,9 @@ class ImagesService implements IImagesService
             throw new NotAuthorizedException("You are not authorized to take this image off sale.");
         }
 
-        $this->updateImageSellingPrice($image->getImageId(), null);
+        $this->imagesRepository->updateImageSellingPrice($image->getImageId(), null);
 
         return new SellImageDto($imageId, null, false);
-    }
-
-    public function updateImageSellingPrice(int $imageId, ?int $price)
-    {
-        $this->imagesRepository->updateImageSellingPrice($imageId, $price);
     }
 
     public function updateImageModerationByImageId(int $imageId, bool $isModerated): ModerateImageDto
@@ -211,7 +201,7 @@ class ImagesService implements IImagesService
         return $this->imagesRepository->deleteImageByImageId($imageId);
     }
 
-    public function isUserAuthorizedToImage(Image $image, User $loggedInUser): bool
+    private function isUserAuthorizedToImage(Image $image, User $loggedInUser): bool
     {
         if ($image->getOwnerId() !== $loggedInUser->getUserId() && $loggedInUser->getRole() !== UserRole::Admin){
             return false;

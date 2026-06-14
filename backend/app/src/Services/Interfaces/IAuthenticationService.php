@@ -9,7 +9,6 @@ use App\Models\User;
 
 interface IAuthenticationService
 {
-    public function getUserByUsernameAndPassword(string $username, string $password): ?User;
     public function getLoggedInUser(): User;
     public function getLoggedInUserByRoleAuthorization(array $roles): User;
     public function login(string $username, string $password): LoginDto;

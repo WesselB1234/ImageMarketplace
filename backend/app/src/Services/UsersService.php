@@ -39,7 +39,7 @@ class UsersService implements IUsersService
         return $this->dtoMapper->mapUserToDto($user);
     }
     
-    public function getUserByUserIdOrThrow(int $userId): User
+    private function getUserByUserIdOrThrow(int $userId): User
     {
         $user = $this->usersRepository->getUserByUserId($userId);
 

@@ -14,11 +14,11 @@ import SellImage from '@/components/pages/images/SellImage.vue'
 import UploadImage from '@/components/pages/images/UploadImage.vue'
 import ViewImages from '@/components/pages/images/ViewImages.vue'
 
-import ViewPortfolio from '@/components/pages/porfolio/ViewPortfolio.vue'
+import ViewPortfolio from '@/components/pages/portfolio/ViewPortfolio.vue'
 
 import ViewSettings from '@/components/pages/settings/ViewSettings.vue'
 
-import viewPrivacy from '@/css/privacy/ViewPrivacy.vue'
+import viewPrivacy from '@/components/pages/privacy/ViewPrivacy.vue'
 
 import CreateUser from '@/components/pages/users/CreateUser.vue'
 import UpdateUser from '@/components/pages/users/UpdateUser.vue'

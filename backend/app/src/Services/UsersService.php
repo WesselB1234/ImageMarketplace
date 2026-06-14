@@ -24,9 +24,9 @@ class UsersService implements IUsersService
         $this->usersPolicy = $usersPolicy;
     }
 
-    public function getAllUsers(): array
+    public function getAllUsers(?int $page, ?int $pageSize): array
     {
-        $users = $this->usersRepository->getAllUsers();
+        $users = $this->usersRepository->getAllUsers($page, $pageSize);
         
         return UsersMapper::mapUsersArrayToDtoList($users);
     }

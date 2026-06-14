@@ -25,7 +25,7 @@ class UsersController extends ApiController
     public function portfolio()
     {
         $loggedInUser = $this->authenticationService->getLoggedInUser();
-        $dtosArray = $this->imagesService->getAllImagesFromUserId($loggedInUser->getUserId());
+        $dtosArray = $this->imagesService->getAllImagesFromUserId($loggedInUser->getUserId(), empty($_GET["page"]) ? null : $_GET["page"] , empty($_GET["pageSize"]) ? null : $_GET["pageSize"]);
 
         http_response_code(200); 
         echo json_encode($dtosArray, JSON_PRETTY_PRINT);
@@ -36,7 +36,7 @@ class UsersController extends ApiController
     {
         $this->authenticationService->getLoggedInUserByRoleAuthorization([UserRole::Admin]);
         
-        $dtosArray = $this->usersService->getAllUsers();
+        $dtosArray = $this->usersService->getAllUsers(empty($_GET["page"]) ? null : $_GET["page"] , empty($_GET["pageSize"]) ? null : $_GET["pageSize"]);
 
         http_response_code(200); 
         echo json_encode($dtosArray, JSON_PRETTY_PRINT);

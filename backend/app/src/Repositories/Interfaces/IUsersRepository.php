@@ -6,7 +6,7 @@ use App\Models\User;
 
 interface IUsersRepository
 {
-    public function getAllUsers(): array;
+    public function getAllUsers(?int $page, ?int $pageSize): array;
     public function getUserByUserId(int $userId): ?User;
     public function getUserByUsername(string $username): ?User;
     public function getFullyKnownUserByUsername(string $username): ?User;

@@ -31,16 +31,16 @@ class ImagesService implements IImagesService
         $this->imagesPolicy = $imagesPolicy;
     }
 
-    public function getAllImagesFromUserId(int $userId): array
+    public function getAllImagesFromUserId(int $userId, ?int $page, ?int $pageSize): array
     {
-        $images = $this->imagesRepository->getAllImagesFromUserId($userId);
+        $images = $this->imagesRepository->getAllImagesFromUserId($userId, $page, $pageSize);
         
         return ImagesMapper::mapImagesArrayToDtoList($images);
     }
 
-    public function getAllOnSaleImages(): array
+    public function getAllOnSaleImages(?int $page, ?int $pageSize): array
     {
-        $images = $this->imagesRepository->getAllOnSaleImages();
+        $images = $this->imagesRepository->getAllOnSaleImages($page, $pageSize);
 
         return ImagesMapper::mapImagesArrayToDtoList($images);
     }

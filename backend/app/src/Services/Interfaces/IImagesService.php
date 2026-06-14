@@ -10,8 +10,8 @@ use App\Models\User;
 
 interface IImagesService
 {
-    public function getAllImagesFromUserId(int $userId): array;
-    public function getAllOnSaleImages(): array;
+    public function getAllImagesFromUserId(int $userId, ?int $page, ?int $pageSize): array;
+    public function getAllOnSaleImages(?int $page, ?int $pageSize): array;
     public function getImageDtoById(int $imageId, User $loggedInUser): ImageDto;
     public function createImage(string $name, string $description, array $imageFile, string $altText, User $loggedInUser): ImageDto;
     public function buyImage(int $imageId, User $buyerUser): BuyImageDto;

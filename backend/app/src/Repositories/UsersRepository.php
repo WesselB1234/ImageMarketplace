@@ -12,12 +12,22 @@ use PDO;
 
 class UsersRepository extends Repository implements IUsersRepository
 {
-    public function getAllUsers(): array
+    public function getAllUsers(?int $page, ?int $pageSize): array
     {
         $users = [];
+        $currentPage = $page === null ? 0 : $page;
+        $currentPageSize = $pageSize === null ? 20 : $pageSize;
 
-        $stmt = $this->connection->prepare("SELECT user_id, username, image_tokens, role FROM Users;");
+        $stmt = $this->connection->prepare(
+            "SELECT user_id, username, image_tokens, role 
+            FROM Users
+            LIMIT :limit OFFSET :offset;"
+        );
+        
+        $stmt->bindValue(':limit', $currentPageSize, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', $currentPage * $currentPageSize, PDO::PARAM_INT);
         $stmt->execute();
+
         $assocUsers = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         foreach($assocUsers as $assocUser){

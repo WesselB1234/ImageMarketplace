@@ -6,8 +6,8 @@ use App\Models\Image;
 
 interface IImagesRepository
 {
-    public function getAllImagesFromUserId(int $userId): array;
-    public function getAllOnSaleImages(): array;
+    public function getAllImagesFromUserId(int $userId, ?int $page, ?int $pageSize): array;
+    public function getAllOnSaleImages(?int $page, ?int $pageSize): array;
     public function getImageByImageId(int $imageId): ?Image;
     public function createImage(Image $image): int;
     public function updateImageSellingPrice(int $imageId, ?int $price);

@@ -12,17 +12,22 @@ use PDO;
 
 class ImagesRepository extends Repository implements IImagesRepository
 {
-    public function getAllImagesFromUserId(int $userId): array
+    public function getAllImagesFromUserId(int $userId, ?int $page, ?int $pageSize): array
     {
         $images = [];
+        $currentPage = $page === null ? 0 : $page;
+        $currentPageSize = $pageSize === null ? 20 : $pageSize;
 
         $stmt = $this->connection->prepare(
-            "SELECT image_id, owner_id, name, creator_id, description, price, is_moderated, is_onsale, time_created, alt_text 
+            "SELECT image_id, owner_id, name, creator_id, description, price, is_moderated, is_onsale, time_created, alt_text
             FROM Images
-            WHERE owner_id = :userId;"
+            WHERE owner_id = :userId
+            LIMIT :limit OFFSET :offset;"
         );
 
-        $stmt->bindValue(":userId", $userId, PDO::PARAM_INT); 
+        $stmt->bindValue(':userId', $userId, PDO::PARAM_INT);
+        $stmt->bindValue(':limit', $currentPageSize, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', $currentPage * $currentPageSize, PDO::PARAM_INT);
         $stmt->execute();
 
         $assocImages = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -34,15 +39,21 @@ class ImagesRepository extends Repository implements IImagesRepository
         return $images;
     }
 
-    function getAllOnSaleImages(): array
+    function getAllOnSaleImages(?int $page, ?int $pageSize): array
     {
         $images = [];
+        $currentPage = $page === null ? 0 : $page;
+        $currentPageSize = $pageSize === null ? 20 : $pageSize;
 
         $stmt = $this->connection->prepare(
             "SELECT image_id, owner_id, creator_id, name, description, price, is_moderated, is_onsale, time_created, alt_text 
             FROM Images
-            WHERE is_onsale = 1 AND is_moderated = 0 AND price IS NOT NULL;"
+            WHERE is_onsale = 1 AND is_moderated = 0 AND price IS NOT NULL
+            LIMIT :limit OFFSET :offset;"
         );
+
+        $stmt->bindValue(':limit', $currentPageSize, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', $currentPage * $currentPageSize, PDO::PARAM_INT);
 
         $stmt->execute();
 

@@ -8,7 +8,7 @@ use App\Models\User;
 
 interface IUsersService
 {
-    public function getAllUsers(): array;
+    public function getAllUsers(?int $page, ?int $pageSize): array;
     public function getUserByUserId(int $userId): UserDto;
     public function updateUser(int $userId, string $username, ?string $password, int $imageTokens, UserRole $role): UserDto;
     public function createUser(User $user): int;

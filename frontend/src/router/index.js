@@ -18,7 +18,7 @@ import ViewPortfolio from '@/components/pages/porfolio/ViewPortfolio.vue'
 
 import ViewSettings from '@/components/pages/settings/ViewSettings.vue'
 
-import viewPrivacy from '@/components/pages/privacy/ViewPrivacy.vue'
+import viewPrivacy from '@/css/privacy/ViewPrivacy.vue'
 
 import CreateUser from '@/components/pages/users/CreateUser.vue'
 import UpdateUser from '@/components/pages/users/UpdateUser.vue'

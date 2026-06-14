@@ -1,8 +1,7 @@
 FROM php:fpm
 
-# Install system dependencies and Composer
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends git unzip libzip-dev \
+    && apt-get install -y --no-install-recommends git unzip libzip-dev mariadb-client \
     && docker-php-ext-install pdo pdo_mysql \
     && curl -sS https://getcomposer.org/installer -o composer-setup.php \
     && php composer-setup.php --install-dir=/usr/local/bin --filename=composer \
@@ -11,8 +10,18 @@ RUN apt-get update \
 
 WORKDIR /app
 
-# Allow running Composer as root within the container
 ENV COMPOSER_ALLOW_SUPERUSER=1
 
-# On container start, install dependencies if vendor is missing, then start php-fpm
-CMD ["sh", "-lc", "[ -f vendor/autoload.php ] || composer install --no-interaction --no-progress; exec php-fpm"]
+CMD ["sh", "-lc", "\
+echo 'Waiting for MySQL...' && \
+until mysqladmin ping -hmysql -uroot -psecret123 --silent; do \
+    sleep 2; \
+done && \
+echo 'MySQL ready' && \
+[ -f vendor/autoload.php ] || composer install --no-interaction --no-progress && \
+mysql -hmysql -uroot -psecret123 -e 'DROP DATABASE IF EXISTS developmentdb; CREATE DATABASE developmentdb;' && \
+composer phinx migrate && \
+composer phinx seed:run && \
+echo 'Starting PHP-FPM...' && \
+php-fpm \
+"]

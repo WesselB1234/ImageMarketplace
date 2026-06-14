@@ -160,7 +160,7 @@ class ImagesRepository extends Repository implements IImagesRepository
 
     public function deleteImageByImageId(int $imageId)
     {
-        $stmt = $this->connection->prepare("DELETE FROM Images WHERE id = :imageId");
+        $stmt = $this->connection->prepare("DELETE FROM Images WHERE image_id = :imageId");
         $stmt->bindValue(":imageId", $imageId, PDO::PARAM_INT); 
         $stmt->execute();
 

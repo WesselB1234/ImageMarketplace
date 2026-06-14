@@ -132,21 +132,39 @@ class UsersRepository extends Repository implements IUsersRepository
         return (int)$this->connection->lastInsertId();
     }
 
-    public function updateTokensBalanceByUserId(int $userId, int $newTokensBalance)
+    public function incrementBalanceByUserId(int $userId, int $imageTokens)
     {
         $stmt = $this->connection->prepare(
             "UPDATE Users 
-            SET image_tokens = :imageTokens
+            SET image_tokens = image_tokens + :imageTokens
             WHERE user_id = :userId;"
         );
 
         $stmt->bindValue(":userId", $userId, PDO::PARAM_INT); 
-        $stmt->bindValue(":imageTokens", $newTokensBalance, PDO::PARAM_INT); 
+        $stmt->bindValue(":imageTokens", $imageTokens, PDO::PARAM_INT); 
 
         $stmt->execute();
 
         if($stmt->rowCount() == 0){
-            throw new NotFoundException("User with ID ".$newTokensBalance." does not exist.");
+            throw new NotFoundException("User with ID ".$userId." does not exist.");
+        }
+    }
+
+    public function decrementBalanceByUserId(int $userId, int $imageTokens)
+    {
+        $stmt = $this->connection->prepare(
+            "UPDATE Users 
+            SET image_tokens = image_tokens - :imageTokens
+            WHERE user_id = :userId;"
+        );
+
+        $stmt->bindValue(":userId", $userId, PDO::PARAM_INT); 
+        $stmt->bindValue(":imageTokens", $imageTokens, PDO::PARAM_INT); 
+
+        $stmt->execute();
+
+        if($stmt->rowCount() == 0){
+            throw new NotFoundException("User with ID ".$userId." does not exist.");
         }
     }
 

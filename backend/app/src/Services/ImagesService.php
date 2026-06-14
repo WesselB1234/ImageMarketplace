@@ -114,14 +114,14 @@ class ImagesService implements IImagesService
         $this->imagesPolicy->enforceBuyImage($image, $buyerUser);
 
         $ownerUser = $this->usersRepository->getUserByUserId($image->getOwnerId());
-        $buyerUser->setImageTokens($buyerUser->getImageTokens() - $image->getPrice());
 
         if($ownerUser !== null){
-            $ownerUser->setImageTokens($ownerUser->getImageTokens() + $image->getPrice());
-            $this->usersRepository->updateTokensBalanceByUserId($ownerUser->getUserId(), $ownerUser->getImageTokens());
+            $this->usersRepository->incrementBalanceByUserId($ownerUser->getUserId(), $image->getPrice());
         }
 
-        $this->usersRepository->updateTokensBalanceByUserId($buyerUser->getUserId(), $buyerUser->getImageTokens());
+        $buyerUser->setImageTokens($buyerUser->getImageTokens() - $image->getPrice());
+
+        $this->usersRepository->decrementBalanceByUserId($buyerUser->getUserId(), $image->getPrice());
         $this->imagesRepository->updateImageOwnershipByImageId($image->getImageId(), $buyerUser->getUserId());
 
         return new BuyImageDto($image->getImageId(), $buyerUser->getUserId());

@@ -12,6 +12,7 @@ interface IUsersRepository
     public function getFullyKnownUserByUsername(string $username): ?User;
     public function updateUser(User $user);
     public function createUser(User $user): int;
-    public function updateTokensBalanceByUserId(int $userId, int $newTokensBalance);
+    public function incrementBalanceByUserId(int $userId, int $imageTokens);
+    public function decrementBalanceByUserId(int $userId, int $imageTokens);
     public function deleteUserByUserId(int $userId);
 }

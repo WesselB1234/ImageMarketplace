@@ -61,5 +61,5 @@
 
     <ErrorAlert ref="errorAlertRef" />
     <ReturnBtn to="/users" text="Return back to users" />
-    <ConfigureUserForm :vModel="vModel" @submit="handleUpdateUser" />
+    <ConfigureUserForm :vModel="vModel" @submit="handleUpdateUser" SubmitBtnText="Update" />
 </template>

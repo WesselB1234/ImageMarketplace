@@ -31,14 +31,16 @@ class UsersService implements IUsersService
         return $this->dtoMapper->mapUsersArrayToDtoList($users);
     }
 
-    public function getUserByUserId(int $userId): ?User
+    public function getUserByUserId(int $userId): UserDto
     {
-        return $this->usersRepository->getUserByUserId($userId);
+        $user = $this->getUserByUserIdOrThrow($userId);
+
+        return $this->dtoMapper->mapUserToDto($user);
     }
     
     public function getUserByUserIdOrThrow(int $userId): User
     {
-        $user = $this->getUserByUserId($userId);
+        $user = $this->usersRepository->getUserByUserId($userId);
 
         if ($user === null){
             throw new NotFoundException("User with ID ".$userId." does not exist.");
@@ -47,8 +49,15 @@ class UsersService implements IUsersService
         return $user;
     }
 
-    public function updateUser(User $user)
+    public function updateUser(int $userId, string $username, ?string $password, int $imageTokens, UserRole $role): UserDto
     {
+        if (empty($password)) {
+            $user = User::constructKnownUserWithoutPassword($userId, $username, $imageTokens, $role); 
+        }
+        else{
+            $user = User::constructFullyKnownUser($userId, $username, $password, $imageTokens, $role);
+        }
+            
         $this->throwIfUserIsNotValid($user);
 
         $password = $user->getPassword();
@@ -58,6 +67,8 @@ class UsersService implements IUsersService
         }
 
         $this->usersRepository->updateUser($user);
+
+        return $this->dtoMapper->mapUserToDto($user);
     }
  
     private function throwIfUserIsNotValid(User $user)

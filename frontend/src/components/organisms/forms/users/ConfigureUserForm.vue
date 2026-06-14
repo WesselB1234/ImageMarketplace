@@ -11,6 +11,9 @@
         isPasswordRequired: {
             type: Boolean,
             default: false
+        },
+        SubmitBtnText: {
+            type: String
         }
     });
 </script>
@@ -31,6 +34,6 @@
 
         <BaseFormField labelName="Password" type="password" id="password" placeholder="Enter password" v-model="vModel.password" :isRequired="isPasswordRequired" />
 
-        <SubmitBtn text="Create" />
+        <SubmitBtn :text="SubmitBtnText" />
     </form>
 </template>

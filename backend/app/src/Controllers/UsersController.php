@@ -64,11 +64,11 @@ class UsersController extends ApiController
     {
         $this->authenticationService->getLoggedInUserByRoleAuthorization([UserRole::Admin]);
         $userId = $requestParams["id"];                
-        $user = $this->usersService->getUserByUserIdOrThrow($userId); 
-        $userDto = $this->dtoMapper->mapUserToDto($user);
+
+        $dto = $this->usersService->getUserByUserId($userId); 
 
         http_response_code(200); 
-        echo json_encode($userDto, JSON_PRETTY_PRINT);   
+        echo json_encode($dto, JSON_PRETTY_PRINT);   
     }
 
     #[Route("PUT", "/users/{id}")]
@@ -78,18 +78,10 @@ class UsersController extends ApiController
         $userId = $requestParams["id"];   
         $data = $this->getDataFromInput(["username", "imageTokens", "role"]);
 
-        if (empty($data["password"])) {
-            $user = User::constructKnownUserWithoutPassword($userId, $data["username"], intval($data["imageTokens"]), UserRole::from($data["role"])); 
-        }
-        else{
-            $user = User::constructFullyKnownUser($userId, $data["username"], $data["password"], $data["imageTokens"], UserRole::from($data["role"]));
-        }
-            
-        $this->usersService->updateUser($user);
-        $userDto = $this->dtoMapper->mapUserToDto($user);
+        $dto = $this->usersService->updateUser($userId, $data["username"], empty($data["password"]) ? null : $data["password"], $data["imageTokens"], UserRole::from($data["role"]));
 
         http_response_code(200); 
-        echo json_encode($userDto, JSON_PRETTY_PRINT);
+        echo json_encode($dto, JSON_PRETTY_PRINT);
     }
 
     #[Route("DELETE", "/users/me")]

@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Mappers\DtoMapper;
 use App\Models\Dtos\BuyImageDto;
 use App\Models\Dtos\ImageDto;
+use App\Models\Dtos\ModerateImageDto;
 use App\Models\Dtos\SellImageDto;
 use App\Models\User;
 use App\Services\Interfaces\IImagesService;
@@ -174,7 +175,7 @@ class ImagesService implements IImagesService
         return new SellImageDto($imageId, $price, true);
     }
 
-    public function takeImageOffSaleByImageId(int $imageId, User $loggedInUser)
+    public function takeImageOffSaleByImageId(int $imageId, User $loggedInUser): SellImageDto
     {
         $image = $this->getImageByImageIdOrThrow($imageId);
 
@@ -183,6 +184,8 @@ class ImagesService implements IImagesService
         }
 
         $this->updateImageSellingPrice($image->getImageId(), null);
+
+        return new SellImageDto($imageId, null, false);
     }
 
     public function updateImageSellingPrice(int $imageId, ?int $price)
@@ -190,9 +193,11 @@ class ImagesService implements IImagesService
         $this->imagesRepository->updateImageSellingPrice($imageId, $price);
     }
 
-    public function updateImageModerationByImageId(int $imageId, bool $isModerated)
+    public function updateImageModerationByImageId(int $imageId, bool $isModerated): ModerateImageDto
     {
         $this->imagesRepository->updateImageModerationByImageId($imageId, $isModerated);
+
+        return new ModerateImageDto($imageId, $isModerated);
     }
 
     public function deleteImageByImageId(int $imageId, User $loggedInUser)

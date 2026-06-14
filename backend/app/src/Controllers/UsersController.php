@@ -41,11 +41,10 @@ class UsersController extends ApiController
     {
         $this->authenticationService->getLoggedInUserByRoleAuthorization([UserRole::Admin]);
         
-        $users = $this->usersService->getAllUsers();
-        $dtoUsers = $this->dtoMapper->mapUsersArrayToDtoList($users);
+        $dtosArray = $this->usersService->getAllUsers();
 
         http_response_code(200); 
-        echo json_encode($dtoUsers, JSON_PRETTY_PRINT);
+        echo json_encode($dtosArray, JSON_PRETTY_PRINT);
     }
 
     #[Route("POST", "/users")]
@@ -54,15 +53,10 @@ class UsersController extends ApiController
         $this->authenticationService->getLoggedInUserByRoleAuthorization([UserRole::Admin]);
         $data = $this->getDataFromInput(["username", "imageTokens", "role"]);
 
-        $user = User::constructUnknownUser($data["username"], $data["password"], intval($data["imageTokens"]), UserRole::from($data["role"])); 
-        
-        $userId = $this->usersService->createUser($user);
-        $user->setUserId($userId);
-        
-        $userDto = $this->dtoMapper->mapUserToDto($user);
+        $dto = $this->usersService->createUserDto($data["username"], $data["password"], intval($data["imageTokens"]), UserRole::from($data["role"]));
 
         http_response_code(201); 
-        echo json_encode($userDto, JSON_PRETTY_PRINT);
+        echo json_encode($dto, JSON_PRETTY_PRINT);
     }
 
     #[Route("GET", "/users/{id}")]

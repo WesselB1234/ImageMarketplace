@@ -2,15 +2,10 @@
 
 namespace App\Controllers;
 
-use App\Mappers\DtoMapper;
-use App\Models\Dtos\ModerateImageDto;
-use App\Models\Dtos\SellImageDto;
-use App\Models\Dtos\BuyImageDto;
 use App\Services\Interfaces\IAuthenticationService;
 use App\Services\Interfaces\IImagesService;
 use App\Services\Interfaces\IUsersService;
 use App\Models\Enums\UserRole;
-use App\Models\Exceptions\NotAuthorizedException;
 use App\Models\Attributes\Route;
 use App\Utils\JwtUtil;
 
@@ -70,9 +65,8 @@ class ImagesController extends ApiController
         $loggedInUser = $this->authenticationService->getLoggedInUser();
         $imageId = $requestParams["id"]; 
         
-        $this->imagesService->takeImageOffSaleByImageId($imageId, $loggedInUser);
-
-        $dto = new SellImageDto($imageId, null, false);
+        $dto = $this->imagesService->takeImageOffSaleByImageId($imageId, $loggedInUser);
+        
         http_response_code(200);
         echo json_encode($dto);
     }
@@ -108,12 +102,10 @@ class ImagesController extends ApiController
         $this->authenticationService->getLoggedInUserByRoleAuthorization([UserRole::Admin]);
         $imageId = $requestParams["id"];
         $data = $this->getDataFromInput(["isModerate"]);
-        $isModerateRaw = $data["isModerate"];
-        $isModerate = filter_var($isModerateRaw, FILTER_VALIDATE_BOOL);
+        $isModerate = filter_var($data["isModerate"], FILTER_VALIDATE_BOOL);
 
-        $this->imagesService->updateImageModerationByImageId($imageId, $isModerate);
-        
-        $dto = new ModerateImageDto($imageId, $isModerate);
+        $dto = $this->imagesService->updateImageModerationByImageId($imageId, $isModerate);
+
         http_response_code(200);
         echo json_encode($dto);
     }

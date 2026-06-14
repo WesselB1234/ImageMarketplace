@@ -41,8 +41,8 @@ class AuthenticationService implements IAuthenticationService
         return null;
     }
 
-    public function getLoggedInUser(): User
-    { 
+    private function getAuthTokenFromHeader(): String 
+    {
         if(!isset($_SERVER["HTTP_AUTHORIZATION"])) {
             throw new NotAuthorizedException("Authorization header is required.");
         }
@@ -54,7 +54,12 @@ class AuthenticationService implements IAuthenticationService
             throw new NotAuthorizedException("Invalid authorization header format.");
         }
 
-        $authToken = $headerParts[1];
+        return $headerParts[1];
+    }
+
+    public function getLoggedInUser(): User
+    { 
+        $authToken = $this->getAuthTokenFromHeader();
         $decodedAuthToken = $this->jwtUtil->getDecodedAuthToken($authToken);
         $this->jwtPolicy->enforceJwtPolicy($decodedAuthToken);
         

@@ -6,6 +6,7 @@ use App\Mappers\DtoMapper;
 use App\Models\Dtos\UserDto;
 use App\Models\Enums\UserRole;
 use App\Models\Exceptions\ConflictException;
+use App\Models\Exceptions\ForbiddenException;
 use App\Services\Interfaces\IUsersService;
 use App\Repositories\Interfaces\IUsersRepository;
 use App\Models\User;
@@ -99,8 +100,12 @@ class UsersService implements IUsersService
         return $this->usersRepository->createUser($user);
     }
 
-    public function deleteUserByUserId(int $userId)
+    public function deleteUserByUserId(int $userId, ?User $loggedInUser = null)
     {
+        if ($loggedInUser !== null && intval($userId) === $loggedInUser->getUserId()) {
+            throw new ForbiddenException("You cannot delete yourself.");
+        }
+
         $this->usersRepository->deleteUserByUserId($userId);
     }
 }

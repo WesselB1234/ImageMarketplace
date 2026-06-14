@@ -2,12 +2,9 @@
 
 namespace App\Controllers;
 
-use App\Mappers\DtoMapper;
-use App\Models\Exceptions\ForbiddenException;
 use App\Services\Interfaces\IAuthenticationService;
 use App\Services\Interfaces\IImagesService;
 use App\Services\Interfaces\IUsersService;
-use App\Models\User;
 use App\Models\Enums\UserRole;
 use App\Models\Attributes\Route;
 
@@ -16,14 +13,12 @@ class UsersController extends ApiController
     private IUsersService $usersService;
     private IAuthenticationService $authenticationService;
     private IImagesService $imagesService;
-    private DtoMapper $dtoMapper;
     
-    public function __construct(IUsersService $usersService, IAuthenticationService $authenticationService, IImagesService $imagesService, DtoMapper $dtoMapper)
+    public function __construct(IUsersService $usersService, IAuthenticationService $authenticationService, IImagesService $imagesService)
     {
         $this->usersService = $usersService;
         $this->authenticationService = $authenticationService;
         $this->imagesService = $imagesService;
-        $this->dtoMapper = $dtoMapper;
     }
 
     #[Route("GET", "/users/me/portfolio")]
@@ -98,12 +93,9 @@ class UsersController extends ApiController
     {
         $loggedInUser = $this->authenticationService->getLoggedInUserByRoleAuthorization([UserRole::Admin]);
         $userId = $params["id"];
-
-        if (intval($userId) === $loggedInUser->getUserId()) {
-            throw new ForbiddenException("You cannot delete yourself.");
-        }
         
-        $this->usersService->deleteUserByUserId($userId);
+        $this->usersService->deleteUserByUserId($userId, $loggedInUser);
+        
         http_response_code(200); 
     }
 }

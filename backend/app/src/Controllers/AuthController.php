@@ -4,16 +4,13 @@ namespace App\Controllers;
 
 use App\Controllers\ApiController;
 use App\Services\Interfaces\IAuthenticationService;
-use App\Services\Interfaces\IUsersService;
 use App\Models\Attributes\Route;
 
 class AuthController extends ApiController 
 {
-    private IUsersService $usersService;
     private IAuthenticationService $authenticationService;
 
-    public function __construct(IUsersService $usersService, IAuthenticationService $authenticationService){
-        $this->usersService = $usersService;
+    public function __construct(IAuthenticationService $authenticationService){
         $this->authenticationService = $authenticationService;
     }
 

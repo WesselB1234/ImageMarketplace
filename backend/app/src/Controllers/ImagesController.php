@@ -4,7 +4,6 @@ namespace App\Controllers;
 
 use App\Services\Interfaces\IAuthenticationService;
 use App\Services\Interfaces\IImagesService;
-use App\Services\Interfaces\IUsersService;
 use App\Models\Enums\UserRole;
 use App\Models\Attributes\Route;
 use App\Utils\JwtUtil;
@@ -12,14 +11,12 @@ use App\Utils\JwtUtil;
 class ImagesController extends ApiController
 {
     private IImagesService $imagesService;
-    private IUsersService $usersService;
     private IAuthenticationService $authenticationService;
     private JwtUtil $jwtUtil;
 
-    public function __construct(IImagesService $imagesService, IUsersService $usersService, IAuthenticationService $authenticationService, JwtUtil $jwtUtil)
+    public function __construct(IImagesService $imagesService, IAuthenticationService $authenticationService, JwtUtil $jwtUtil)
     {
         $this->imagesService = $imagesService;
-        $this->usersService = $usersService;
         $this->authenticationService = $authenticationService;
         $this->jwtUtil = $jwtUtil;
     }

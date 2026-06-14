@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Mappers\DtoMapper;
+use App\Mappers\ImagesMapper;
 use App\Models\Dtos\BuyImageDto;
 use App\Models\Dtos\ImageDto;
 use App\Models\Dtos\ModerateImageDto;
@@ -33,14 +33,14 @@ class ImagesService implements IImagesService
     {
         $images = $this->imagesRepository->getAllImagesFromUserId($userId);
         
-        return DtoMapper::mapImagesArrayToDtoList($images);
+        return ImagesMapper::mapImagesArrayToDtoList($images);
     }
 
     public function getAllOnSaleImages(): array
     {
         $images = $this->imagesRepository->getAllOnSaleImages();
 
-        return DtoMapper::mapImagesArrayToDtoList($images);
+        return ImagesMapper::mapImagesArrayToDtoList($images);
     }
 
     private function getImageByImageIdOrThrow(int $imageId): Image
@@ -70,7 +70,7 @@ class ImagesService implements IImagesService
             $image->setCreator($this->usersRepository->getUserByUserId($image->getCreatorId()));
         }
         
-        return DtoMapper::mapImageToDto($image);
+        return ImagesMapper::mapImageToDto($image);
     }
 
     private function validateImageFile(array $imageFile)
@@ -111,7 +111,7 @@ class ImagesService implements IImagesService
             $image->setImageId($imageId);
             $image->setTimeCreated(New DateTime());
 
-            return DtoMapper::mapImageToDto($image);
+            return ImagesMapper::mapImageToDto($image);
         }
         catch(Exception $e){
 

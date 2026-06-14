@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Mappers\DtoMapper;
+use App\Mappers\UsersMapper;
 use App\Models\Dtos\RegisterDto;
 use App\Models\Dtos\LoginDto;
 use App\Models\Dtos\UserDto;
@@ -106,7 +106,7 @@ class AuthenticationService implements IAuthenticationService
         $userId = $this->usersService->createUser($user);
         $user->setUserId($userId);
         
-        $userDto = DtoMapper::mapUserToDto($user);
+        $userDto = UsersMapper::mapUserToDto($user);
         
         return new RegisterDto($userDto, $this->jwtUtil->generateAuthTokenFromUser($user));
     }
@@ -115,6 +115,6 @@ class AuthenticationService implements IAuthenticationService
     {
         $loggedInUser = $this->getLoggedInUser();
         
-        return DtoMapper::mapUserToDto($loggedInUser);
+        return UsersMapper::mapUserToDto($loggedInUser);
     }
 }

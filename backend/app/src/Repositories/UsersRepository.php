@@ -5,7 +5,7 @@ namespace App\Repositories;
 use App\Repositories\Interfaces\IUsersRepository;
 use App\Repositories\Repository;
 use App\Models\User;
-use App\Mappers\DataMapper;
+use App\Mappers\UsersMapper;
 use App\Models\Exceptions\NotFoundException;
 
 use PDO;
@@ -21,7 +21,7 @@ class UsersRepository extends Repository implements IUsersRepository
         $assocUsers = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         foreach($assocUsers as $assocUser){
-            array_push($users, DataMapper::mapAssocUserToUserWithoutPassword($assocUser));
+            array_push($users, UsersMapper::mapAssocUserToUserWithoutPassword($assocUser));
         }
 
         return $users;
@@ -41,7 +41,7 @@ class UsersRepository extends Repository implements IUsersRepository
         $assocUser = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($assocUser !== false){
-            return DataMapper::mapAssocUserToUserWithoutPassword($assocUser);
+            return UsersMapper::mapAssocUserToUserWithoutPassword($assocUser);
         }
 
         return null;
@@ -61,7 +61,7 @@ class UsersRepository extends Repository implements IUsersRepository
         $assocUser = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($assocUser !== false){
-            return DataMapper::mapAssocUserToUserWithoutPassword($assocUser);
+            return UsersMapper::mapAssocUserToUserWithoutPassword($assocUser);
         }
 
         return null;
@@ -81,7 +81,7 @@ class UsersRepository extends Repository implements IUsersRepository
         $assocUser = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($assocUser !== false){
-            return DataMapper::mapAssocUserToUser($assocUser);
+            return UsersMapper::mapAssocUserToUser($assocUser);
         }
 
         return null;

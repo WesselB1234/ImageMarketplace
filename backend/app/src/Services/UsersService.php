@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Mappers\DtoMapper;
+use App\Mappers\UsersMapper;
 use App\Models\Dtos\UserDto;
 use App\Models\Enums\UserRole;
 use App\Models\Exceptions\ConflictException;
@@ -17,26 +17,24 @@ class UsersService implements IUsersService
 {
     private IUsersRepository $usersRepository; 
     private PasswordHasherUtil $passwordHasherUtil;
-    private DtoMapper $dtoMapper;
 
-    public function __construct(IUsersRepository $usersRepository, PasswordHasherUtil $passwordHasherUtil, DtoMapper $dtoMapper){
+    public function __construct(IUsersRepository $usersRepository, PasswordHasherUtil $passwordHasherUtil){
         $this->usersRepository = $usersRepository;
         $this->passwordHasherUtil = $passwordHasherUtil;
-        $this->dtoMapper = $dtoMapper;
     }
 
     public function getAllUsers(): array
     {
         $users = $this->usersRepository->getAllUsers();
         
-        return $this->dtoMapper->mapUsersArrayToDtoList($users);
+        return UsersMapper::mapUsersArrayToDtoList($users);
     }
 
     public function getUserByUserId(int $userId): UserDto
     {
         $user = $this->getUserByUserIdOrThrow($userId);
 
-        return $this->dtoMapper->mapUserToDto($user);
+        return UsersMapper::mapUserToDto($user);
     }
     
     private function getUserByUserIdOrThrow(int $userId): User
@@ -69,7 +67,7 @@ class UsersService implements IUsersService
 
         $this->usersRepository->updateUser($user);
 
-        return $this->dtoMapper->mapUserToDto($user);
+        return UsersMapper::mapUserToDto($user);
     }
  
     private function throwIfUserIsNotValid(User $user)
@@ -90,7 +88,7 @@ class UsersService implements IUsersService
         $userId = $this->createUser($user);
         $user->setUserId($userId);
         
-        return $this->dtoMapper->mapUserToDto($user);
+        return UsersMapper::mapUserToDto($user);
     }
 
     public function createUser(User $user): int

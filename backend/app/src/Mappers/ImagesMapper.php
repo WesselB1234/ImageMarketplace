@@ -1,27 +1,32 @@
-<?php 
+<?php
 
 namespace App\Mappers;
 
-use App\Models\Dtos\ImageDto;
-use App\Models\Dtos\UserDto;
-use App\Models\User;
 use App\Models\Image;
+use App\Models\Dtos\ImageDto;
+use DateTime;
 
-class DtoMapper
+class ImagesMapper
 {
-    public static function mapUserToDto(User $user): UserDto
+    public static function mapAssocImageToImage(array $assoc): Image
     {
-        return new UserDto(
-            $user->getUserId(),
-            $user->getUsername(),
-            $user->getImageTokens(),
-            $user->getRole()
+        return Image::constructFullyKnownImage(
+            $assoc["id"],
+            $assoc["owner_id"],
+            $assoc["creator_id"],
+            $assoc["name"],
+            $assoc["description"],
+            $assoc["price"],
+            $assoc["is_moderated"],
+            $assoc["is_onsale"],
+            new DateTime($assoc["time_created"]),
+            $assoc["alt_text"]
         );
     }
 
     public static function mapImageToDto(Image $image): ImageDto
     {
-        $imageDto = new ImageDto(
+        $dto = new ImageDto(
             $image->getImageId(),
             $image->getOwnerId(),
             $image->getCreatorId(),
@@ -35,25 +40,14 @@ class DtoMapper
         );
 
         if ($image->getOwner() !== null) {
-            $imageDto->setOwner(self::mapUserToDto($image->getOwner()));
+            $dto->setOwner(UsersMapper::mapUserToDto($image->getOwner()));
         }
 
         if ($image->getCreator() !== null) {
-            $imageDto->setCreator(self::mapUserToDto($image->getCreator()));
+            $dto->setCreator(UsersMapper::mapUserToDto($image->getCreator()));
         }
 
-        return $imageDto;
-    }
-
-    public static function mapUsersArrayToDtoList(array $users): array
-    {
-        $dtoList = [];
-
-        foreach ($users as $user) {
-            $dtoList[] = self::mapUserToDto($user);
-        }
-
-        return $dtoList;
+        return $dto;
     }
 
     public static function mapImagesArrayToDtoList(array $images): array

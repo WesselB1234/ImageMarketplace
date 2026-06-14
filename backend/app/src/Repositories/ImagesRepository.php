@@ -5,7 +5,7 @@ namespace App\Repositories;
 use App\Repositories\Interfaces\IImagesRepository;
 use App\Repositories\Repository;
 use App\Models\Image;
-use App\Mappers\DataMapper;
+use App\Mappers\ImagesMapper;
 use App\Models\Exceptions\NotFoundException;
 
 use PDO;
@@ -28,7 +28,7 @@ class ImagesRepository extends Repository implements IImagesRepository
         $assocImages = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         foreach($assocImages as $assocImage){
-            array_push($images, DataMapper::mapAssocImageToImage($assocImage));
+            array_push($images, ImagesMapper::mapAssocImageToImage($assocImage));
         }
 
         return $images;
@@ -49,7 +49,7 @@ class ImagesRepository extends Repository implements IImagesRepository
         $assocImages = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         foreach($assocImages as $assocImage){
-            array_push($images, DataMapper::mapAssocImageToImage($assocImage));
+            array_push($images, ImagesMapper::mapAssocImageToImage($assocImage));
         }
 
         return $images;
@@ -69,7 +69,7 @@ class ImagesRepository extends Repository implements IImagesRepository
         $assocImage = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if($assocImage !== false){
-            return DataMapper::mapAssocImageToImage($assocImage);
+            return ImagesMapper::mapAssocImageToImage($assocImage);
         }
 
         return null;

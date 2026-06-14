@@ -11,7 +11,7 @@ class ImagesMapper
     public static function mapAssocImageToImage(array $assoc): Image
     {
         return Image::constructFullyKnownImage(
-            $assoc["id"],
+            $assoc["image_id"],
             $assoc["owner_id"],
             $assoc["creator_id"],
             $assoc["name"],

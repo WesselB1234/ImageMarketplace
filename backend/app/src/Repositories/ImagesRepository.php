@@ -17,7 +17,7 @@ class ImagesRepository extends Repository implements IImagesRepository
         $images = [];
 
         $stmt = $this->connection->prepare(
-            "SELECT id, owner_id, name, creator_id, description, price, is_moderated, is_onsale, time_created, alt_text 
+            "SELECT image_id, owner_id, name, creator_id, description, price, is_moderated, is_onsale, time_created, alt_text 
             FROM Images
             WHERE owner_id = :userId;"
         );
@@ -39,9 +39,9 @@ class ImagesRepository extends Repository implements IImagesRepository
         $images = [];
 
         $stmt = $this->connection->prepare(
-            "SELECT id, owner_id, creator_id, name, description, price, is_moderated, is_onsale, time_created, alt_text 
+            "SELECT image_id, owner_id, creator_id, name, description, price, is_moderated, is_onsale, time_created, alt_text 
             FROM Images
-            WHERE is_onsale = 1 AND is_moderated = 0; AND price IS NOT NULL;"
+            WHERE is_onsale = 1 AND is_moderated = 0 AND price IS NOT NULL;"
         );
 
         $stmt->execute();
@@ -58,9 +58,9 @@ class ImagesRepository extends Repository implements IImagesRepository
     public function getImageByImageId(int $imageId): ?Image
     {
          $stmt = $this->connection->prepare(
-            "SELECT id, owner_id, creator_id, name, description, price, is_moderated, is_onsale, time_created, alt_text 
+            "SELECT image_id, owner_id, creator_id, name, description, price, is_moderated, is_onsale, time_created, alt_text 
             FROM Images
-            WHERE id = :imageId;"
+            WHERE image_id = :imageId;"
         );
 
         $stmt->bindValue(":imageId", $imageId, PDO::PARAM_INT); 
@@ -80,7 +80,7 @@ class ImagesRepository extends Repository implements IImagesRepository
         $stmt = $this->connection->prepare(
             "UPDATE Images 
             SET price = :price, is_onsale = :isOnSale
-            WHERE id = :imageId;"
+            WHERE image_id = :imageId;"
         );
 
         $stmt->bindValue(":imageId", $imageId, PDO::PARAM_INT); 
@@ -127,7 +127,7 @@ class ImagesRepository extends Repository implements IImagesRepository
         $stmt = $this->connection->prepare(
             "UPDATE Images 
             SET owner_id = :userId, is_onsale = 0, price = NULL
-            WHERE id = :imageId;"
+            WHERE image_id = :imageId;"
         );
 
         $stmt->bindValue(":imageId", $imageId, PDO::PARAM_INT); 
@@ -145,7 +145,7 @@ class ImagesRepository extends Repository implements IImagesRepository
         $stmt = $this->connection->prepare(
             "UPDATE Images 
             SET is_moderated = :isModerated
-            WHERE id = :imageId;"
+            WHERE image_id = :imageId;"
         );
 
         $stmt->bindValue(":imageId", $imageId, PDO::PARAM_INT); 

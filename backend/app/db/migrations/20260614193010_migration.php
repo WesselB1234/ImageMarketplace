@@ -15,8 +15,7 @@ final class Migration extends AbstractMigration
             ->addColumn('image_tokens', 'integer')
             ->addColumn('role', 'enum', ['values' => ['User', 'Admin']])
             ->create();
-        // composer phinx migrate
-        // mariadb -uroot -psecret123 -e "DROP DATABASE developmentdb; CREATE DATABASE developmentdb;"
+
         // IMAGES TABLE
         $images = $this->table('Images', ['id' => 'image_id']);
         $images

@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Mappers\DtoMapper;
 use App\Models\Dtos\BuyImageDto;
 use App\Models\Dtos\ImageDto;
+use App\Models\Dtos\SellImageDto;
 use App\Models\User;
 use App\Services\Interfaces\IImagesService;
 use App\Repositories\Interfaces\IImagesRepository;
@@ -156,8 +157,10 @@ class ImagesService implements IImagesService
         return new BuyImageDto($image->getImageId(), $buyerUser->getUserId());
     }
 
-    public function sellImage(Image $image, int $price, User $loggedInUser)
+    public function sellImage(int $imageId, int $price, User $loggedInUser): SellImageDto
     {
+        $image = $this->getImageByImageIdOrThrow($imageId);
+
         if (!$this->isUserAuthorizedToImage($image, $loggedInUser)){
             throw new NotAuthorizedException("You are not authorized to sell this image.");
         }
@@ -167,6 +170,8 @@ class ImagesService implements IImagesService
         }
         
         $this->imagesRepository->updateImageSellingPrice($image->getImageId(), $price);
+
+        return new SellImageDto($imageId, $price, true);
     }
 
     public function takeImageOffSaleByImageId(int $imageId, User $loggedInUser)

@@ -41,7 +41,6 @@ class UsersController extends ApiController
     {
         $this->authenticationService->getLoggedInUserByRoleAuthorization([UserRole::Admin]);
         
-        $this->authenticationService->getLoggedInUser();
         $users = $this->usersService->getAllUsers();
         $dtoUsers = $this->dtoMapper->mapUsersArrayToDtoList($users);
 

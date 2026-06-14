@@ -58,10 +58,8 @@ class ImagesController extends ApiController
         $imageId = $requestParams["id"];    
         $data = $this->getDataFromInput(["price"]); 
 
-        $image = $this->imagesService->getImageByImageIdOrThrow($imageId);
-        $this->imagesService->sellImage($image, $data["price"], $loggedInUser);
-
-        $dto = new SellImageDto($imageId, $data["price"], true);
+        $dto = $this->imagesService->sellImage($imageId, $data["price"], $loggedInUser);
+        
         http_response_code(200);
         echo json_encode($dto);
     }

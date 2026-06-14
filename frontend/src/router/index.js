@@ -24,6 +24,8 @@ import CreateUser from '@/components/pages/Users/CreateUser.vue'
 import UpdateUser from '@/components/pages/Users/UpdateUser.vue'
 import ViewUsers from '@/components/pages/Users/ViewUsers.vue'
 
+import NotFound from '@/components/pages/other/NotFound.vue'
+
 const routes = [
     {
         path: '/',
@@ -144,6 +146,14 @@ const routes = [
                     roles: ['Admin']
                 }
             },
+            {
+                path: ':pathMatch(.*)*',
+                component: NotFound,
+                meta: { 
+                    title: 'Not found',
+                    isAuthenticated: true
+                }
+            }
         ]
     }
 ]

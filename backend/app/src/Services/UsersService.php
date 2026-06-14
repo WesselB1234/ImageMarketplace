@@ -5,8 +5,7 @@ namespace App\Services;
 use App\Mappers\UsersMapper;
 use App\Models\Dtos\UserDto;
 use App\Models\Enums\UserRole;
-use App\Models\Exceptions\ConflictException;
-use App\Models\Exceptions\ForbiddenException;
+use App\Policies\UsersPolicy;
 use App\Services\Interfaces\IUsersService;
 use App\Repositories\Interfaces\IUsersRepository;
 use App\Models\User;
@@ -17,10 +16,12 @@ class UsersService implements IUsersService
 {
     private IUsersRepository $usersRepository; 
     private PasswordHasherUtil $passwordHasherUtil;
+    private UsersPolicy $usersPolicy;
 
-    public function __construct(IUsersRepository $usersRepository, PasswordHasherUtil $passwordHasherUtil){
+    public function __construct(IUsersRepository $usersRepository, PasswordHasherUtil $passwordHasherUtil, UsersPolicy $usersPolicy){
         $this->usersRepository = $usersRepository;
         $this->passwordHasherUtil = $passwordHasherUtil;
+        $this->usersPolicy = $usersPolicy;
     }
 
     public function getAllUsers(): array
@@ -57,7 +58,7 @@ class UsersService implements IUsersService
             $user = User::constructFullyKnownUser($userId, $username, $password, $imageTokens, $role);
         }
             
-        $this->throwIfUserIsNotValid($user);
+        $this->usersPolicy->enforceUserIsNotDuplicate($user);
 
         $password = $user->getPassword();
 
@@ -68,16 +69,6 @@ class UsersService implements IUsersService
         $this->usersRepository->updateUser($user);
 
         return UsersMapper::mapUserToDto($user);
-    }
- 
-    private function throwIfUserIsNotValid(User $user)
-    {
-        $duplicateUser = $this->usersRepository->getUserByUsername($user->getUsername());
-
-        if ($duplicateUser !== null && ($user->getUserId() !== null && $duplicateUser->getUserId() === $user->getUserId()) === false)
-        {
-            throw new ConflictException("User with username ".$user->getUsername(). " already exists.");
-        }
     }
 
     public function createUserDto(string $username, string $password, int $imageTokens, UserRole $role): UserDto
@@ -93,17 +84,14 @@ class UsersService implements IUsersService
 
     public function createUser(User $user): int
     {
-        $this->throwIfUserIsNotValid($user);
+        $this->usersPolicy->enforceUserIsNotDuplicate($user);
 
         return $this->usersRepository->createUser($user);
     }
 
     public function deleteUserByUserId(int $userId, ?User $loggedInUser = null)
     {
-        if ($loggedInUser !== null && intval($userId) === $loggedInUser->getUserId()) {
-            throw new ForbiddenException("You cannot delete yourself.");
-        }
-
+        $this->usersPolicy->enforceNotDeletingSelf($userId, $loggedInUser);
         $this->usersRepository->deleteUserByUserId($userId);
     }
 }

@@ -6,7 +6,7 @@ use App\Repositories\Interfaces\IImagesRepository;
 use App\Repositories\Repository;
 use App\Models\Image;
 use App\Mappers\ImagesMapper;
-use App\Models\Exceptions\NotFoundException;
+use App\Exception\NotFoundException;
 
 use PDO;
 

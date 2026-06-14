@@ -15,7 +15,7 @@ use App\Repositories\Interfaces\IUsersRepository;
 use App\Models\Image;
 use DateTime;
 use Exception;
-use App\Models\Exceptions\NotFoundException;
+use App\Exception\NotFoundException;
 use RuntimeException;
 
 class ImagesService implements IImagesService

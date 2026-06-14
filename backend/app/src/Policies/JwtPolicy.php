@@ -2,7 +2,7 @@
 
 namespace App\Policies;
 
-use App\Models\Exceptions\InvalidAuthTokenException;
+use App\Exception\InvalidAuthTokenException;
 use stdClass;
 
 class JwtPolicy

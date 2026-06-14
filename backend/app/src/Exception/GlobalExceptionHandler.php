@@ -1,14 +1,14 @@
 <?php 
 
 use App\Models\Dtos\ErrorDto;
-use App\Models\Exceptions\BadRequestException;
-use App\Models\Exceptions\ConflictException;
-use App\Models\Exceptions\ForbiddenException;
-use App\Models\Exceptions\InvalidAuthTokenException;
-use App\Models\Exceptions\NotAuthorizedException;
-use App\Models\Exceptions\NotFoundException;
-use App\Models\Exceptions\MethodNotAllowedException;
-use App\Models\Exceptions\UploadException;
+use App\Exception\BadRequestException;
+use App\Exception\ConflictException;
+use App\Exception\ForbiddenException;
+use App\Exception\InvalidAuthTokenException;
+use App\Exception\NotAuthorizedException;
+use App\Exception\NotFoundException;
+use App\Exception\MethodNotAllowedException;
+use App\Exception\UploadException;
 use Firebase\JWT\ExpiredException;
 use Firebase\JWT\SignatureInvalidException;
 

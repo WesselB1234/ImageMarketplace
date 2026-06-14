@@ -9,7 +9,7 @@ use App\Policies\UsersPolicy;
 use App\Services\Interfaces\IUsersService;
 use App\Repositories\Interfaces\IUsersRepository;
 use App\Models\User;
-use App\Models\Exceptions\NotFoundException;
+use App\Exception\NotFoundException;
 use App\Utils\PasswordHasherUtil;
 
 class UsersService implements IUsersService

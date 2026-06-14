@@ -2,8 +2,8 @@
 
 namespace App\Controllers;
 
-use App\Models\Exceptions\BadRequestException;
-use App\Models\Exceptions\NotFoundException;
+use App\Exception\BadRequestException;
+use App\Exception\NotFoundException;
 
 class ApiController
 {

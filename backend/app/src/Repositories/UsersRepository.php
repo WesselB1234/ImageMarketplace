@@ -6,7 +6,7 @@ use App\Repositories\Interfaces\IUsersRepository;
 use App\Repositories\Repository;
 use App\Models\User;
 use App\Mappers\UsersMapper;
-use App\Models\Exceptions\NotFoundException;
+use App\Exception\NotFoundException;
 
 use PDO;
 

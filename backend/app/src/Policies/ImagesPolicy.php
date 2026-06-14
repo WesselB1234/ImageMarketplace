@@ -3,8 +3,8 @@
 namespace App\Policies;
 
 use App\Models\Enums\UserRole;
-use App\Models\Exceptions\NotAuthorizedException;
-use App\Models\Exceptions\UploadException;
+use App\Exception\NotAuthorizedException;
+use App\Exception\UploadException;
 use App\Models\Image;
 use App\Models\User;
 use InvalidArgumentException;

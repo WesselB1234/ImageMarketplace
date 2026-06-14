@@ -3,8 +3,8 @@
 namespace App\Framework;
 
 use App\Models\Attributes\Route;
-use App\Models\Exceptions\MethodNotAllowedException;
-use App\Models\Exceptions\NotFoundException;
+use App\Exception\MethodNotAllowedException;
+use App\Exception\NotFoundException;
 use App\Models\RouteControllerMethod;
 use ReflectionClass;
 use DI\Container;

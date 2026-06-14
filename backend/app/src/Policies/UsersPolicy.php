@@ -2,8 +2,7 @@
 
 namespace App\Policies;
 
-use App\Models\Exceptions\ConflictException;
-use App\Models\Exceptions\ForbiddenException;
+use App\Exception\ConflictException;
 use App\Models\User;
 use App\Repositories\Interfaces\IUsersRepository;
 

@@ -3,6 +3,12 @@ declare(strict_types=1);
 
 use Phinx\Migration\AbstractMigration;
 
+/*
+    docker compose exec mysql mariadb -uroot -psecret123 -e "DROP DATABASE developmentdb; CREATE DATABASE developmentdb;"
+    docker compose exec php composer phinx migrate
+    docker compose exec php composer phinx seed:run
+*/
+
 final class Migration extends AbstractMigration
 {
     public function change(): void

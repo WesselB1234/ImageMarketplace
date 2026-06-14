@@ -34,12 +34,12 @@ class ImageMarketPlaceSeeder extends AbstractSeed
                 'owner_id' => 1,
                 'creator_id' => 1,
                 'name' => 'TestImage',
-                'description' => 'TestImage',
+                'description' => 'This image does not have an .png file yet. You can make a new image containing a .png by uploading a new one.',
                 'price' => null,
                 'is_moderated' => 0,
                 'is_onsale' => 0,
                 'time_created' => '2026-04-25 16:10:11',
-                'alt_text' => 'TestImage alt text'
+                'alt_text' => 'This image does not have an .png file yet. You can make a new image containing a .png by uploading a new one.'
             ]
         ];
 

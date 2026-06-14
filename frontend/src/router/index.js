@@ -16,13 +16,13 @@ import ViewImages from '@/components/pages/images/ViewImages.vue'
 
 import ViewPortfolio from '@/components/pages/porfolio/ViewPortfolio.vue'
 
-import ViewSettings from '@/components/pages/Settings/ViewSettings.vue'
+import ViewSettings from '@/components/pages/settings/ViewSettings.vue'
 
 import viewPrivacy from '@/components/pages/privacy/ViewPrivacy.vue'
 
-import CreateUser from '@/components/pages/Users/CreateUser.vue'
-import UpdateUser from '@/components/pages/Users/UpdateUser.vue'
-import ViewUsers from '@/components/pages/Users/ViewUsers.vue'
+import CreateUser from '@/components/pages/users/CreateUser.vue'
+import UpdateUser from '@/components/pages/users/UpdateUser.vue'
+import ViewUsers from '@/components/pages/users/ViewUsers.vue'
 
 import NotFound from '@/components/pages/other/NotFound.vue'
 

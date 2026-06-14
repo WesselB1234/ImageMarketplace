@@ -8,6 +8,7 @@ use App\Models\Dtos\ImageDto;
 use App\Models\Dtos\ModerateImageDto;
 use App\Models\Dtos\SellImageDto;
 use App\Models\User;
+use App\Policies\ImagesPolicy;
 use App\Services\Interfaces\IImagesService;
 use App\Repositories\Interfaces\IImagesRepository;
 use App\Repositories\Interfaces\IUsersRepository;
@@ -15,18 +16,19 @@ use App\Models\Image;
 use DateTime;
 use Exception;
 use App\Models\Exceptions\NotFoundException;
-use App\Models\Exceptions\NotAuthorizedException;
-use App\Models\Enums\UserRole;
+use RuntimeException;
 
 class ImagesService implements IImagesService
 {
     private IImagesRepository $imagesRepository; 
     private IUsersRepository $usersRepository; 
+    private ImagesPolicy $imagesPolicy;
 
-    public function __construct(IImagesRepository $imagesRepository, IUsersRepository $usersRepository)
+    public function __construct(IImagesRepository $imagesRepository, IUsersRepository $usersRepository, ImagesPolicy $imagesPolicy)
     {
         $this->imagesRepository = $imagesRepository;
         $this->usersRepository = $usersRepository;
+        $this->imagesPolicy = $imagesPolicy;
     }
 
     public function getAllImagesFromUserId(int $userId): array
@@ -57,10 +59,7 @@ class ImagesService implements IImagesService
     public function getImageDtoById(int $imageId, User $loggedInUser): ImageDto
     {
         $image = $this->getImageByImageIdOrThrow($imageId);
-        
-        if ($image->getIsOnSale() === false && $loggedInUser->getRole() !== UserRole::Admin && $image->getOwnerId() !== $loggedInUser->getUserId()){
-            throw new NotAuthorizedException("You cannot view private off sale images.");
-        }
+        $this->imagesPolicy->enforceAuthorizedToViewImage($image, $loggedInUser);
 
         if ($image->getOwnerId() !== null){
             $image->setOwner($this->usersRepository->getUserByUserId($image->getOwnerId()));
@@ -73,20 +72,6 @@ class ImagesService implements IImagesService
         return ImagesMapper::mapImageToDto($image);
     }
 
-    private function validateImageFile(array $imageFile)
-    {    
-        if (!isset($imageFile) || $imageFile["error"] !== UPLOAD_ERR_OK) {
-            throw new Exception("The uploading of the file to the server has failed.");
-        }
-
-        $finfo = finfo_open(FILEINFO_MIME_TYPE);
-        $mimeType = finfo_file($finfo, $imageFile["tmp_name"]);
-
-        if ($mimeType !== "image/png") {
-            throw new Exception("You cannot use any other image extension other than .png");
-        }
-    }
-
     private function uploadImageFile(array $imageFile, int $imageId)
     {
         $extension = pathinfo($imageFile["name"], PATHINFO_EXTENSION);
@@ -94,7 +79,7 @@ class ImagesService implements IImagesService
         $destination = "assets/img/UserUploadedImages/$filename";
 
         if (!move_uploaded_file($imageFile["tmp_name"], $destination)) {
-            throw new Exception("Failed to save image to file structure.");
+            throw new RuntimeException("Failed to save image to file structure.");
         }
     }
 
@@ -104,7 +89,7 @@ class ImagesService implements IImagesService
         $image = Image::constructUnknownImage($loggedInUser->getUserId(), $loggedInUser->getUserId(), $name, $description, $altText);
 
         try{
-            $this->validateImageFile($imageFile);
+            $this->imagesPolicy->enforceIncomingImageFile($imageFile);
             $imageId = $this->imagesRepository->createImage($image);
             $this->uploadImageFile($imageFile, $imageId);
             
@@ -126,18 +111,7 @@ class ImagesService implements IImagesService
     public function buyImage(int $imageId, User $buyerUser): BuyImageDto
     {
         $image = $this->getImageByImageIdOrThrow($imageId);
-
-        if ($image->getOwnerId() === $buyerUser->getUserId()){
-            throw new NotAuthorizedException("You cannot buy your own image.");
-        }
-
-        if ($image->getIsOnSale() === false || $image->getIsModerated() || $image->getPrice() === null){
-            throw new Exception("This image is not on sale");
-        }
-
-        if ($image->getPrice() > $buyerUser->getImageTokens()){
-            throw new Exception("You do not have enough image tokens to purchase this image.");
-        }
+        $this->imagesPolicy->enforceBuyImage($image, $buyerUser);
 
         $ownerUser = $this->usersRepository->getUserByUserId($image->getOwnerId());
         $buyerUser->setImageTokens($buyerUser->getImageTokens() - $image->getPrice());
@@ -153,18 +127,11 @@ class ImagesService implements IImagesService
         return new BuyImageDto($image->getImageId(), $buyerUser->getUserId());
     }
 
-    public function sellImage(int $imageId, int $price, User $loggedInUser): SellImageDto
+    public function sellImage(int $imageId, int $price, User $sellerUser): SellImageDto
     {
         $image = $this->getImageByImageIdOrThrow($imageId);
 
-        if (!$this->isUserAuthorizedToImage($image, $loggedInUser)){
-            throw new NotAuthorizedException("You are not authorized to sell this image.");
-        }
-
-        if ($price < 0){
-            throw new Exception("Price cannot be negative");
-        }
-        
+        $this->imagesPolicy->enforceSellImage($image, $sellerUser, $price);
         $this->imagesRepository->updateImageSellingPrice($image->getImageId(), $price);
 
         return new SellImageDto($imageId, $price, true);
@@ -174,10 +141,7 @@ class ImagesService implements IImagesService
     {
         $image = $this->getImageByImageIdOrThrow($imageId);
 
-        if (!$this->isUserAuthorizedToImage($image, $loggedInUser)){
-            throw new NotAuthorizedException("You are not authorized to take this image off sale.");
-        }
-
+        $this->imagesPolicy->enforceUserIsAuthorizedToConfigureImage($image, $loggedInUser);
         $this->imagesRepository->updateImageSellingPrice($image->getImageId(), null);
 
         return new SellImageDto($imageId, null, false);
@@ -194,19 +158,8 @@ class ImagesService implements IImagesService
     {
         $image = $this->getImageByImageIdOrThrow($imageId);
 
-        if (!$this->isUserAuthorizedToImage($image, $loggedInUser)){
-            throw new NotAuthorizedException("You are not authorized to delete this image.");
-        }
+        $this->imagesPolicy->enforceUserIsAuthorizedToConfigureImage($image, $loggedInUser);
 
         return $this->imagesRepository->deleteImageByImageId($imageId);
-    }
-
-    private function isUserAuthorizedToImage(Image $image, User $loggedInUser): bool
-    {
-        if ($image->getOwnerId() !== $loggedInUser->getUserId() && $loggedInUser->getRole() !== UserRole::Admin){
-            return false;
-        }
-
-        return true;
     }
 }

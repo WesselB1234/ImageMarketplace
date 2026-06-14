@@ -27,7 +27,7 @@ class UsersPolicy
     public function enforceNotDeletingSelf(int $deleteUserId, User $loggedInUser) 
     {
         if ($loggedInUser !== null && intval($deleteUserId) === $loggedInUser->getUserId()) {
-            throw new ForbiddenException("You cannot delete yourself.");
+            throw new ConflictException("You cannot delete yourself.");
         }
     }
 }

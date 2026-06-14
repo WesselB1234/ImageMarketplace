@@ -2,25 +2,18 @@
 
 namespace App\Controllers;
 
-use App\Exception\BadRequestException;
-use App\Exception\NotFoundException;
+use App\Policies\ApiPolicy;
 
 class ApiController
 {
-    private function throwIfInputDataIsInvalid(?array $data, array $requiredParams): void
-    {
-        if ($data === null) {
-            throw new BadRequestException("Invalid JSON.");
-        }
+    // private ApiPolicy $apiPolicy;
 
-        foreach ($requiredParams as $param) {
-            if (!array_key_exists($param, $data)) {
-                throw new NotFoundException("Missing required param: $param.");
-            }
-        }
-    }
+    // public function __construct(ApiPolicy $apiPolicy) 
+    // {
+    //     $this->apiPolicy = $apiPolicy;
+    // }
 
-    public function getDataFromInput(array $requiredParams): array
+    public function getDataFromInput(?array $requiredParams = null): array
     {
         $contentType = $_SERVER["CONTENT_TYPE"];
 
@@ -28,10 +21,15 @@ class ApiController
             return array_merge($_POST, $_FILES);
         }
 
-        $input = file_get_contents("php://input");
-        $data = json_decode($input, true);
+        error_log(print_r($_GET, true));
 
-        $this->throwIfInputDataIsInvalid($data, $requiredParams);
+        $input = file_get_contents("php://input");
+        $json = json_decode($input, true) ?? [];
+        $data = array_merge($_GET, $json);
+
+        // if ($requiredParams !== null) {
+        //     $this->apiPolicy->enforceRequiredParams($data, $requiredParams);
+        // }
 
         return $data;
     }

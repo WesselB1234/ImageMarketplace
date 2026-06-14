@@ -35,8 +35,11 @@ class UsersController extends ApiController
     public function getAll()
     {
         $this->authenticationService->getLoggedInUserByRoleAuthorization([UserRole::Admin]);
-        
-        $dtosArray = $this->usersService->getAllUsers(empty($_GET["page"]) ? null : $_GET["page"] , empty($_GET["pageSize"]) ? null : $_GET["pageSize"]);
+        $data = $this->getDataFromInput();
+
+        error_log(print_r($data,true));
+
+        $dtosArray = $this->usersService->getAllUsers(empty($data["page"]) ? null : $data["page"] , empty($data["pageSize"]) ? null : $data["pageSize"]);
 
         http_response_code(200); 
         echo json_encode($dtosArray, JSON_PRETTY_PRINT);

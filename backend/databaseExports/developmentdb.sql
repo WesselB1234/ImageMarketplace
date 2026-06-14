@@ -66,8 +66,8 @@ CREATE TABLE `Users` (
 --
 
 INSERT INTO `Users` (`user_id`, `username`, `password`, `image_tokens`, `role`) VALUES
-(54, 'admin', '$2y$12$D.Ju/TZfyqx2mq.0pu.pcebxBWxN0nQx6zuxlfpqF48VvuXnOpiyG', 100000, 'Admin'),
-(55, 'user', '$2y$12$exTQCqOyLIxAg4IE0ZCoA.7QSLXlMTdg5oiKbXRNRijqo6eXy5p1.', 1000, 'User');
+(1, 'admin', '$2y$12$D.Ju/TZfyqx2mq.0pu.pcebxBWxN0nQx6zuxlfpqF48VvuXnOpiyG', 100000, 'Admin'),
+(2, 'user', '$2y$12$exTQCqOyLIxAg4IE0ZCoA.7QSLXlMTdg5oiKbXRNRijqo6eXy5p1.', 1000, 'User');
 
 --
 -- Indexen voor geëxporteerde tabellen

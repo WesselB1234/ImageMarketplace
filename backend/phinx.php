@@ -1,5 +1,7 @@
 <?php
 
+$_ENV = parse_ini_file(__DIR__."/.env");
+
 return
 [
     'paths' => [
@@ -11,10 +13,10 @@ return
         'default_environment' => 'development',
         'production' => [
             'adapter' => 'mysql',
-            'host' => 'localhost',
-            'name' => 'production_db',
-            'user' => 'root',
-            'pass' => '',
+            'host' => $_ENV['DB_SERVER_NAME'],
+            'name' => $_ENV['DB_NAME'],
+            'user' => $_ENV['DB_USERNAME'],
+            'pass' => $_ENV['DB_PASSWORD'],
             'port' => '3306',
             'charset' => 'utf8',
         ],

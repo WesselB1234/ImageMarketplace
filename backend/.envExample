@@ -1,6 +1,6 @@
-DB_SERVER_NAME=serverName
-DB_NAME=db
-DB_USERNAME=user
+DB_SERVER_NAME=mysql
+DB_NAME=developmentdb
+DB_USERNAME=root
 DB_PASSWORD=password
 DOMAIN=http://localhost:80
 FRONT_END_URL=http://localhost:5173

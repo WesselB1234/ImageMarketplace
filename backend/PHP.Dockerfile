@@ -10,24 +10,18 @@ RUN apt-get update \
 
 WORKDIR /app
 
-COPY . .
-
 ENV COMPOSER_ALLOW_SUPERUSER=1
 
-
 CMD ["sh", "-lc", "\
-# echo 'Waiting for MySQL...' && \
-# until mysqladmin ping -hmysql -uroot -p\"$MYSQL_ROOT_PASSWORD\" --silent; do \
-#     sleep 2; \
-# done && \
-# echo 'MySQL ready' && \
+echo 'Waiting for MySQL...' && \
+until mysqladmin ping -hmysql -uroot -psecret123 --silent; do \
+    sleep 2; \
+done && \
+echo 'MySQL ready' && \
 [ -f vendor/autoload.php ] || composer install --no-interaction --no-progress && \
-# mysql -hmysql -uroot -p\"$MYSQL_ROOT_PASSWORD\" -e 'DROP DATABASE IF EXISTS developmentdb; CREATE DATABASE developmentdb;' && \
-# composer phinx migrate && \
-# composer phinx seed:run && \
+mysql -hmysql -uroot -psecret123 -e 'DROP DATABASE IF EXISTS developmentdb; CREATE DATABASE developmentdb;' && \
+composer phinx migrate && \
+composer phinx seed:run && \
 echo 'Starting PHP-FPM...' && \
-php-fpm && \
-echo 'Injecting Render port and starting Nginx...' && \
-envsubst '${PORT}' < /etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf && \
-nginx -g 'daemon off;' \
+php-fpm \
 "]

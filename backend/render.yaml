@@ -1,43 +1,44 @@
 services:
-  # 1. The PHP Web Service (Replaces Nginx + PHP services)
-  - type: web
+  # 1. Gewijzigd naar een Background Worker om de poort-timeout te omzeilen
+  - type: worker
     name: php-app
     env: docker
     dockerfilePath: PHP.Dockerfile
     dockerContext: .
-    plan: free # Can be upgraded if needed
+    plan: free
     envVars:
       - key: DB_HOST
-        value: mysql # Connects to the private MySQL service
+        value: mysql
       - key: DB_USER
         value: root
       - key: DB_PASSWORD
-        sync: false # Set this secret securely in the Render Dashboard
+        value: secret123 # Hardcoded om direct te matchen met de database hieronder
       - key: DB_DATABASE
         value: developmentdb
-      - key: PORT
-        value: 10000
+      - key: MYSQL_ROOT_PASSWORD
+        value: secret123 # Zorgt dat het startscript in de Dockerfile kan inloggen
 
-  # 2. The MySQL/MariaDB Private Service (Replaces mysql service)
+  # 2. De MySQL Private Service
   - type: pserv
     name: mysql
     env: docker
     dockerImage: mariadb:latest
+    # LET OP: Verwijder de 'disk' sectie hieronder als je op het gratis plan zit!
     disk:
       name: mysqldata
       mountPath: /var/lib/mysql
-      sizeGB: 1 # Disks require a paid Render plan
+      sizeGB: 1 
     envVars:
       - key: MYSQL_ROOT_PASSWORD
-        sync: false
+        value: secret123 # Matcht nu exact met de php-app
       - key: MYSQL_USER
         value: root
       - key: MYSQL_PASSWORD
-        sync: false
+        value: secret123
       - key: MYSQL_DATABASE
         value: developmentdb
 
-  # 3. phpMyAdmin Web Service (Optional)
+  # 3. phpMyAdmin Web Service
   - type: web
     name: phpmyadmin
     env: docker
@@ -45,4 +46,4 @@ services:
     plan: free
     envVars:
       - key: PMA_HOST
-        value: mysql # Points to the private MySQL service name
+        value: mysql

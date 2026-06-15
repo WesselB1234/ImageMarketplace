@@ -78,6 +78,18 @@ class ImagesService implements IImagesService
         $filename = strval($imageId).".".$extension;
         $destination = "assets/img/UserUploadedImages/$filename";
 
+        if (!is_dir("assets")){
+            mkdir("assets");
+        }
+        
+        if (!is_dir("assets/img")){
+            mkdir("assets/img");
+        }
+
+        if (!is_dir("assets/img/UserUploadedImages")){
+            mkdir("assets/img/UserUploadedImages");
+        }
+
         if (!move_uploaded_file($imageFile["tmp_name"], $destination)) {
             throw new RuntimeException("Failed to save image to file structure.");
         }

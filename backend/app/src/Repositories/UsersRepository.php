@@ -15,7 +15,7 @@ class UsersRepository extends Repository implements IUsersRepository
     public function getAllUsers(?int $page, ?int $pageSize): array
     {
         $users = [];
-        $currentPage = $page === null ? 0 : $page;
+        $currentPage = $page === null ? 1 : $page;
         $currentPageSize = $pageSize === null ? 20 : $pageSize;
 
         $stmt = $this->connection->prepare(
@@ -25,7 +25,7 @@ class UsersRepository extends Repository implements IUsersRepository
         );
         
         $stmt->bindValue(':limit', $currentPageSize, PDO::PARAM_INT);
-        $stmt->bindValue(':offset', $currentPage * $currentPageSize, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', ($currentPage - 1) * $currentPageSize, PDO::PARAM_INT);
         $stmt->execute();
 
         $assocUsers = $stmt->fetchAll(PDO::FETCH_ASSOC);

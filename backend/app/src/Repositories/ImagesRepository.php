@@ -15,7 +15,7 @@ class ImagesRepository extends Repository implements IImagesRepository
     public function getAllImagesFromUserId(int $userId, ?int $page, ?int $pageSize): array
     {
         $images = [];
-        $currentPage = $page === null ? 0 : $page;
+        $currentPage = $page === null ? 1 : $page;
         $currentPageSize = $pageSize === null ? 20 : $pageSize;
 
         $stmt = $this->connection->prepare(
@@ -27,7 +27,7 @@ class ImagesRepository extends Repository implements IImagesRepository
 
         $stmt->bindValue(':userId', $userId, PDO::PARAM_INT);
         $stmt->bindValue(':limit', $currentPageSize, PDO::PARAM_INT);
-        $stmt->bindValue(':offset', $currentPage * $currentPageSize, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', ($currentPage - 1) * $currentPageSize, PDO::PARAM_INT);
         $stmt->execute();
 
         $assocImages = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -42,7 +42,7 @@ class ImagesRepository extends Repository implements IImagesRepository
     function getAllOnSaleImages(?int $page, ?int $pageSize): array
     {
         $images = [];
-        $currentPage = $page === null ? 0 : $page;
+        $currentPage = $page === null ? 1 : $page;
         $currentPageSize = $pageSize === null ? 20 : $pageSize;
 
         $stmt = $this->connection->prepare(
@@ -53,7 +53,7 @@ class ImagesRepository extends Repository implements IImagesRepository
         );
 
         $stmt->bindValue(':limit', $currentPageSize, PDO::PARAM_INT);
-        $stmt->bindValue(':offset', $currentPage * $currentPageSize, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', ($currentPage - 1)* $currentPageSize, PDO::PARAM_INT);
 
         $stmt->execute();
 

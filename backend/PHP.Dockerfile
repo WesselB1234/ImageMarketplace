@@ -26,7 +26,7 @@ CMD ["sh", "-lc", "\
 # composer phinx migrate && \
 # composer phinx seed:run && \
 echo 'Starting PHP-FPM...' && \
-php-fpm \
+php-fpm && \
 echo 'Injecting Render port and starting Nginx...' && \
 envsubst '${PORT}' < /etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf && \
 nginx -g 'daemon off;' \

@@ -10,6 +10,8 @@ RUN apt-get update \
 
 WORKDIR /app
 
+COPY . .
+
 ENV COMPOSER_ALLOW_SUPERUSER=1
 
 CMD ["sh", "-lc", "\

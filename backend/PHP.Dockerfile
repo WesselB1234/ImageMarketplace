@@ -14,6 +14,7 @@ COPY . .
 
 ENV COMPOSER_ALLOW_SUPERUSER=1
 
+
 CMD ["sh", "-lc", "\
 # echo 'Waiting for MySQL...' && \
 # until mysqladmin ping -hmysql -uroot -p\"$MYSQL_ROOT_PASSWORD\" --silent; do \
@@ -26,4 +27,7 @@ CMD ["sh", "-lc", "\
 # composer phinx seed:run && \
 echo 'Starting PHP-FPM...' && \
 php-fpm \
+echo 'Injecting Render port and starting Nginx...' && \
+envsubst '${PORT}' < /etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf && \
+nginx -g 'daemon off;' \
 "]

@@ -1,0 +1,6 @@
+DB_SERVER_NAME=serverName
+DB_NAME=db
+DB_USERNAME=user
+DB_PASSWORD=password
+DOMAIN=http://localhost:80
+TOKEN_SECRET_KEY=zxcvbnmasdfghjklqwertyuiopzxcvbnmasdfghjklqwertyuiopzxcvbnmasdfghjklqwertyuiop

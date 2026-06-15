@@ -1,0 +1,2 @@
+VITE_API_URL=http://localhost:80
+VITE_USER_UPLOADED_IMAGES_URL=/assets/img/UserUploadedImages

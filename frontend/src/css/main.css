@@ -1,0 +1,40 @@
+main {
+    min-height: calc(100vh - 174px);
+}
+
+footer {
+    height: 70px;
+}
+
+.authentication-box {
+    width: 400px;
+}
+
+.image-card{
+    width: 270px;
+}
+
+.card-image-top{
+    height: 300px;
+    object-fit: contain;
+}
+
+.nav-btn{
+    color: black;
+    text-decoration: none;
+    transition: border-color 0.3s ease;
+    border-bottom: 3px transparent solid;
+    padding: 5px;
+}
+.nav-btn:visited, .nav-btn:hover, .nav-btn:active, .nav-btn:focus { 
+    color: black; 
+    text-decoration: none; 
+}
+
+.nav-btn:hover{
+    border-bottom: 3px black solid;
+}
+
+.nav-enabled{
+    background-color: rgb(229, 229, 229);
+}

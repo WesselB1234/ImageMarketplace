@@ -14,7 +14,7 @@ class JwtUtil
     public function generateAuthTokenFromUser(User $user): string
     {
         $now = time();
-        $expiration = $now + ($_ENV["TOKEN_EXPIRATION_IN_HOURS"] * 3600);
+        $expiration = $now + 3600;
 
         $payload = [
             "iss" => $_ENV["DOMAIN"],

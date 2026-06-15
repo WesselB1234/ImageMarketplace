@@ -8,6 +8,7 @@ use DI\CompiledContainer;
 
 function start()
 {
+    $_ENV = parse_ini_file(__DIR__."/../.env");
     $httpMethod = $_SERVER["REQUEST_METHOD"];
     $uri = strtok($_SERVER["REQUEST_URI"], "?");
 
@@ -20,7 +21,7 @@ function start()
     header("Access-Control-Allow-Methods: GET, POST, PUT, PATCH, DELETE, OPTIONS");
     header("Access-Control-Allow-Headers: Content-Type, Authorization");
     header("Access-Control-Expose-Headers: X-Auth-Error, Authorization");
-    header("Access-Control-Allow-Origin: *"); 
+    header("Access-Control-Allow-Origin: ". $_ENV["FRONT_END_URL"]); 
     header("Content-Type: application/json");
 
     if ($httpMethod === "OPTIONS") {
@@ -29,8 +30,6 @@ function start()
     }
 
     session_start();
-
-    $_ENV = parse_ini_file(__DIR__."/../.env");
 
     $containerCacheFile = __DIR__."/../cache/CompiledContainer.php";
 

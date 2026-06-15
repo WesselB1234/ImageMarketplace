@@ -3,4 +3,5 @@ DB_NAME=db
 DB_USERNAME=user
 DB_PASSWORD=password
 DOMAIN=http://localhost:80
+FRONT_END_URL=http://localhost:5173
 TOKEN_SECRET_KEY=zxcvbnmasdfghjklqwertyuiopzxcvbnmasdfghjklqwertyuiopzxcvbnmasdfghjklqwertyuiop

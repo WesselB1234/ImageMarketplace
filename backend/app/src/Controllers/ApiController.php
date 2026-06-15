@@ -21,8 +21,6 @@ class ApiController
             return array_merge($_POST, $_FILES);
         }
 
-        error_log(print_r($_GET, true));
-
         $input = file_get_contents("php://input");
         $json = json_decode($input, true) ?? [];
         $data = array_merge($_GET, $json);

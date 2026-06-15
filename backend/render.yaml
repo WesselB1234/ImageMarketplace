@@ -1,7 +1,7 @@
 services:
   # 1. Gewijzigd naar een Background Worker om de poort-timeout te omzeilen
   - type: worker
-    name: php-app
+    name: php-app-worker
     env: docker
     dockerfilePath: PHP.Dockerfile
     dockerContext: .

@@ -1,0 +1,46 @@
+services:
+  # 1. The PHP Web Service (Replaces Nginx + PHP services)
+  - type: web
+    name: php-app
+    env: docker
+    dockerfilePath: PHP.Dockerfile
+    dockerContext: .
+    plan: free # Can be upgraded if needed
+    envVars:
+      - key: DB_HOST
+        value: mysql # Connects to the private MySQL service
+      - key: DB_USER
+        value: root
+      - key: DB_PASSWORD
+        sync: false # Set this secret securely in the Render Dashboard
+      - key: DB_DATABASE
+        value: developmentdb
+
+  # 2. The MySQL/MariaDB Private Service (Replaces mysql service)
+  - type: pserv
+    name: mysql
+    env: docker
+    dockerImage: mariadb:latest
+    disk:
+      name: mysqldata
+      mountPath: /var/lib/mysql
+      sizeGB: 1 # Disks require a paid Render plan
+    envVars:
+      - key: MYSQL_ROOT_PASSWORD
+        sync: false
+      - key: MYSQL_USER
+        value: root
+      - key: MYSQL_PASSWORD
+        sync: false
+      - key: MYSQL_DATABASE
+        value: developmentdb
+
+  # 3. phpMyAdmin Web Service (Optional)
+  - type: web
+    name: phpmyadmin
+    env: docker
+    dockerImage: phpmyadmin:latest
+    plan: free
+    envVars:
+      - key: PMA_HOST
+        value: mysql # Points to the private MySQL service name

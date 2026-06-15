@@ -2,6 +2,7 @@
     import axios from '@/utils/axios.js'
     import { onMounted, ref } from 'vue';
     import { useErrorHandlingStore } from '@/stores/errorHandlingStore'
+    import router from '@/router/index.js'
     
     import ImagesDisplay from '@/components/organisms/images/ImagesDisplay.vue'
 
@@ -10,7 +11,10 @@
 
     onMounted(async () => {
         try {
-            const response = await axios.get('/images/all-on-sale')
+            const response = await axios.get('/images/all-on-sale', {
+                params: router.currentRoute.value.query
+            })
+
             images.value = response.data
         }
         catch (ex){

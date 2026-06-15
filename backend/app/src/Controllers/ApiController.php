@@ -6,12 +6,12 @@ use App\Policies\ApiPolicy;
 
 class ApiController
 {
-    // private ApiPolicy $apiPolicy;
+    private ApiPolicy $apiPolicy;
 
-    // public function __construct(ApiPolicy $apiPolicy) 
-    // {
-    //     $this->apiPolicy = $apiPolicy;
-    // }
+    public function __construct(ApiPolicy $apiPolicy) 
+    {
+        $this->apiPolicy = $apiPolicy;
+    }
 
     public function getDataFromInput(?array $requiredParams = null): array
     {
@@ -27,9 +27,9 @@ class ApiController
         $json = json_decode($input, true) ?? [];
         $data = array_merge($_GET, $json);
 
-        // if ($requiredParams !== null) {
-        //     $this->apiPolicy->enforceRequiredParams($data, $requiredParams);
-        // }
+        if ($requiredParams !== null) {
+            $this->apiPolicy->enforceRequiredParams($data, $requiredParams);
+        }
 
         return $data;
     }

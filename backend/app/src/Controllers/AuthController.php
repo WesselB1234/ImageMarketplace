@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Controllers\ApiController;
+use App\Policies\ApiPolicy;
 use App\Services\Interfaces\IAuthenticationService;
 use App\Models\Attributes\Route;
 
@@ -10,7 +11,10 @@ class AuthController extends ApiController
 {
     private IAuthenticationService $authenticationService;
 
-    public function __construct(IAuthenticationService $authenticationService){
+    public function __construct(ApiPolicy $apiPolicy, IAuthenticationService $authenticationService)
+    {
+        parent::__construct($apiPolicy);
+
         $this->authenticationService = $authenticationService;
     }
 

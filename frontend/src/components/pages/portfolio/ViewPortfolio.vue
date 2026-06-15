@@ -2,6 +2,7 @@
     import axios from '@/utils/axios.js'
     import { onMounted, ref } from 'vue';
     import { useErrorHandlingStore } from '@/stores/errorHandlingStore'
+    import router from '@/router/index.js'
 
     import CreateBtn from '@/components/atoms/buttons/CreateBtn.vue'
     import ErrorAlert from '@/components/atoms/errorHandling/ErrorAlert.vue'
@@ -13,7 +14,10 @@
 
     onMounted(async () => {
         try {
-            const response = await axios.get('/users/me/portfolio')
+            const response = await axios.get('/users/me/portfolio', {
+                params: router.currentRoute.value.query
+            })
+            
             images.value = response.data
         }
         catch (ex){

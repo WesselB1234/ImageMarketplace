@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Policies\ApiPolicy;
 use App\Services\Interfaces\IAuthenticationService;
 use App\Services\Interfaces\IImagesService;
 use App\Models\Enums\UserRole;
@@ -14,8 +15,10 @@ class ImagesController extends ApiController
     private IAuthenticationService $authenticationService;
     private JwtUtil $jwtUtil;
 
-    public function __construct(IImagesService $imagesService, IAuthenticationService $authenticationService, JwtUtil $jwtUtil)
+    public function __construct(ApiPolicy $apiPolicy, IImagesService $imagesService, IAuthenticationService $authenticationService, JwtUtil $jwtUtil)
     {
+        parent::__construct($apiPolicy);
+
         $this->imagesService = $imagesService;
         $this->authenticationService = $authenticationService;
         $this->jwtUtil = $jwtUtil;
@@ -25,7 +28,9 @@ class ImagesController extends ApiController
     public function getOnSaleImages()
     {   
         $this->authenticationService->getLoggedInUser();
-        $dtosArray = $this->imagesService->getAllOnSaleImages(empty($_GET["page"]) ? null : $_GET["page"] , empty($_GET["pageSize"]) ? null : $_GET["pageSize"]);
+        $data = $this->getDataFromInput();
+
+        $dtosArray = $this->imagesService->getAllOnSaleImages(empty($data["page"]) ? null : $data["page"] , empty($data["pageSize"]) ? null : $data["pageSize"]);
 
         http_response_code(200);
         echo json_encode($dtosArray, JSON_PRETTY_PRINT);

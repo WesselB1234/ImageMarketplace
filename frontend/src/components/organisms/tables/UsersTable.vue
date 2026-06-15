@@ -1,6 +1,7 @@
 <script setup>
     import axios from '@/utils/axios.js'
     import { onMounted, ref } from 'vue'
+    import router from '@/router/index.js'
 
     import UserRow from '@/components/molecules/tables/UserRow.vue'
 
@@ -19,10 +20,14 @@
 
     onMounted(async () => {
         try {
-            const response = await axios.get('/users')
+            const response = await axios.get('/users', {
+                params: router.currentRoute.value.query
+            })
+
             users.value = response.data
         }
         catch (ex){
+
             if (ex.response){
                 props.errorAlertRef.displayErrorMessage(ex.response.data.message)
             }

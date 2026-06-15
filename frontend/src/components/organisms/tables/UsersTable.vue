@@ -1,41 +1,20 @@
 <script setup>
-    import axios from '@/utils/axios.js'
-    import { onMounted, ref } from 'vue'
-    import router from '@/router/index.js'
-
     import UserRow from '@/components/molecules/tables/UserRow.vue'
 
     const props = defineProps({
         errorAlertRef: {
             type: Object,
-            required: true
+            required: false
         },
         successAlertRef: {
             type: Object,
-            required: true
+            required: false
         },
+        users: {
+            type: Array,
+            required: true
+        }
     });
-
-    const users = ref(null)
-
-    onMounted(async () => {
-        try {
-            const response = await axios.get('/users', {
-                params: router.currentRoute.value.query
-            })
-
-            users.value = response.data
-        }
-        catch (ex){
-
-            if (ex.response){
-                props.errorAlertRef.displayErrorMessage(ex.response.data.message)
-            }
-            else {
-                props.errorAlertRef.displayErrorMessage(ex.message)
-            }
-        }
-    })
 </script>
 
 <template>

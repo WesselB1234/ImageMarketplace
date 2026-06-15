@@ -8,12 +8,15 @@ services:
         volumes:
             - ./nginx.conf:/etc/nginx/nginx.conf
             - ./:/app
+        command: sh -c "nginx -g 'daemon off;'"   # ← REQUIRED for Render + ${PORT:-80}
+
     php:
         build:
             context: .
             dockerfile: PHP.Dockerfile
         volumes:
             - ./:/app
+
     mysql:
         image: mariadb:latest
         environment:
@@ -25,11 +28,13 @@ services:
             - mysqldata:/var/lib/mysql
         ports:
             - 3306:3306
+
     phpmyadmin:
         image: phpmyadmin:latest
         ports:
             - 8080:80
         environment:
             - PMA_HOST=mysql
+
 volumes:
     mysqldata: {}

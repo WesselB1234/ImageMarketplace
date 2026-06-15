@@ -15,30 +15,19 @@ This application was made by Wessel B. for Inholland University of Applied Scien
 ## Instructions for starting the application
 <ol>
   <li>
-      Create a .env file in the main project directory that contains the following values:
-      <ul>
-        <li>
-          DB_SERVER_NAME
-        </li>
-        <li>
-          DB_USERNAME
-        </li>
-        <li>
-          DB_PASSWORD
-        </li>
-        <li>
-          DB_NAME
-        </li>
-      </ul>
+      Create an .env file in the /frontend and /backend directores. Use the .envExamples that are implemented in /backend and /frontend directories as a reference for implementing both .env files.
+  </li>
+  <li>
+      In your terminal: "cd frontend", "npm install" and "npm run dev"
   </li>
   <li>
       Open the Docker desktop app.
   </li>
   <li>
-      Run "docker compose up" in your CLI from the main project directory.
+      In your terminal: "cd backend" and "docker compose up"
   </li>
   <li>
-      Enter "http://localhost/login" into your address bar.
+      Enter "http://localhost:5173/auth/login" into your address bar.
   </li>
   <li>
       Enter the username and password of your account. The account credentials can be found above in the account credentials section.
@@ -51,40 +40,15 @@ This application was made by Wessel B. for Inholland University of Applied Scien
   </li>
 </ol>
 
-## Automatic view mapping
-When displaying a view, the application will automatically determine which view to display and what data to pass to it. 
+## Pagination
 
-First, it determines which view file to display by getting the name of the controller and name of the method that the router has called. For example, if the displayView() method gets called by a PortfolioController from method index, it will display the view /Portfolio/index.php. If is a directory passed to the displayView() method, it will choose that view file instead, but that is optional. 
+## Atomic component structure
 
-After the view file has been located, it will display the view and pass the following data to the view: error message, success message and view data. The displayView() method can be found in the base controller, so if a PortfolioController wants to display a view, then it will need to inherit the base controller class first. After inheriting, the PortfolioController can call $this->displayView().
+## Pinia statemanagement
 
-<img width="1011" height="791" alt="ViewMapper" src="https://github.com/user-attachments/assets/850e54f4-85c8-44e3-b510-3be68c59441a" />
-<img width="978" height="162" alt="DisplayViewMethod" src="https://github.com/user-attachments/assets/61c25dd8-e069-4e08-aa68-9a6e7390a873" />
+## JWT authentication
 
-#### Files
-<ul>
-  <li>
-      app\src\Controllers\Controller.php (The base controller file)
-  </li>
-  <li>
-      app\src\Controllers\PortfolioController.php (The PortfolioController file)
-  </li>
-</ul>
-
-## Automated router
-Upon making a request, the router will make sure that the right controller method gets called. If a controller method wants to be bound to a route URL, then the method needs to have a route attribute implemented. The need for maintaining a large list of hardcoded controllers and routes has been AUTOMATED.
-
-For example, if the PortfolioController wants the index method to be bound to the /portfolio route, then it needs to add the attribute #[Route("GET", "/portfolio")] on top of the method. If the route also needs request parameters, then they can be added like this: #[Route("GET", "/portfolio", ["id"])]. In the parameters section of the index method, there should also be an array $requestParams parameter like this: index(array $requestParams). Route /portfolio/5 will now call the index method of the PortfolioController and will pass the value of 5 to $requestParams["id"]. Below you can find the file containing the source code of the custom-made router.
-
-<img width="780" height="255" alt="RefreshRouter" src="https://github.com/user-attachments/assets/8ce41c50-5305-4994-b6a0-42696912ce19" />
-<img width="624" height="174" alt="IndexRouter" src="https://github.com/user-attachments/assets/e6a1b94b-4a7e-4eb9-abc8-ac461d8a5f37" />
-
-#### Files
-<ul>
-  <li>
-      app\src\Framework\Router.php (The main router file)
-  </li>
-</ul>
+## Authorization with and without roles
 
 ## Dependency injection
 It is no longer necessary to create objects such as services and repositories in this application. All dependencies can now be injected into the constructor. This issue has been solved using the PHP-DI library. This software module can be installed by calling "composer require php-di/php-di" in the CLI. 

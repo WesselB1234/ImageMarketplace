@@ -23,7 +23,7 @@ class UsersPolicy
         }
     }
 
-    public function enforceNotDeletingSelf(int $deleteUserId, User $loggedInUser) 
+    public function enforceNotDeletingSelf(int $deleteUserId, ?User $loggedInUser) 
     {
         if ($loggedInUser !== null && intval($deleteUserId) === $loggedInUser->getUserId()) {
             throw new ConflictException("You cannot delete yourself.");

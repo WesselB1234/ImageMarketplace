@@ -1,6 +1,6 @@
 # Image Marketplace
 Within this application, accounts can upload images and sell them to other users.
-This application was made by Wessel B. for Inholland University of Applied Sciences as an assignment. Different aspects of the application such as a custom-made router will be described below.
+This application was made by Wessel B. for Inholland University of Applied Sciences as an assignment. Below is a step-by-step plan on how this application can be started. Below the step-by-step plan there will be various screenshots on implemented features.
 
 ## Login credentials for test accounts
 <ul>
@@ -44,10 +44,14 @@ This application was made by Wessel B. for Inholland University of Applied Scien
 <img width="772" height="191" alt="Schermafbeelding 2026-06-16 111507" src="https://github.com/user-attachments/assets/c38915fd-9e78-41ce-a47f-c79919e9efdd" />
 
 <img width="938" height="437" alt="Schermafbeelding 2026-06-16 111529" src="https://github.com/user-attachments/assets/8dad801c-4b62-4de8-8e7d-7114d19874dc" />
+
 #### Files
 <ul>
   <li>
-      app\src\Framework\Dependencies.php (The file containing all dependency bindings)
+      backend\src\Services\ImagesService.php
+  </li>
+  <li>
+      backend\src\Repositories\ImagesRepository.php
   </li>
 </ul>
 
@@ -60,7 +64,7 @@ This application was made by Wessel B. for Inholland University of Applied Scien
 #### Files
 <ul>
   <li>
-      app\src\Framework\Dependencies.php (The file containing all dependency bindings)
+      frontend\src\stores\authStore.js
   </li>
 </ul>
 
@@ -75,7 +79,13 @@ This application was made by Wessel B. for Inholland University of Applied Scien
 #### Files
 <ul>
   <li>
-      app\src\Framework\Dependencies.php (The file containing all dependency bindings)
+      backend\src\Utils\JwtUtil.php
+  </li>
+  <li>
+      backend\src\Policies\JwtPolicy.php
+  </li>
+  <li>
+      frontend\src\utils\axios.js
   </li>
 </ul>
 
@@ -94,6 +104,9 @@ If user is not logged in then decoding will fail and GetLoggedInUser will throw 
 #### Files
 <ul>
   <li>
-      app\src\Framework\Dependencies.php (The file containing all dependency bindings)
+      backend\src\Services\AuthenticationService.php
+  </li>
+  <li>
+      backend\src\Controllers\ImagesController.php
   </li>
 </ul>

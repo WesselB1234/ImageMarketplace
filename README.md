@@ -1,6 +1,6 @@
 # Image Marketplace
 Within this application, accounts can upload images and sell them to other users.
-This application was made by Wessel B. for Inholland University of Applied Sciences as an assignment. Below is a step-by-step plan on how this application can be started. Below the step-by-step plan there will be various screenshots on implemented features.
+This application was made by Wessel B. for Inholland University of Applied Sciences as an assignment. Below is a step-by-step plan on how this application can be started. Below the step-by-step plan there will be various screenshots on the features that have been implemented.
 
 ## Login credentials for test accounts
 <ul>

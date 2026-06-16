@@ -41,23 +41,21 @@ This application was made by Wessel B. for Inholland University of Applied Scien
 </ol>
 
 ## Pagination
+<img width="772" height="191" alt="Schermafbeelding 2026-06-16 111507" src="https://github.com/user-attachments/assets/c38915fd-9e78-41ce-a47f-c79919e9efdd" />
+
+<img width="938" height="437" alt="Schermafbeelding 2026-06-16 111529" src="https://github.com/user-attachments/assets/8dad801c-4b62-4de8-8e7d-7114d19874dc" />
+#### Files
+<ul>
+  <li>
+      app\src\Framework\Dependencies.php (The file containing all dependency bindings)
+  </li>
+</ul>
 
 ## Atomic component structure
+<img width="377" height="508" alt="Schermafbeelding 2026-06-16 111229" src="https://github.com/user-attachments/assets/d2183b78-4819-4f81-874a-73ddb4bf2903" />
 
 ## Pinia statemanagement
-
-## JWT authentication
-
-## Authorization with and without roles
-
-## Dependency injection
-It is no longer necessary to create objects such as services and repositories in this application. All dependencies can now be injected into the constructor. This issue has been solved using the PHP-DI library. This software module can be installed by calling "composer require php-di/php-di" in the CLI. 
-
-If a controller requires an IImagesService then all the controller needs to do is inject the object into the constructor like this: public function __construct(IImagesService $imagesService). Be aware that all dependencies that include interfaces need to be wired. All dependency definitions can be found in the main dependencies file.
-
-<img width="964" height="569" alt="DependencyWirings" src="https://github.com/user-attachments/assets/77404d57-c297-4344-9e40-06f53d1f03e5" />
-<img width="860" height="88" alt="InitDefinitions" src="https://github.com/user-attachments/assets/5e132bb4-aaa6-4546-9d03-e879c6bef5fe" />
-<img width="630" height="42" alt="CreateControllerWithDepencies" src="https://github.com/user-attachments/assets/7e9c9ce4-3f81-4318-9152-52529349e719" />
+<img width="937" height="858" alt="Schermafbeelding 2026-06-16 111625" src="https://github.com/user-attachments/assets/2c1078a7-9505-4abc-9f3c-3871ad9bed98" />
 
 #### Files
 <ul>
@@ -66,97 +64,36 @@ If a controller requires an IImagesService then all the controller needs to do i
   </li>
 </ul>
 
-## WCAG 2.2
-This application follows the WCAG 2.2 guidelines. Below you can find a list of requirements that have been fulfilled.
+## JWT authentication
 
-#### Semantic tags
-One reason why the application follows the WCAG 2.2 guidelines, is due to the use of semantic HTML tags. For example, the register page uses the following semantic HTML tags: nav, form, main, header, footer, section and h3.
+<img width="1092" height="837" alt="Schermafbeelding 2026-06-16 112736" src="https://github.com/user-attachments/assets/7feb2901-62e4-4cba-a20e-599ed39b9810" />
 
-<img width="1265" height="494" alt="RegisterSemantic" src="https://github.com/user-attachments/assets/bdcd7782-149e-4f39-8497-2095254c419f" />
-<img width="785" height="357" alt="NavbarHeaderSemantic" src="https://github.com/user-attachments/assets/fd9915cb-c923-4089-88f2-c38ce41bc6c3" />
-<img width="849" height="195" alt="FooterSemanticTags" src="https://github.com/user-attachments/assets/e713bbf8-562b-48c9-af08-8f0b7719d7f4" />
+<img width="1285" height="806" alt="Schermafbeelding 2026-06-16 112916" src="https://github.com/user-attachments/assets/e554ada3-269b-4e65-9787-c2d137a04cfc" />
 
-#### Labels and inputs
-Input and label elements are also used correctly. This is how they are implemented on the register page: \<label for="repeat_password">Repeat password</label> \<input type="password" id="repeat_password">. As you can see, both for and id have the same values, which causes them to be connected to each other.
-
-<img width="1159" height="122" alt="RepeatPasswordLabels" src="https://github.com/user-attachments/assets/d88b4d58-809b-4ca7-b0dd-c1115c584f51" />
-
-#### Empty links or buttons
-All links also have a destination which prevents the empty link problem.
-
-#### Descriptive alt texts for images
-All images have descriptive in alt text. This is an example of how it has been implemented in the image’s displayer partial: \<img src="/assets/img/UserUploadedImages/1.png" alt="Alt image text example">. This makes it possible to see the content of the image even if they fail to load. It also allows screen readers to read images for people with eyesight issues.
-
-<img width="1145" height="54" alt="ImgExample" src="https://github.com/user-attachments/assets/1419ae65-faff-4c74-8cbe-8e2628cf96aa" />
-
-#### Text resizing
-If the user decides to zoom in at 200%, then the layout of the application will adapt. One example of adaptation is that the navbar will turn into a hamburger menu if the screen width becomes too small.
-
-<img width="908" height="479" alt="BiggerLettersByZoomingIn" src="https://github.com/user-attachments/assets/ebc71e42-f7e6-418b-a584-19d8d41bff12" />
-
-#### Contrast ratio
-Finally, the application's contrast between text and backgrounds has been carefully implemented. For example, the contrast score between the color of enabled navbar button (#E5E5E5) and its text color (#000000) is 16.67.
-
-<img width="183" height="70" alt="NavbarContrastExample" src="https://github.com/user-attachments/assets/23a572c1-ccd3-4e08-a1c7-bc20c5b40467" />
-<img width="1106" height="792" alt="CoolorsScore" src="https://github.com/user-attachments/assets/ed1e587a-b5cb-4998-a56e-e5689bf0176c" />
+<img width="670" height="863" alt="Schermafbeelding 2026-06-16 113150" src="https://github.com/user-attachments/assets/41758830-a93c-4c3e-9d9b-ea17fb1ebce7" />
 
 #### Files
 <ul>
   <li>
-      app\src\Views\Authentication\register.php (Register page)
-  </li>
-  <li>
-      app\src\Views\Partials\navbarHeader.php (Navbar Partial)
-  </li>
-  <li>
-      app\src\Views\Partials\imagesDisplay.php (Images displayer partial)
+      app\src\Framework\Dependencies.php (The file containing all dependency bindings)
   </li>
 </ul>
 
-## GDPR
-This application also follows the GDPR guidelines. Below you can find a list of requirements that have been fulfilled.
+## Authorization with and without roles
 
-#### Storing sensitive data securely
-Upon creating an account or updating an existing account, the application will make sure that passwords are stored as hashed strings. This is an example of how passwords get turned into hashes within the application: password_hash($rawPassword, PASSWORD_DEFAULT);. The hashing algorithm can be found in the UserService file.
+If user is not logged in then decoding will fail and GetLoggedInUser will throw an exception. If it succeeds it will check if the user's role is authorized to access the endpoint.
 
-<img width="776" height="124" alt="HashedPassword" src="https://github.com/user-attachments/assets/54ca3f53-227e-445a-84d5-7c4c3f78a4e5" />
-<img width="501" height="105" alt="PasswordHashedInDb" src="https://github.com/user-attachments/assets/87186125-74cc-4557-b5ca-0b5669da66e1" />
+<img width="995" height="476" alt="Schermafbeelding 2026-06-16 111305" src="https://github.com/user-attachments/assets/baa5b79d-6807-489d-89a2-99979390f419" />
 
-#### Only necessary needed data
-The application asks as little data as possible from the user. The only data that the application collects is the user’s username and password. All other data such as image balance, userId and role will be generated by the application. You can find an example of this at the register page.
+<img width="846" height="312" alt="Schermafbeelding 2026-06-16 111319" src="https://github.com/user-attachments/assets/2b4ef109-f31e-403b-8df0-bd64eeb9ea10" />
 
-<img width="722" height="676" alt="RegisterData" src="https://github.com/user-attachments/assets/05206ea4-6e6d-40ce-ab1e-1f714820db37" />
-<img width="876" height="109" alt="AllUserDataMinimal" src="https://github.com/user-attachments/assets/b87220b3-8c90-4f28-a320-a7479cbfce7d" />
+<img width="905" height="131" alt="Schermafbeelding 2026-06-16 111358" src="https://github.com/user-attachments/assets/82317e35-dacd-46eb-9d0a-7d2c608637e5" />
 
-#### Preventing GET request data leaks
-The application also makes sure to include POST methods on all form elements. As an example, this is how it is implemented in the register page: \<form action="/register" method="POST" id="registerForm">. By making each form have a POST method, it prevents the data leaks that GET requests can cause.
-
-<img width="565" height="27" alt="POST_Method" src="https://github.com/user-attachments/assets/58ecaea4-73e3-4930-aec0-cbb5e2b7b11e" />
-
-#### Privacy statement page
-Finally, the application also includes a privacy statement page. This privacy statement page can be accessed by entering the following URL when running the application: /privacy.
-
-<img width="1875" height="895" alt="PrivacyStatement" src="https://github.com/user-attachments/assets/2edccb63-3a9a-4ee8-bda6-cece4117e9c8" />
-
-#### Account deletion
-One example of why this application follows GDPR guidelines is the implementation of account deletion. When a user wants to delete their account, they can go to the settings page and press the "Delete account" button. After the account has been successfully deleted, the application will redirect the user to the login page. The source code showing how the application deletes a user account can be found in the SettingsController in the method deleteAccount.
-
-<img width="911" height="383" alt="AccountDeletionInterface" src="https://github.com/user-attachments/assets/333863e8-ddb5-41f4-983a-e57def0bfcf7" />
-<img width="1470" height="275" alt="AccountDeletionStatement" src="https://github.com/user-attachments/assets/286e2fac-4348-441f-9154-09b00d204891" />
-<img width="947" height="492" alt="DeleteAccountCode" src="https://github.com/user-attachments/assets/0bfb9e04-8f21-4b0a-b744-1cbea9da81b6" />
+<img width="551" height="121" alt="Schermafbeelding 2026-06-16 111431" src="https://github.com/user-attachments/assets/b95b7598-5aa9-4f85-ae9f-5157191cb876" />
 
 #### Files
 <ul>
   <li>
-      app\src\Views\Authentication\register.php (An example of a form element using a POST method and minimizing personal information)
-  </li>
-  <li>
-      app\src\Controllers\SettingsController (The controller containing the user deletion method)
-  </li>
-  <li>
-      app\src\Services\UsersService.php (The users service which contains the password hashing algorithm)
-  </li>
-  <li>
-      app\src\Views\Privacy\index.php (Privacy statement page)
+      app\src\Framework\Dependencies.php (The file containing all dependency bindings)
   </li>
 </ul>

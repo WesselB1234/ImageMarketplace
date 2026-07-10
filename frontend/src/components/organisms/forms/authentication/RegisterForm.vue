@@ -1,5 +1,5 @@
 <script setup>
-    import AuthsubmitBtn from '@/components/atoms/buttons/forms/AuthSubmitBtn.vue'
+    import AuthsubmitBtn from '@/components/atoms/buttons/forms/AuthsubmitBtn.vue'
     import BaseFormField from '@/components/molecules/forms/BaseFormField.vue'
 
     const props = defineProps({

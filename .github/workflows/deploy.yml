@@ -36,7 +36,9 @@ jobs:
         run: |
           echo "VITE_API_URL=${{ vars.VITE_API_URL }}" >> .env
           echo "VITE_USER_UPLOADED_IMAGES_URL=${{ vars.VITE_USER_UPLOADED_IMAGES_URL }}" >> .env
-
+          echo "----- .env contents -----"
+          cat .env
+          
       - name: Install dependencies
         run: npm install
 

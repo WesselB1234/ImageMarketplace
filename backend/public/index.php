@@ -46,7 +46,7 @@ function start()
     else {
         $builder = new ContainerBuilder();
         $builder->useAutowiring(true);
-        $builder->addDefinitions(__DIR__."/../src/framework/Dependencies.php");
+        $builder->addDefinitions(__DIR__."/../src/Framework/Dependencies.php");
         $builder->enableCompilation(__DIR__."/../cache", "CompiledContainer");
         $container = $builder->build();
     }

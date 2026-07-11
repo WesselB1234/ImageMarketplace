@@ -8,7 +8,13 @@ use DI\CompiledContainer;
 
 function start()
 {
-    $_ENV = parse_ini_file(__DIR__."/../.env");
+    if (file_exists(__DIR__ . "/../.env")) {
+        $_ENV = parse_ini_file(__DIR__ . "/../.env");
+    } 
+    else {
+        $_ENV = getenv();
+    }
+    
     $httpMethod = $_SERVER["REQUEST_METHOD"];
     $uri = strtok($_SERVER["REQUEST_URI"], "?");
 

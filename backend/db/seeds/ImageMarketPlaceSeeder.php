@@ -25,7 +25,7 @@ class ImageMarketPlaceSeeder extends AbstractSeed
             ]
         ];
 
-        $this->table('Users')->insert($users)->saveData();
+        $this->table('users')->insert($users)->saveData();
 
         // IMAGES
         $images = [
@@ -43,6 +43,6 @@ class ImageMarketPlaceSeeder extends AbstractSeed
             ]
         ];
 
-        $this->table('Images')->insert($images)->saveData();
+        $this->table('images')->insert($images)->saveData();
     }
 }

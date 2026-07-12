@@ -20,7 +20,7 @@ class ImagesRepository extends Repository implements IImagesRepository
 
         $stmt = $this->connection->prepare(
             "SELECT image_id, owner_id, name, creator_id, description, price, is_moderated, is_onsale, time_created, alt_text
-            FROM Images
+            FROM images
             WHERE owner_id = :userId
             LIMIT :limit OFFSET :offset;"
         );
@@ -47,7 +47,7 @@ class ImagesRepository extends Repository implements IImagesRepository
 
         $stmt = $this->connection->prepare(
             "SELECT image_id, owner_id, creator_id, name, description, price, is_moderated, is_onsale, time_created, alt_text 
-            FROM Images
+            FROM images
             WHERE is_onsale = 1 AND is_moderated = 0 AND price IS NOT NULL
             LIMIT :limit OFFSET :offset;"
         );
@@ -70,7 +70,7 @@ class ImagesRepository extends Repository implements IImagesRepository
     {
          $stmt = $this->connection->prepare(
             "SELECT image_id, owner_id, creator_id, name, description, price, is_moderated, is_onsale, time_created, alt_text 
-            FROM Images
+            FROM images
             WHERE image_id = :imageId;"
         );
 
@@ -89,7 +89,7 @@ class ImagesRepository extends Repository implements IImagesRepository
     public function updateImageSellingPrice(int $imageId, ?int $price)
     {
         $stmt = $this->connection->prepare(
-            "UPDATE Images 
+            "UPDATE images 
             SET price = :price, is_onsale = :isOnSale
             WHERE image_id = :imageId;"
         );
@@ -115,7 +115,7 @@ class ImagesRepository extends Repository implements IImagesRepository
     public function createImage(Image $image): int
     {
         $stmt = $this->connection->prepare(
-            "INSERT INTO Images(owner_id, creator_id, name, description, price, is_moderated, is_onsale, alt_text) 
+            "INSERT INTO images(owner_id, creator_id, name, description, price, is_moderated, is_onsale, alt_text) 
             VALUES (:ownerId, :creatorId, :name, :description, :price, :isModerated, :isOnsale, :altText);"
         );
 
@@ -136,7 +136,7 @@ class ImagesRepository extends Repository implements IImagesRepository
     public function updateImageOwnershipByImageId(int $imageId, int $userId)
     {
         $stmt = $this->connection->prepare(
-            "UPDATE Images 
+            "UPDATE images 
             SET owner_id = :userId, is_onsale = 0, price = NULL
             WHERE image_id = :imageId;"
         );
@@ -154,7 +154,7 @@ class ImagesRepository extends Repository implements IImagesRepository
     public function updateImageModerationByImageId(int $imageId, bool $isModerated)
     {
         $stmt = $this->connection->prepare(
-            "UPDATE Images 
+            "UPDATE images 
             SET is_moderated = :isModerated
             WHERE image_id = :imageId;"
         );
@@ -171,7 +171,7 @@ class ImagesRepository extends Repository implements IImagesRepository
 
     public function deleteImageByImageId(int $imageId)
     {
-        $stmt = $this->connection->prepare("DELETE FROM Images WHERE image_id = :imageId");
+        $stmt = $this->connection->prepare("DELETE FROM images WHERE image_id = :imageId");
         $stmt->bindValue(":imageId", $imageId, PDO::PARAM_INT); 
         $stmt->execute();
 

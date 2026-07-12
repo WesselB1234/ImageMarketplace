@@ -13,11 +13,11 @@ return [
         'default_environment' => 'default',
         'default' => [
             'adapter' => $_ENV['DB_ADAPTER'],
-            'host'     => $_ENV['DB_SERVER_NAME'],
-            'name'     => $_ENV['DB_NAME'],
-            'user'     => $_ENV['DB_USERNAME'],
-            'pass'     => $_ENV['DB_PASSWORD'],
-            'port'     => $_ENV['DB_PORT'],
+            'host' => $_ENV['DB_SERVER_NAME'],
+            'name' => $_ENV['DB_NAME'],
+            'user' => $_ENV['DB_USERNAME'],
+            'pass' => $_ENV['DB_PASSWORD'],
+            'port' => $_ENV['DB_PORT'],
         ]
     ],
 

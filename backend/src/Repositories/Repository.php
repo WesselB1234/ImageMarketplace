@@ -10,8 +10,8 @@ class Repository
 
     public function __construct(){
 
-        $connectionString = 'mysql:host=' . $_ENV["DB_SERVER_NAME"] . ';dbname=' .
-            $_ENV["DB_NAME"] . ';charset=utf8mb4';
+        $connectionString = $_ENV['DB_ADAPTER'].':host=' . $_ENV["DB_SERVER_NAME"] . ';dbname=' .
+            $_ENV["DB_NAME"] . ';';
 
         $this->connection = new PDO(
             $connectionString,

@@ -41,7 +41,7 @@ class UsersRepository extends Repository implements IUsersRepository
     {
         $stmt = $this->connection->prepare(
             "SELECT user_id, username, image_tokens, role 
-            FROM Users
+            FROM users
             WHERE user_id = :userId;"
         );
 
@@ -61,7 +61,7 @@ class UsersRepository extends Repository implements IUsersRepository
     {
         $stmt = $this->connection->prepare(
             "SELECT user_id, username, image_tokens, role 
-            FROM Users
+            FROM users
             WHERE username = :username;"
         );
 
@@ -81,7 +81,7 @@ class UsersRepository extends Repository implements IUsersRepository
     {
         $stmt = $this->connection->prepare(
             "SELECT user_id, username, password, image_tokens, role 
-            FROM Users
+            FROM users
             WHERE username = :username;"
         );
 
@@ -100,7 +100,7 @@ class UsersRepository extends Repository implements IUsersRepository
     public function updateUser(User $user)
     {
         $stmt = $this->connection->prepare(
-            "UPDATE Users 
+            "UPDATE users 
             SET username = :username, "
                 .($user->getPassword() !== null ? "password = :password, " : ""). 
                 "image_tokens = :imageTokens, 
@@ -128,7 +128,7 @@ class UsersRepository extends Repository implements IUsersRepository
     public function createUser(User $user): int
     {
         $stmt = $this->connection->prepare(
-            "INSERT INTO Users (username, password, image_tokens, role) 
+            "INSERT INTO users (username, password, image_tokens, role) 
             VALUES (:username, :password, :imageTokens, :role);"
         );
 
@@ -145,7 +145,7 @@ class UsersRepository extends Repository implements IUsersRepository
     public function incrementBalanceByUserId(int $userId, int $imageTokens)
     {
         $stmt = $this->connection->prepare(
-            "UPDATE Users 
+            "UPDATE users 
             SET image_tokens = image_tokens + :imageTokens
             WHERE user_id = :userId;"
         );
@@ -163,7 +163,7 @@ class UsersRepository extends Repository implements IUsersRepository
     public function decrementBalanceByUserId(int $userId, int $imageTokens)
     {
         $stmt = $this->connection->prepare(
-            "UPDATE Users 
+            "UPDATE users 
             SET image_tokens = image_tokens - :imageTokens
             WHERE user_id = :userId;"
         );
@@ -180,7 +180,7 @@ class UsersRepository extends Repository implements IUsersRepository
 
     public function deleteUserByUserId(int $userId)
     {
-        $stmt = $this->connection->prepare("DELETE FROM Users WHERE user_id = :userId;");
+        $stmt = $this->connection->prepare("DELETE FROM users WHERE user_id = :userId;");
         $stmt->bindValue(":userId", $userId, PDO::PARAM_INT); 
         $stmt->execute();
 

@@ -8,7 +8,9 @@ use DI\CompiledContainer;
 
 function start()
 {
-    var_dump(is_writable("/tmp"));
+    var_dump(__DIR__);
+    var_dump(realpath(__DIR__ . "/../"));
+    var_dump(is_writable(__DIR__ . "/../"));
 
     if (file_exists(__DIR__ . "/../.env")) {
         $_ENV = parse_ini_file(__DIR__ . "/../.env");

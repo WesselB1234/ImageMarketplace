@@ -19,6 +19,9 @@ ENV COMPOSER_ALLOW_SUPERUSER=1
 COPY . /app
 COPY nginx.conf /etc/nginx/nginx.conf
 
+RUN chown -R www-data:www-data /app \
+    && chmod -R 775 /app
+
 EXPOSE 10000
 
 # On container start, install dependencies if vendor is missing, then start php-fpm and nginx

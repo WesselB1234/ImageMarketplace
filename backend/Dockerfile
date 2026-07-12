@@ -4,7 +4,7 @@ FROM php:fpm
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends git unzip libzip-dev libpq-dev nginx gettext-base \
-    && docker-php-ext-install pdo pdo_pgsql \ 
+    && docker-php-ext-install pdo pdo_mysql pdo_pgsql \ 
     && curl -sS https://getcomposer.org/installer -o composer-setup.php \
     && php composer-setup.php --install-dir=/usr/local/bin --filename=composer \
     && rm composer-setup.php \

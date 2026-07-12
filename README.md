@@ -2,6 +2,16 @@
 Within this application, accounts can upload images and sell them to other users.
 This application was made by Wessel B. for Inholland University of Applied Sciences as an assignment. Below is a step-by-step plan on how this application can be started. Below the step-by-step plan there will be various screenshots on the features that have been implemented.
 
+## Deployment urls
+<ul>
+  <li>
+    Frontend: https://wesselb1234.github.io/ImageMarketplace
+  </li>
+  <li>
+    Backend: https://imagemarketplace.onrender.com
+  </li>
+</ul>
+
 ## Login credentials for test accounts
 <ul>
   <li>

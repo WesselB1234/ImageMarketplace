@@ -7,7 +7,7 @@ function getPriceFormatted(price){
 }
 
 function getImageUrl(imageId) {
-    return import.meta.env.VITE_API_URL + import.meta.env.VITE_USER_UPLOADED_IMAGES_URL + '/' + imageId + '.png'
+    return import.meta.env.VITE_API_URL + '/assets/img/UserUploadedImages/' + imageId + '.png'
 }
 
 export { getPriceFormatted, getImageUrl };

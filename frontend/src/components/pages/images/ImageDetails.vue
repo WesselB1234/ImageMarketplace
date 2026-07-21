@@ -1,6 +1,6 @@
 <script setup>
     import axios from '@/utils/axios.js'
-    import { getImageUrl, getPriceFormatted } from '@/utils/stringFormatter'
+    import { getImageUrl, getPriceFormatted, getDateTimeFormatted } from '@/utils/stringFormatter'
     import { onMounted, ref } from 'vue'
     import { useAuthStore } from '@/stores/authStore'
     import { useErrorHandlingStore } from '@/stores/errorHandlingStore'
@@ -143,7 +143,7 @@
                             </span>
                         </li>
                         <li class="list-group-item">
-                            <span class="font-weight-bold">Time created:</span> {{ image?.timeCreated }}
+                            <span class="font-weight-bold">Time created:</span> {{ getDateTimeFormatted(image?.timeCreated) }}
                         </li>
                         <li class="list-group-item">
                             <span v-if="image?.isModerated === true" class="text-danger">This image has been moderated</span>
